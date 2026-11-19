@@ -310,3 +310,20 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
 **Berkas:** `src/components/DockNav.jsx` (state redup, timer, listener pointer/fokus, guard reduced motion), `src/index.css` (opacity + transisi 250ms, keadaan redup, override reduced motion), `PROGRESS.md`, `DESIGN.md`.
 
 **Verifikasi:** `npm run build` 0 error. Aplikasi tidak dijalankan; verifikasi visual (diam ±2,5 detik → meredup, sentuh → penuh, 3 tema) adalah tugas user.
+
+---
+
+## Sesi 2E — Logo Provider pada Judul Grup Dropdown Model (19 Nov 2026)
+
+**Tujuan:** Judul grup provider di dropdown Model diberi logo satu warna. Murni kosmetik — data harga, perilaku dropdown, state, `localStorage`, dan rumus tidak berubah.
+
+**Cakupan:**
+- Berkas baru `src/data/providerIcons.js`: path SVG (viewBox 24x24) diambil apa adanya dari **Simple Icons** pada 19 Nov 2026, dipetakan dari nama `provider` di `models.js`.
+- **Ikon asli (8):** Anthropic, OpenAI, Google, DeepSeek, xAI (mark X), Mistral, Moonshot, Alibaba (Alibaba Cloud).
+- **Monogram (1):** Z.ai — tidak tersedia di Simple Icons; memakai chip kotak rounded 14px berborder hairline dengan huruf "Z" 9px `--muted`. Logo tidak dikarang.
+- `Dropdown` menampilkan slot ikon 14px di semua judul grup (sejajar tengah, jarak 6px, `currentColor` + `--muted`), jatuh ke monogram bila provider tidak punya path. Pemicu, baris model, dan dropdown Paket/Jendela/Mata Uang tidak berubah.
+- **Berkas:** baru `src/data/providerIcons.js`; diubah `src/components/Dropdown.jsx`, `src/index.css`, `PROGRESS.md`.
+
+**Verifikasi:** `npm run build` 0 error; uji fungsi murni memastikan 9 provider terpetakan (8 ikon, 1 monogram). Aplikasi tidak dijalankan — verifikasi visual di 3 tema adalah tugas user.
+
+**Status:** Selesai — commit `feat: logo provider pada judul grup dropdown Model (Sesi 2E)`.

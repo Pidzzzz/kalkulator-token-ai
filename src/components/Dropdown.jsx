@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { getProviderIcon } from "../data/providerIcons";
 
 const TINGGI_MAKS = 264;
 const TINGGI_MIN = 88;
@@ -349,58 +350,78 @@ export default function Dropdown({
           aria-label={label}
           style={{ maxHeight: `${tinggiMaks}px` }}
         >
-          {grup.map((g, gi) => (
-            <div
-              key={g.label ?? `grup-${gi}`}
-              className="dropdown__grup"
-              role="presentation"
-            >
-              {g.label ? (
-                <div className="dropdown__grup-label" role="presentation">
-                  {g.label}
-                </div>
-              ) : null}
-
-              {g.options.map((opsi) => {
-                const terpilihBaris =
-                  String(opsi.value) === String(value);
-                const aktif = opsi._i === activeIndex;
-                return (
-                  <div
-                    key={opsi.value}
-                    id={`${id}-opsi-${opsi._i}`}
-                    ref={(el) => {
-                      if (el) itemRefs.current[opsi._i] = el;
-                    }}
-                    role="option"
-                    aria-selected={terpilihBaris}
-                    className={[
-                      "dropdown__opsi",
-                      aktif ? "dropdown__opsi--aktif" : "",
-                      terpilihBaris ? "dropdown__opsi--dipilih" : "",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                    onMouseDown={(e) => e.preventDefault()}
-                    onMouseEnter={() => setActiveIndex(opsi._i)}
-                    onClick={() => pilih(opsi)}
-                  >
-                    <span className="dropdown__centang" aria-hidden="true">
-                      {terpilihBaris ? <CheckIcon /> : null}
-                    </span>
-                    <span className="dropdown__opsi-teks">
-                      <span className="dropdown__opsi-nama">{opsi.label}</span>
-                      {opsi.detail ? (
-                        <span className="dropdown__opsi-detail">
-                          {opsi.detail}
+          {grup.map((g, gi) => {
+            const ikonProvider = g.label ? getProviderIcon(g.label) : null;
+            return (
+              <div
+                key={g.label ?? `grup-${gi}`}
+                className="dropdown__grup"
+                role="presentation"
+              >
+                {g.label ? (
+                  <div className="dropdown__grup-label" role="presentation">
+                    <span className="dropdown__grup-ikon" aria-hidden="true">
+                      {ikonProvider ? (
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          focusable="false"
+                        >
+                          <path d={ikonProvider} />
+                        </svg>
+                      ) : (
+                        <span className="dropdown__grup-monogram">
+                          {g.label.charAt(0)}
                         </span>
-                      ) : null}
+                      )}
                     </span>
+                    <span>{g.label}</span>
                   </div>
-                );
-              })}
-            </div>
-          ))}
+                ) : null}
+
+                {g.options.map((opsi) => {
+                  const terpilihBaris =
+                    String(opsi.value) === String(value);
+                  const aktif = opsi._i === activeIndex;
+                  return (
+                    <div
+                      key={opsi.value}
+                      id={`${id}-opsi-${opsi._i}`}
+                      ref={(el) => {
+                        if (el) itemRefs.current[opsi._i] = el;
+                      }}
+                      role="option"
+                      aria-selected={terpilihBaris}
+                      className={[
+                        "dropdown__opsi",
+                        aktif ? "dropdown__opsi--aktif" : "",
+                        terpilihBaris ? "dropdown__opsi--dipilih" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onMouseEnter={() => setActiveIndex(opsi._i)}
+                      onClick={() => pilih(opsi)}
+                    >
+                      <span className="dropdown__centang" aria-hidden="true">
+                        {terpilihBaris ? <CheckIcon /> : null}
+                      </span>
+                      <span className="dropdown__opsi-teks">
+                        <span className="dropdown__opsi-nama">{opsi.label}</span>
+                        {opsi.detail ? (
+                          <span className="dropdown__opsi-detail">
+                            {opsi.detail}
+                          </span>
+                        ) : null}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
       ) : null}
     </div>

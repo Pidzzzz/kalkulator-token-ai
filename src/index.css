@@ -648,6 +648,9 @@ body {
 }
 
 .dropdown__grup-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 7px 9px 3px;
   font-size: 0.625rem;
   font-weight: 700;
@@ -655,6 +658,40 @@ body {
   text-transform: uppercase;
   color: var(--muted);
   user-select: none;
+}
+
+/* Slot ikon 14px yang sama untuk semua judul grup provider. */
+.dropdown__grup-ikon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  color: var(--muted);
+}
+
+.dropdown__grup-ikon svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
+/* Chip monogram untuk provider tanpa ikon di Simple Icons. */
+.dropdown__grup-monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--muted);
 }
 
 .dropdown__opsi {
