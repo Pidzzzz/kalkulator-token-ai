@@ -12,13 +12,14 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 | Token | Gelap (Bawaan) | Terang (Ref A) | Hangat (Ref C) | Pakai untuk |
 |---|---|---|---|---|
 | `--bg` | `#0D0D12` | `#F6F7FB` | `#FAF9F5` | Latar halaman |
-| `--card` | `#17171F` | `#FFFFFF` | `#FFFFFF` | Kartu modul / panel |
+| `--card` | `#17171F` | `#FFFFFF` | `#FFFFFF` | Kartu modul / panel & permukaan dock |
 | `--line` | `#38364A` | `#CBD5E1` | `#DDDACE` | Garis kartu & pembatas |
 | `--ink` | `#EEEBE6` | `#0F172A` | `#141413` | Teks utama & judul H1 |
 | `--muted` | `#A39DAF` | `#475569` | `#6B6A63` | Teks sekunder & hint |
 | `--accent` | `#7C5CFF` | `#3730A3` | `#D97757` | Aksen utama (dipakai hemat) |
 | `--accent-light` | `#B197FF` | `#3730A3` | `#9A4524` | Label kecil / sorotan teks |
-| `--accent-soft` | `#241D40` | `#EEF0FB` | `#F0EEE6` | Latar track tab / strip rumus / badge |
+| `--accent-soft` | `#241D40` | `#EEF0FB` | `#F0EEE6` | Latar pengalih tema / strip rumus / badge |
+| `--on-accent` | `#FFFFFF` | `#FFFFFF` | `#141413` | Teks tombol aktif berlatar `--accent` (dock dll) |
 
 > Bayangan kartu sangat lembut (`box-shadow`) hanya diizinkan khusus pada tema **Terang**. Semua tema tetap tanpa gradasi dan tanpa glow.
 
@@ -57,11 +58,19 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
   - Pergantian tema tidak mengubah ritme vertikal maupun ukuran elemen.
   - Di layar 1366×768, angka hasil pertama sudah terlihat di atas lipatan.
   - Ritme vertikal rapat: padding atas halaman ±24px, H1 ±27px, jarak antar seksi ±16px, padding kartu 16px, tinggi kolom masukan ±37px, angka hasil ±30px.
-- **Bilah tab segmented (Ref A):**
-  - Rel (*track*) berlatar `--accent-soft` dengan padding halus.
-  - Tab aktif tampil sebagai pil terangkat berlatar `--card` dengan teks `--accent`.
-  - Tab nonaktif berlatar transparan dengan teks `--muted`.
-  - Tanpa scrollbar horizontal: keempat tab berbagi lebar merata (grid 4 kolom); di HP otomatis menjadi grid 2×2.
+- **Navigasi Dock Melayang (Sesi 1H — Pengganti Tab):**
+  - Menggantikan bilah tab segmented horizontal di header; header kini bersih hanya berisi judul, subjudul, chip, dan pengalih tema.
+  - Elemen `<nav role="tablist">` fixed di bawah tengah layar (`bottom: calc(14px + env(safe-area-inset-bottom))`).
+  - **Permukaan SOLID `--card`**: border 1px `--line`, radius besar (24px), padding 6px, satu bayangan elevasi netral lembut (`rgba(0, 0, 0, 0.16)`).
+  - **DILARANG:** `backdrop-filter`/blur, latar transparan, bayangan berwarna aksen (anti-glow).
+  - **Tombol Modul:**
+    - Badge mono `"F1"`..`"F4"` selalu terlihat di setiap tombol.
+    - Hanya tombol **AKTIF** yang memelar menampilkan label namanya (transisi `max-width` ±0.3s): *"Penerjemah Batas"*, *"Simulator Sesi"*, *"Token Teks"*, *"Data Model"*.
+    - Tombol aktif: latar SOLID `--accent`, teks `--on-accent` (`#FFFFFF` tema gelap & terang, `#141413` tema hangat) — tanpa gradasi, tanpa glow.
+    - Tombol nonaktif: teks `--muted`; hover hanya mengubah teks ke `--ink` tanpa efek terangkat/membesar.
+    - Modul F2-F4 membawa titik kecil `--accent` (atau `--on-accent` saat aktif) di sudut tombol sebagai penanda status modul yang segera hadir.
+  - **Ruang Bawah Konten:** Wadah `.page` diberi `padding-block-end: calc(110px + env(safe-area-inset-bottom))` agar dock tidak pernah menutupi footer atau konten terbawah di layar mana pun.
+  - **Aksesibilitas & Keyboard:** Navigasi panah kiri/kanan, tombol keyboard F1-F4 langsung berpindah (dengan `preventDefault` cegah aksi bawaan browser), URL hash sinkron `#f1`..`#f4`, dan menghormati `prefers-reduced-motion`.
 - **Bar pemakaian jatah (Ref B):**
   - Terletak di panel hasil tepat di bawah angka utama.
   - Berisi baris kecil "PEMAKAIAN JATAH" + nilai contoh "$10 dari $100" + rel tipis dengan isian `--accent` selebar 10% (contoh statis; dihubungkan ke logika hitung di sesi fungsi).

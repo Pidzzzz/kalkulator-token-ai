@@ -27,6 +27,7 @@
   --accent: #7C5CFF;
   --accent-light: #B197FF;
   --accent-soft: #241D40;
+  --on-accent: #FFFFFF;
 
   --card-shadow: none;
   --font-heading: var(--font-serif);
@@ -45,6 +46,7 @@
   --accent: #3730A3;
   --accent-light: #3730A3;
   --accent-soft: #EEF0FB;
+  --on-accent: #FFFFFF;
 
   --card-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
   --font-heading: var(--font-serif);
@@ -63,6 +65,7 @@
   --accent: #D97757;
   --accent-light: #9A4524;
   --accent-soft: #F0EEE6;
+  --on-accent: #141413;
 
   --card-shadow: none;
   --font-heading: var(--font-serif);
@@ -120,12 +123,13 @@ body {
   background: var(--muted);
 }
 
-/* ---- Page Shell (Compact ±24px top padding) ---- */
+/* ---- Page Shell (Padding bawah ±110px untuk dock melayang) ---- */
 .page {
   max-width: 920px;
   margin-inline: auto;
   padding-inline: 16px;
-  padding-block: 22px;
+  padding-block-start: 22px;
+  padding-block-end: calc(110px + env(safe-area-inset-bottom, 0px));
 }
 
 /* ---- Header ---- */
@@ -220,88 +224,137 @@ body {
   white-space: nowrap;
 }
 
-/* ---- Bilah Tab Segmented (Referensi A: Rel track --accent-soft, tab aktif pil terangkat --card) ---- */
-.module-tabs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+/* ---- Navigasi Dock Melayang (Sesi 1H: Pengganti Tab) ---- */
+.dock-nav {
+  position: fixed;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
   gap: 4px;
-  margin-block-end: 16px;
-  width: 100%;
-  background-color: var(--accent-soft);
-  padding: 4px;
-  border-radius: var(--radius);
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+  max-width: calc(100vw - 24px);
+  width: max-content;
 }
 
-@media (max-width: 600px) {
-  .module-tabs {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.module-tab {
+.dock-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  min-height: 36px;
-  padding-inline: 8px;
-  padding-block: 6px;
-  font-family: var(--font-sans);
-  font-size: 0.813rem;
-  font-weight: 600;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 19px;
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
   background-color: transparent;
   color: var(--muted);
   cursor: pointer;
   user-select: none;
-  white-space: nowrap;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  text-decoration: none;
+  transition: color 0.15s ease, background-color 0.25s ease;
 }
 
-.module-tab:hover {
+.dock-btn:hover {
   color: var(--ink);
 }
 
-.module-tab:focus-visible {
+.dock-btn:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline-offset: 2px;
 }
 
-/* Tab Aktif: Pil terangkat berlatar --card dengan teks --accent */
-.module-tab[aria-selected="true"] {
-  background-color: var(--card);
-  color: var(--accent);
-  border-color: var(--line);
-  box-shadow: var(--card-shadow);
-}
-
-.module-tab__badge {
-  font-size: 0.625rem;
-  font-weight: 700;
-  padding-inline: 5px;
-  padding-block: 1px;
-  border-radius: 3px;
-  background-color: var(--line);
-  color: var(--ink);
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.module-tab[aria-selected="true"] .module-tab__badge {
+.dock-btn[aria-selected="true"] {
   background-color: var(--accent);
-  color: #ffffff;
+  color: var(--on-accent);
+  padding-inline: 14px 12px;
 }
 
-.module-tab__label {
+.dock-btn__badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.dock-btn__label {
+  font-family: var(--font-sans);
+  font-size: 0.813rem;
+  font-weight: 600;
   white-space: nowrap;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  margin-inline-start: 0;
+  transition: max-width 0.3s ease, opacity 0.25s ease, margin-inline-start 0.3s ease;
 }
 
-.module-tab__soon {
-  font-size: 0.625rem;
-  font-weight: 500;
+.dock-btn[aria-selected="true"] .dock-btn__label {
+  max-width: 180px;
+  opacity: 1;
+  margin-inline-start: 6px;
+}
+
+.dock-btn__dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  transition: background-color 0.2s ease;
+}
+
+.dock-btn[aria-selected="true"] .dock-btn__dot {
+  background-color: var(--on-accent);
+}
+
+@media (max-width: 360px) {
+  .dock-nav {
+    gap: 2px;
+    padding: 4px;
+  }
+  .dock-btn {
+    padding: 0 8px;
+  }
+  .dock-btn[aria-selected="true"] {
+    padding-inline: 10px 8px;
+  }
+  .dock-btn__label {
+    font-size: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock-btn,
+  .dock-btn__label,
+  .dock-btn__dot {
+    transition: none !important;
+  }
+}
+
+/* Modul Segera Hadir (Placeholder F2-F4) */
+.module-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 240px;
+  padding: 40px 16px;
+}
+
+.module-placeholder__text {
   color: var(--muted);
-  opacity: 0.7;
-  font-style: italic;
+  font-size: 0.938rem;
+  margin: 0;
 }
 
 /* ---- Card Modul (Padding 16px) ---- */

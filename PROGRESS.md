@@ -93,3 +93,29 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
 - Dokumentasi diperbarui di DESIGN.md dan PROGRESS.md.
 
 **Status:** ✅ Selesai — `npm run build` 0 error.
+
+---
+
+## Sesi 1H — Navigasi Dock Melayang (19 Nov 2026)
+
+**Tujuan:** Menggantikan bilah tab segmented horizontal di header dengan dock melayang di bawah layar sebagai satu-satunya navigasi modul.
+
+**Cakupan Rombakan:**
+- **Pencabutan ModuleTabs:** Komponen `ModuleTabs` lama dicabut dari header dan alur halaman. Header kembali bersih dan hanya berfokus pada judul, subjudul, chip status, dan pengalih tema ikon.
+- **Komponen DockNav:**
+  - Posisi tetap (*fixed*) di bawah tengah layar (`bottom: calc(14px + env(safe-area-inset-bottom))`) dengan `z-index: 100`.
+  - Permukaan solid `--card`, border 1px `--line`, sudut lengkung 24px, padding 6px, dan satu bayangan netral lembut tanpa blur/backdrop-filter/glow.
+  - Tombol modul menampilkan badge mono ("F1".."F4") secara konsisten; hanya modul aktif yang memelar menampilkan label teks (*"Penerjemah Batas"*, *"Simulator Sesi"*, *"Token Teks"*, *"Data Model"*) dengan transisi `max-width` 0.3s halus.
+  - Modul aktif menggunakan latar solid `--accent` dengan warna teks `--on-accent` (`#FFFFFF` untuk gelap & terang, `#141413` untuk hangat).
+  - Modul nonaktif teks `--muted`, hover teks `--ink` tanpa efek membesar/terangkat.
+  - Modul F2-F4 dilengkapi titik kecil penanda status di sudut tombol.
+- **Manajemen Status & Perilaku:**
+  - Modul F1 menampilkan modul masukan dan hasil perkiraan yang ada. Modul F2, F3, F4 menampilkan panel status kosong ringkas bertuliskan "Modul ini segera hadir."
+  - URL hash sinkron dua arah (`#f1`..`#f4`). Modul awal ditentukan dari URL hash saat halaman pertama kali dibuka (default `#f1` jika tanpa hash). Perubahan URL via riwayat browser (*back/forward*) juga tersinkron otomatis via listener `hashchange`.
+  - Navigasi keyboard: Panah kiri/kanan memindahkan fokus & modul secara melingkar; penekanan tombol keyboard F1-F4 langsung memicu perpindahan modul dengan `preventDefault()` guna mencegah perilaku bawaan peramban (seperti Help atau Find).
+  - Aksesibilitas: Menggunakan role `tablist` & `tab`, atribut `aria-selected` dan `aria-controls`, outline fokus `--accent`, serta dukungan `prefers-reduced-motion`.
+- **Ruang Bawah Konten:**
+  - Wadah `.page` diberi `padding-block-end: calc(110px + env(safe-area-inset-bottom))` sehingga dock tidak pernah menutupi footer atau elemen halaman terbawah saat digulir.
+- **Dokumentasi:** Dicatat ke DESIGN.md dan PROGRESS.md.
+
+**Status:** ✅ Selesai — `npm run build` 0 error, commit `feat: navigasi dock melayang (Sesi 1H)`.
