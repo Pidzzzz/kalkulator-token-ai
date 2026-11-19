@@ -116,3 +116,44 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - Tumpukan sama dengan Rak Proyek: React + Vite + GitHub Pages (deploy otomatis tiap push ke `main`), supaya tidak ada permukaan belajar baru.
 - Dokumen proyek: `AGENTS.md` (cara kerja) · `PRD.md` (ini + PRD.md) · `DESIGN.md` (dokumen ini) · `PROGRESS.md` (status).
 - Satu sesi OpenCode = satu fitur (F1 dulu, baru F2, F3, F4). Prompt pembuka tiap sesi menyebut nomor fiturnya dan menunjuk bagian PRD/DESIGN yang relevan saja.
+
+## 6. F1 Hidup — Pola Fungsi (Sesi 2)
+
+> Tata letak, tema, dock, dan blok Rumus & Asumsi Sesi 1–1I tidak berubah. Bagian ini hanya mencatat pola baru yang lahir saat F1 dihubungkan ke data.
+
+### 6.1 Chip preset cepat
+
+- Terletak tepat di bawah kolom **Jatah (USD)** dalam satu baris `flex-wrap`.
+- Enam chip: `$5`, `$10`, `$20`, `$50`, `25%`, `50%`.
+- Bentuk pil kecil (radius 999px, tinggi ±27px) berlatar `--accent-soft`, border 1px `--line`, teks `--ink`; hover mengubah teks & border ke `--accent`; saat ditekan latar solid `--accent`.
+- Chip persen menghitung dari **Total jatah paket** dan otomatis nonaktif (opacity 0,45) bila total kosong/tidak valid.
+- Mengklik chip mengisi kolom Jatah; hasil langsung berubah tanpa tombol Hitung.
+
+### 6.2 Tabel asumsi yang bisa diedit
+
+- Baris `input` dan `output` memakai `<input type="number">` di kolom **Nilai** — bukan teks statis.
+- Isian mewarisi bahasa visual tabel: font mono, tebal `--accent-light`, latar `--bg`, border `--line`, `tabular-nums`, tinggi ±30px. Spinner bawaan disembunyikan.
+- Di layar ≤520px, isian tetap berada di baris atas bersama parameter (rata kanan), keterangan tetap di bawah.
+- Baris `jatah` tetap tampilan nilai (diubah dari panel Masukan), ikut memperbarui angka.
+
+### 6.3 Strip hasil ringkas (HP)
+
+- Hanya tampil pada lebar ≤679px.
+- `position: fixed` di atas layar (`top: calc(8px + env(safe-area-inset-top))`), latar solid `--card`, border `--line`, radius `--radius-sm`, bayangan netral lembut, `z-index: 90` (di bawah dock `100`).
+- Muncul setelah panel Masukan sepenuhnya terlewati saat menggulir; tersembunyi kembali saat pengguna menggulir ke atas.
+- Isi: label kecil `PERKIRAAN` + teks mono/stat `~167 request · $10,00` (`tabular-nums`). Saat keadaan tepi, hanya pesan ramah yang tampil.
+- Transisi opacity/translate ±0,2s; dimatikan pada `prefers-reduced-motion`.
+
+### 6.4 Angka hasil & salin
+
+- Tiga angka hasil memakai count-up ±250ms dengan easing *ease-out cubic*; nilai akhir selalu angka eksak. `prefers-reduced-motion: reduce` mematikan animasi.
+- Semua angka (hasil, rumus, isian, tabel) memakai `font-variant-numeric: tabular-nums` agar lebar digit stabil.
+- Tombol **Salin hasil** di kaki kartu Hasil menyalin teks polos: paket, model, jatah + jendela, request, token, perkiraan biaya, dan penegasan “perkiraan”. Status tombol berubah menjadi **Tersalin** ±1,8 detik.
+- Tombol nonaktif saat hasil belum valid (jatah/harga/token belum memenuhi syarat).
+
+### 6.5 Persistensi & keadaan tepi
+
+- Seluruh masukan F1 (paket, model, jatah, total, jendela, token input/output) disimpan di `localStorage` kunci `kalkulator-f1-input`; nilai tak dikenal divalidasi balik ke bawaan.
+- Jatah kosong/0: panel Hasil menampilkan “Isi jatah dulu untuk melihat perkiraan.” — tidak pernah `~0`, `NaN`, atau `Infinity`.
+- Harga model 0 atau token 0 juga menghasilkan pesan ramah, bukan pembagian tak terdefinisi.
+- Total jatah kosong/tidak valid menyembunyikan bilah pemakaian, bukan menampilkan rel kosong yang menyesatkan.

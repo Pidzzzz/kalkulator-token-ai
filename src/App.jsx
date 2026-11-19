@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Header from "./components/Header";
 import DockNav, { MODULES } from "./components/DockNav";
 import InputPanel from "./components/InputPanel";
 import ResultPanel from "./components/ResultPanel";
 import FormulaSection from "./components/FormulaSection";
+import MobileResultStrip from "./components/MobileResultStrip";
 import Footer from "./components/Footer";
+import { useF1State } from "./utils/useF1State";
+import { getJendelaLabel, getPresetById, hitungF1 } from "./utils/calculator";
 
 function getModuleFromHash() {
   if (typeof window === "undefined") return "f1";
@@ -22,6 +25,69 @@ export default function App() {
   });
 
   const [activeModule, setActiveModule] = useState(getModuleFromHash);
+
+  const {
+    state: f1,
+    pilihPaket,
+    pilihModel,
+    aturJatah,
+    aturTotalKuota,
+    aturJendela,
+    aturTokenInput,
+    aturTokenOutput,
+  } = useF1State();
+
+  const preset = getPresetById(f1.paketId);
+  const jendelaLabel = getJendelaLabel(f1.jendela);
+
+  const result = useMemo(
+    () =>
+      hitungF1({
+        modelId: f1.modelId,
+        jatah: f1.jatah,
+        tokenInput: f1.tokenInput,
+        tokenOutput: f1.tokenOutput,
+        totalKuota: f1.totalKuota,
+      }),
+    [f1.modelId, f1.jatah, f1.tokenInput, f1.tokenOutput, f1.totalKuota]
+  );
+
+  // Strip hasil ringkas di HP: muncul setelah panel Masukan terlewati.
+  const inputPanelRef = useRef(null);
+  const [stripVisible, setStripVisible] = useState(false);
+
+  useEffect(() => {
+    if (activeModule !== "f1") {
+      setStripVisible(false);
+      return;
+    }
+
+    let raf = null;
+
+    const perbarui = () => {
+      const el = inputPanelRef.current;
+      if (!el) {
+        setStripVisible(false);
+        return;
+      }
+      setStripVisible(el.getBoundingClientRect().bottom < 0);
+    };
+
+    const onScroll = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(perbarui);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    perbarui();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [activeModule]);
 
   const changeTheme = (newTheme) => {
     setTheme(newTheme);
@@ -84,10 +150,38 @@ export default function App() {
           className="main-panel"
         >
           <div className="module-f1">
-            <InputPanel />
-            <ResultPanel />
+            <div className="module-f1__input" ref={inputPanelRef}>
+              <InputPanel
+                paketId={f1.paketId}
+                modelId={f1.modelId}
+                jatah={f1.jatah}
+                totalKuota={f1.totalKuota}
+                jendela={f1.jendela}
+                onPilihPaket={pilihPaket}
+                onPilihModel={pilihModel}
+                onUbahJatah={aturJatah}
+                onUbahTotal={aturTotalKuota}
+                onUbahJendela={aturJendela}
+              />
+            </div>
+
+            <ResultPanel
+              result={result}
+              preset={preset}
+              model={result.model}
+              jendelaLabel={jendelaLabel}
+            />
           </div>
-          <FormulaSection />
+
+          <FormulaSection
+            result={result}
+            tokenInput={f1.tokenInput}
+            tokenOutput={f1.tokenOutput}
+            onTokenInputChange={aturTokenInput}
+            onTokenOutputChange={aturTokenOutput}
+          />
+
+          <MobileResultStrip result={result} visible={stripVisible} />
         </main>
       ) : (
         <main

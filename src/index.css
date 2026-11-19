@@ -367,6 +367,10 @@ body {
   gap: 16px;
 }
 
+.module-f1__input {
+  min-width: 0;
+}
+
 @media (min-width: 680px) {
   .module-f1 {
     grid-template-columns: 1fr 1fr;
@@ -429,6 +433,7 @@ body {
   outline: none;
   transition: border-color 0.15s ease, background-color 0.15s ease;
   box-sizing: border-box;
+  font-variant-numeric: tabular-nums;
 }
 
 .form-input:hover,
@@ -464,6 +469,62 @@ body {
   font-size: 0.688rem;
   color: var(--muted);
   line-height: 1.35;
+}
+
+/* Chip preset cepat (di bawah kolom Jatah) */
+.preset-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-block-start: 2px;
+}
+
+.preset-chip {
+  font-family: var(--font-sans);
+  font-size: 0.688rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  min-height: 27px;
+  padding: 3px 9px;
+  color: var(--ink);
+  background-color: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.preset-chip:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.preset-chip:active {
+  color: var(--on-accent);
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.preset-chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.preset-chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.preset-chip:disabled:hover {
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preset-chip {
+    transition: none;
+  }
 }
 
 /* ---- Result Panel (Baris Datar Dipisah Hairline) ---- */
@@ -529,6 +590,7 @@ body {
   letter-spacing: -0.02em;
   line-height: 1.15;
   color: var(--ink); /* Angka sekunder memakai --ink */
+  font-variant-numeric: tabular-nums;
 }
 
 .result-row__value--accent {
@@ -568,6 +630,7 @@ body {
   color: var(--ink);
   font-family: var(--font-stat);
   font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .usage-bar__track {
@@ -584,6 +647,74 @@ body {
   background-color: var(--accent);
   border-radius: 999px;
   transition: width 0.3s ease;
+}
+
+/* Keadaan tepi: pesan ramah saat jatah/harga belum valid */
+.result-empty {
+  margin: 0;
+  padding-block: 18px 22px;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Strip hasil ringkas di HP (muncul setelah panel Masukan terlewati) */
+.mobile-result-strip {
+  display: none;
+}
+
+@media (max-width: 679px) {
+  .mobile-result-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    position: fixed;
+    top: calc(8px + env(safe-area-inset-top, 0px));
+    left: 12px;
+    right: 12px;
+    z-index: 90;
+    padding: 8px 12px;
+    background-color: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  }
+
+  .mobile-result-strip--visible {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .mobile-result-strip__label {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+  }
+
+  .mobile-result-strip__text {
+    font-family: var(--font-stat);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+}
+
+@media (max-width: 679px) and (prefers-reduced-motion: reduce) {
+  .mobile-result-strip {
+    transition: none;
+  }
 }
 
 /* ---- 5. Bagian Rumus & Asumsi Lebar Penuh (Sesi 1I) ---- */
@@ -670,6 +801,7 @@ body {
   font-size: clamp(12px, 0.72rem + 0.2vw, 13px);
   color: var(--ink);
   line-height: 1.5;
+  font-variant-numeric: tabular-nums;
 }
 
 .code-line__num {
@@ -798,9 +930,54 @@ body {
 }
 
 .assumptions-col--val {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
   font-family: var(--font-mono);
   font-weight: 700;
   color: var(--accent-light);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Kolom isian angka di dalam tabel asumsi */
+.assumptions-input {
+  width: 120px;
+  max-width: 100%;
+  min-height: 30px;
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.813rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-light);
+  background-color: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.assumptions-input:hover {
+  border-color: var(--muted);
+}
+
+.assumptions-input:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.assumptions-input::-webkit-outer-spin-button,
+.assumptions-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.assumptions-input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .assumptions-col--desc {
@@ -843,6 +1020,14 @@ body {
 
   .assumptions-col--desc {
     font-size: 0.75rem;
+  }
+
+  .assumptions-col--val {
+    justify-content: flex-end;
+  }
+
+  .assumptions-input {
+    width: 112px;
   }
 }
 
@@ -894,4 +1079,17 @@ body {
   font-size: 0.75rem;
   color: var(--muted);
   line-height: 1.4;
+}
+
+/* ---- Utilitas aksesibilitas ---- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

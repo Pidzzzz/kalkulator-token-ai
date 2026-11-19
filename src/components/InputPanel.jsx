@@ -1,4 +1,41 @@
-export default function InputPanel() {
+import { useMemo } from "react";
+import { models, presets, jendelaOptions } from "../data/models";
+import { formatHarga, parseAngka } from "../utils/calculator";
+
+const NOMINAL_CEPAT = [5, 10, 20, 50];
+const PERSEN_CEPAT = [25, 50];
+
+export default function InputPanel({
+  paketId,
+  modelId,
+  jatah,
+  totalKuota,
+  jendela,
+  onPilihPaket,
+  onPilihModel,
+  onUbahJatah,
+  onUbahTotal,
+  onUbahJendela,
+}) {
+  // Kelompokkan model per provider untuk <optgroup>.
+  const modelPerProvider = useMemo(() => {
+    const grup = new Map();
+    for (const m of models) {
+      if (!grup.has(m.provider)) grup.set(m.provider, []);
+      grup.get(m.provider).push(m);
+    }
+    return Array.from(grup.entries());
+  }, []);
+
+  const totalAngka = parseAngka(totalKuota);
+  const totalValid = Number.isFinite(totalAngka) && totalAngka > 0;
+
+  const isiJatahPersen = (persen) => {
+    if (!totalValid) return;
+    const nilai = (totalAngka * persen) / 100;
+    onUbahJatah(formatHarga(nilai));
+  };
+
   return (
     <article className="card">
       <h2 className="card__title">Masukan</h2>
@@ -12,13 +49,14 @@ export default function InputPanel() {
             className="form-select"
             id="paket"
             name="paket"
-            defaultValue="opencode-go"
+            value={paketId}
+            onChange={(e) => onPilihPaket(e.target.value)}
           >
-            <option value="opencode-go">OpenCode Go</option>
-            <option value="claude-pro">Claude Pro</option>
-            <option value="claude-max">Claude Max 5×</option>
-            <option value="chatgpt-plus">ChatGPT Plus</option>
-            <option value="kustom">Kustom</option>
+            {presets.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.nama}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -30,13 +68,20 @@ export default function InputPanel() {
             className="form-select"
             id="model"
             name="model"
-            defaultValue="claude-sonnet"
+            value={modelId}
+            onChange={(e) => onPilihModel(e.target.value)}
           >
-            <option value="claude-sonnet">Claude 4 Sonnet</option>
-            <option value="claude-opus">Claude Opus 4</option>
-            <option value="gpt-4o">GPT-4o</option>
-            <option value="gemini-pro">Gemini 2.5 Pro</option>
-            <option value="deepseek-v3">DeepSeek V3</option>
+            {modelPerProvider.map(([provider, daftar]) => (
+              <optgroup key={provider} label={provider}>
+                {daftar.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {`${m.nama} — $${formatHarga(m.hargaInput)}/$${formatHarga(
+                      m.hargaOutput
+                    )} per 1 jt`}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
           </select>
         </div>
 
@@ -53,12 +98,65 @@ export default function InputPanel() {
             autoCorrect="off"
             autoCapitalize="none"
             spellCheck="false"
-            aria-describedby="jatah-hint"
-            defaultValue="10.00"
+            value={jatah}
+            onChange={(e) => onUbahJatah(e.target.value)}
           />
-          <p id="jatah-hint" className="form-hint">
-            Contoh: 20% dari $50/bulan = $10
-          </p>
+
+          <div
+            className="preset-chips"
+            role="group"
+            aria-label="Isi jatah cepat"
+          >
+            {NOMINAL_CEPAT.map((nominal) => (
+              <button
+                key={nominal}
+                type="button"
+                className="preset-chip"
+                onClick={() => onUbahJatah(String(nominal))}
+              >
+                ${nominal}
+              </button>
+            ))}
+            {PERSEN_CEPAT.map((persen) => {
+              const nilai = totalValid ? (totalAngka * persen) / 100 : null;
+              return (
+                <button
+                  key={persen}
+                  type="button"
+                  className="preset-chip"
+                  onClick={() => isiJatahPersen(persen)}
+                  disabled={!totalValid}
+                  title={
+                    totalValid
+                      ? `Isi ${persen}% dari total ($${formatHarga(nilai)})`
+                      : "Isi total jatah paket dulu untuk memakai chip persen"
+                  }
+                >
+                  {persen}%
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label" htmlFor="totalKuota">
+            Total jatah paket (USD)
+          </label>
+          <input
+            className="form-input"
+            id="totalKuota"
+            name="totalKuota"
+            type="text"
+            inputMode="decimal"
+            autoCorrect="off"
+            autoCapitalize="none"
+            spellCheck="false"
+            value={totalKuota}
+            placeholder="Contoh: 50"
+            onChange={(e) => onUbahTotal(e.target.value)}
+          />
+          <p className="form-hint">Dasar bilah pemakaian jatah.</p>
         </div>
 
         <div className="form-group">
@@ -69,11 +167,14 @@ export default function InputPanel() {
             className="form-select"
             id="jendela"
             name="jendela"
-            defaultValue="5jam"
+            value={jendela}
+            onChange={(e) => onUbahJendela(e.target.value)}
           >
-            <option value="5jam">Per 5 jam</option>
-            <option value="minggu">Per minggu</option>
-            <option value="bulan">Per bulan</option>
+            {jendelaOptions.map((j) => (
+              <option key={j.id} value={j.id}>
+                {j.label}
+              </option>
+            ))}
           </select>
         </div>
       </form>

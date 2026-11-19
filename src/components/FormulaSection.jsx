@@ -1,7 +1,32 @@
 import { useState } from "react";
+import {
+  formatDesimal,
+  formatHarga,
+  formatRibuan,
+  formatUSD,
+} from "../utils/calculator";
 
-export default function FormulaSection() {
+export default function FormulaSection({
+  result,
+  tokenInput,
+  tokenOutput,
+  onTokenInputChange,
+  onTokenOutputChange,
+}) {
   const [mode, setMode] = useState("simbol"); // "simbol" | "angka"
+
+  const inputTeks = formatRibuan(result.tokenInput);
+  const outputTeks = formatRibuan(result.tokenOutput);
+  const hargaInputTeks = "$" + formatHarga(result.hargaInput);
+  const hargaOutputTeks = "$" + formatHarga(result.hargaOutput);
+  const biayaTeks =
+    result.biayaPerRequest > 0
+      ? "$" + formatDesimal(result.biayaPerRequest, 2, 4)
+      : "—";
+  const jatahTeks = result.jatah > 0 ? formatUSD(result.jatah, 0, 2) : "—";
+  const requestTeks = result.isValid
+    ? formatRibuan(result.requestTampil)
+    : "—";
 
   return (
     <section className="formula-section" aria-label="Rumus dan Asumsi Perhitungan">
@@ -97,13 +122,13 @@ export default function FormulaSection() {
                 <span className="formula-rhs">
                   <span className="formula-term">
                     <span className="formula-paren">(</span>
-                    <span className="formula-num">10.000</span>
+                    <span className="formula-num">{inputTeks}</span>
                     <span className="formula-op">×</span>
-                    <span className="formula-num">$3</span>
+                    <span className="formula-num">{hargaInputTeks}</span>
                     <span className="formula-op">+</span>
-                    <span className="formula-num">2.000</span>
+                    <span className="formula-num">{outputTeks}</span>
                     <span className="formula-op">×</span>
-                    <span className="formula-num">$15</span>
+                    <span className="formula-num">{hargaOutputTeks}</span>
                     <span className="formula-paren">)</span>
                   </span>
                   <span className="formula-term formula-term--continuation">
@@ -112,7 +137,7 @@ export default function FormulaSection() {
                   </span>
                   <span className="formula-term formula-term--result">
                     <span className="formula-op">=</span>
-                    <span className="formula-val-highlight">$0,06</span>
+                    <span className="formula-val-highlight">{biayaTeks}</span>
                   </span>
                 </span>
               </div>
@@ -129,13 +154,13 @@ export default function FormulaSection() {
                 </span>
                 <span className="formula-rhs">
                   <span className="formula-term">
-                    <span className="formula-num">$10</span>
+                    <span className="formula-num">{jatahTeks}</span>
                     <span className="formula-op">÷</span>
-                    <span className="formula-num">$0,06</span>
+                    <span className="formula-num">{biayaTeks}</span>
                   </span>
                   <span className="formula-term formula-term--result">
                     <span className="formula-op">=</span>
-                    <span className="formula-val-highlight">167</span>
+                    <span className="formula-val-highlight">{requestTeks}</span>
                   </span>
                 </span>
               </div>
@@ -144,15 +169,20 @@ export default function FormulaSection() {
         )}
       </div>
 
-      {/* Tampilan Prosa (Khusus Tema Hangat / Referensi C) */}
+      {/* Tampilan Prosa (Khusus Tema Hangat / Referensi C) — nilai hidup */}
       <div className="formula-prose-view">
         <p className="formula-prose__text">
           Rumus: request = jatah ÷ biaya_per_request, dengan biaya_per_request =
           (input × harga_input + output × harga_output) ÷ 1.000.000.
+          {result.isValid ? (
+            ` Dengan jatah ${jatahTeks}, input ${inputTeks} token (${hargaInputTeks} per 1 jt), output ${outputTeks} token (${hargaOutputTeks} per 1 jt), biaya per request ${biayaTeks} dan request terjangkau ${requestTeks}.`
+          ) : (
+            ` ${result.emptyMessage}`
+          )}
         </p>
       </div>
 
-      {/* Tabel Asumsi Tiga Kolom */}
+      {/* Tabel Asumsi Tiga Kolom — input & output bisa diedit */}
       <div
         className="assumptions-table"
         role="table"
@@ -193,14 +223,24 @@ export default function FormulaSection() {
                 className="assumptions-col assumptions-col--val"
                 role="cell"
               >
-                10.000 token
+                <input
+                  className="assumptions-input"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  step="100"
+                  value={tokenInput}
+                  onChange={(e) => onTokenInputChange(e.target.value)}
+                  aria-label="Token input per request"
+                />
               </span>
             </div>
             <span
               className="assumptions-col assumptions-col--desc"
               role="cell"
             >
-              Perkiraan panjang prompt per request ($3.00 / 1 jt token)
+              Perkiraan panjang prompt per request ({hargaInputTeks} / 1 jt
+              token)
             </span>
           </div>
 
@@ -216,14 +256,24 @@ export default function FormulaSection() {
                 className="assumptions-col assumptions-col--val"
                 role="cell"
               >
-                2.000 token
+                <input
+                  className="assumptions-input"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  step="100"
+                  value={tokenOutput}
+                  onChange={(e) => onTokenOutputChange(e.target.value)}
+                  aria-label="Token output per request"
+                />
               </span>
             </div>
             <span
               className="assumptions-col assumptions-col--desc"
               role="cell"
             >
-              Perkiraan respon model per request ($15.00 / 1 jt token)
+              Perkiraan respon model per request ({hargaOutputTeks} / 1 jt
+              token)
             </span>
           </div>
 
@@ -239,7 +289,7 @@ export default function FormulaSection() {
                 className="assumptions-col assumptions-col--val"
                 role="cell"
               >
-                $10.00
+                {result.jatah > 0 ? formatUSD(result.jatah, 2, 2) : "—"}
               </span>
             </div>
             <span

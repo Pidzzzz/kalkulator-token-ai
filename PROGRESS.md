@@ -144,3 +144,47 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
 - **Dokumentasi:** Dicatat ke DESIGN.md dan PROGRESS.md.
 
 **Status:** ✅ Selesai — `npm run build` 0 error, commit `style: rumus & asumsi lebar penuh + sakelar angka (Sesi 1I)`.
+
+---
+
+## Sesi 2 — Fungsi F1 Penerjemah Batas (19 Nov 2026)
+
+**Tujuan:** Menghidupkan F1: hitungan nyata di browser dari file data, hasil berubah seketika, rumus & asumsi memakai nilai berjalan, plus polish fungsi. Desain/tata letak Sesi 1–1I dipertahankan; F2–F4 tetap kosong.
+
+**Cakupan:**
+- **Lapisan data (`src/data/models.js`):** 15 model lintas 7 provider dengan `{ id, nama, provider, hargaInput, hargaOutput, hargaCache, konteks, sumber, cek }`; 6 preset paket (`opencode-go`, `claude-pro`, `claude-max`, `chatgpt-plus`, `gemini`, `kustom`) dengan jatah/kuota/jendela bawaan; daftar opsi jendela. Harga tidak di-hardcode di komponen.
+- **Masukan F1 hidup:** preset mengisi Jatah, Total jatah paket, dan Jendela; semuanya tetap bisa diubah user. Dropdown Model memakai `optgroup` per provider dengan teks harga `"Claude 4 Sonnet — $3/$15 per 1 jt"`. Chip cepat `$5 · $10 · $20 · $50 · 25% · 50%` di bawah Jatah (chip persen mengambil dari total paket; nonaktif bila total tidak valid).
+- **Asumsi bisa diedit:** token `input` dan `output` pada tabel asumsi menjadi isian angka di dalam tabel; setiap perubahan langsung menghitung ulang.
+- **Fungsi murni (`src/utils/calculator.js`):** membaca `models.js`, menghitung biaya per request, request, total token, perkiraan biaya, dan persentase pemakaian. Tanpa suku cache (wilayah F2). Semua pembagian dilindungi dari nol.
+- **Rumus & asumsi hidup:** mode “Dengan angka” memakai token, harga model terpilih, dan jatah sungguhan; tema Hangat menampilkan prosa dengan nilai hidup; tabel asumsi menampilkan harga & jatah berjalan.
+- **Bilah pemakaian jatah:** lebar = jatah ÷ total kuota, label `"$X dari $Y"`; bilah disembunyikan bila total kosong/tidak valid.
+- **Keadaan tepi:** jatah kosong/0 → “Isi jatah dulu untuk melihat perkiraan.”; harga model 0 → pesan ramah; token 0 → pesan ramah. Tidak ada `~0`, `NaN`, atau `Infinity`.
+- **Polish:** count-up 250 ms untuk tiga angka hasil (menghormati `prefers-reduced-motion`); `tabular-nums` pada angka; tombol “Salin hasil” menyalin ringkasan teks dan menampilkan “Tersalin” ±1,8 detik; masukan F1 tersimpan di `localStorage` (`kalkulator-f1-input`); strip ringkas `~167 request · $10,00` muncul fixed di atas pada HP setelah panel Masukan terlewati.
+- **Dokumentasi:** DESIGN.md (pola chip preset, tabel asumsi editable, strip sticky) dan AGENTS.md (status F1).
+
+**Kasus uji wajib (terverifikasi lewat fungsi murni):**
+`jatah $10 · input 10.000 @ $3 · output 2.000 @ $15` → biaya per request **$0,06**; request **~167**; total token **~2.004.000**; perkiraan biaya **$10,00**.
+
+**Daftar harga yang MASIH PLACEHOLDER (verifikasi resmi = tugas F4):**
+
+| Provider | Model | Harga input / output (per 1 jt token) |
+|---|---|---|
+| Anthropic | Claude 4 Sonnet | $3 / $15 |
+| Anthropic | Claude 3.5 Haiku | $0,80 / $4 |
+| Anthropic | Claude Opus 4 | $15 / $75 |
+| OpenAI | GPT-4o | $2,50 / $10 |
+| OpenAI | GPT-4o mini | $0,15 / $0,60 |
+| OpenAI | o1 | $15 / $60 |
+| OpenAI | o3-mini | $1,10 / $4,40 |
+| Google | Gemini 2.5 Pro | $1,25 / $5 |
+| Google | Gemini 2.0 Flash | $0,10 / $0,40 |
+| DeepSeek | DeepSeek V3 | $0,14 / $0,28 |
+| DeepSeek | DeepSeek R1 | $0,55 / $2,19 |
+| Meta | Llama 3.3 70B | $0,60 / $0,80 |
+| Mistral | Mistral Large | $2 / $6 |
+| Mistral | Codestral | $0,20 / $0,60 |
+| xAI | Grok 2 | $2 / $10 |
+
+> Seluruh 15 baris di atas belum diverifikasi ke halaman resmi; `hargaCache`, `konteks`, nilai jatah/kuota preset, dan tanggal `cek` juga masih acuan awal. Jangan menganggapnya angka tagihan final.
+
+**Status:** ✅ Selesai — `npm run build` 0 error, commit `feat: fungsi F1 Penerjemah Batas (Sesi 2)`.
