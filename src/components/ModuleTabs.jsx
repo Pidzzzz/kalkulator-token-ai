@@ -10,7 +10,7 @@ export default function ModuleTabs() {
     <div
       className="module-tabs"
       role="tablist"
-      aria-label="Pilihan modul kalkulator token"
+      aria-label="Pilihan modul"
     >
       {MODULES.map((m) => (
         <button
@@ -23,7 +23,7 @@ export default function ModuleTabs() {
           className="module-tab"
         >
           <span className="module-tab__badge">{m.id}</span>
-          <span className="module-tab__text">{m.label}</span>
+          <span className="module-tab__label">{m.label}</span>
           {!m.active && <span className="module-tab__soon">segera</span>}
         </button>
       ))}

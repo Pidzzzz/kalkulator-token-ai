@@ -1,28 +1,16 @@
 # PROGRESS — Kalkulator Token & Request AI
 
-## Sesi 1 — Eksplorasi Desain (19 Nov 2026)
+## Sesi 1C — Rombak Anti-Slop (Desain + Kata) + Compact (19 Nov 2026)
 
-**Tujuan:** Scaffold proyek + implementasi desain statis F1 — menguji apakah
-token warna dan tata letak dari DESIGN.md terasa cocok saat jadi antarmuka
-sungguhan.
+**Tujuan:** Merombak kembali antarmuka ke disiplin desain proyek yang datar,
+hemat kata, padat (compact), dan bebas dari dekorasi berlebih (anti-slop).
 
-**Cakupan:**
-- Scaffold Vite + React (pola sama dengan Rak Proyek).
-- Dokumen proyek: AGENTS.md, PROGRESS.md. Target Baseline disepakati ke **Baseline 2026**.
-- Halaman statis satu halaman: header, pemilih modul F1–F4, panel F1 (input + hasil contoh statis), footer.
-- Estetika Anti-Slop Violet: Latar solid obsidian `#0C0C11`, kartu matte `#15151F`, garis pembatas `#2A283A`, tipografi warm off-white `#EEEBE6`, teks sekunder lavender-slate `#9A94A8`. Ungu `#7C5CFF` dipakai hemat dan presisi sebagai spotlight angka hasil dan tombol utama, tanpa glow, tanpa gradasi murahan.
-- Kapabilitas Modern Web Guidance (Baseline 2026):
-  - CSS Scroll-driven animations (`animation-timeline: scroll(self inline)` + `@property`) untuk fading mask tepi tablist saat overflow.
-  - CSS Container Queries (`@container card`) agar ukuran tipografi hasil menyesuaikan ruang kartu sendiri.
-  - Pola ARIA `tablist`/`tabpanel` dengan native `<button type="button">`.
-  - Kontrol form mobile-friendly: `min-height: 44px`, `font-size: max(1rem, 1em)` untuk mencegah iOS auto-zoom.
-  - Stabilitas layout: `scrollbar-gutter: stable`.
-- Logika hitung BELUM dibuat — angka yang tampil adalah contoh statis.
-- Konfigurasi GitHub Pages (workflow deploy otomatis).
+**Cakupan Rombakan:**
+- **Pembersihan Dekorasi AI Slop:** Menghapus badge "TOOL PENGEMBANG AI" & teks versi, menghapus titik hias (dot), menghapus subjudul di bawah judul panel, serta menghapus kartu-kartu hasil bertumpuk & caption penjelas.
+- **Ketepatan Kata:** Menggunakan teks persis sesuai mandat (H1, subjudul 1 kalimat, chip status polos, judul panel "Masukan" & "Hasil Perkiraan", label kolom polos tanpa kata pamer, label hasil uppercase, dan badge "ESTIMASI").
+- **Hierarki Warna Bersih:** H1 memakai `--ink` (bukan ungu). Ungu (`--accent`) murni untuk elemen fungsional kecil (badge modul tab, angka hasil utama Request Terjangkau, penanda tab aktif, tombol primer). Angka sekunder Total Token & Biaya memakai `--ink`.
+- **Bilah Tab Segmented:** Mengganti overflow scroll dengan grid 4 kolom merata (tanpa scrollbar di lebar berapa pun), otomatis responsif menjadi grid 2×2 di layar HP.
+- **Aturan Scrollbar Global:** Menghilangkan scrollbar bawaan OS; area yang memerlukan scroll menggunakan scrollbar tipis selaras tema (track transparan, thumb `--line`).
+- **Target Compact (Keras):** Rapatkan ritme vertikal (padding atas ±24px, H1 ±27px, jarak seksi ±16px, padding kartu 16px, tinggi input ±37px, angka hasil ±30px). Seluruh halaman F1 (header sampai footer) muat 1 layar penuh pada laptop 1920×1080 zoom 100% tanpa scroll vertikal.
 
-**Status:** ✅ Selesai — siap review visual oleh user.
-
-**Catatan untuk review visual:**
-- Buka `npm run dev`, periksa di laptop DAN HP.
-- Nilai: warna, kontras, jarak, ukuran huruf — catat yang terasa kurang.
-- Angka hasil bertanda "contoh" — bukan hitungan sungguhan.
+**Status:** ✅ Selesai — `npm run build` 0 error, siap review visual oleh user.

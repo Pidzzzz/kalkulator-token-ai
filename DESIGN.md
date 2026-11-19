@@ -10,32 +10,57 @@
 | `--bg` | `#0D0D12` | Latar halaman |
 | `--card` | `#17171F` | Kartu modul / panel |
 | `--line` | `#38364A` | Garis kartu & pembatas |
-| `--ink` | `#EEEBE6` | Teks utama |
-| `--muted` | `#A39DAF` | Teks sekunder |
+| `--ink` | `#EEEBE6` | Teks utama & judul H1 |
+| `--muted` | `#A39DAF` | Teks sekunder & hint |
 | `--accent` | `#7C5CFF` | Aksen utama (dipakai hemat) |
 | `--accent-light` | `#B197FF` | Label kecil / sorotan teks |
-| `--accent-soft` | `#241D40` | Latar chip / strip rumus |
+| `--accent-soft` | `#241D40` | Latar chip / strip rumus / badge |
 | `--danger` | — | Belum ditetapkan; pakai hanya bila perlu, satu warna saja |
 
-Aturan anti-slop (selera user): latar solid, tanpa gradasi, tanpa glow. Ungu hanya untuk aksen — judul modul, angka hasil utama, tombol primer. Jangan ungu-kan seluruh halaman.
+### Aturan anti-slop (disiplin proyek)
 
-## 2. Tipografi
+- **Latar solid, tanpa gradasi, tanpa glow.** Jangan ungu-kan seluruh halaman.
+- **Tanpa dekorasi pamer:** Tanpa badge atau teks versi dekoratif ("TOOL PENGEMBANG AI", "v0.1.0 · Baseline 2026", dll) di header maupun tempat lain.
+- **Tanpa subjudul di bawah judul panel:** Judul panel ("Masukan", "Hasil Perkiraan") berdiri sendiri tanpa kalimat pengantar tambahan.
+- **Tanpa caption penjelas di bawah angka:** Angka hasil tampil bersih tanpa baris penjelasan panjang ("Perkiraan request...", "Kombinasi input...", dll).
+- **Label Bahasa Indonesia polos:** Hindari kata serapan pamer (jangan pakai "parameter", "kumulatif", "default").
+- **Header ringkas:** Judul + satu kalimat tujuan saja di header.
 
-- Font: **Inter** seluruhnya (pilihan tetap user; poster memakai serif hanya untuk judul poster, bukan untuk produk).
-- Judul halaman: Inter Bold, besar, satu baris: "Kalkulator Token & Request AI".
-- Judul modul (F1–F4): Inter Bold 20–24px, diawali chip kecil `F1` dst. berlatar ungu.
-- Label input: Inter SemiBold 13–14px; angka hasil: Inter Bold, besar, mudah dibaca sekilas.
-- Rumus & asumsi: monospace kecil, di bawah hasil, selalu terlihat — bukan disembunyikan di tooltip.
-- Bahasa: Bahasa Indonesia di semua label, tombol, dan penjelasan.
+## 2. Tipografi & Hierarki Warna
 
-## 3. Layout (satu halaman, web statis)
+- **Font:** **Inter** seluruhnya (monospace untuk rumus).
+- **Judul halaman (H1):** Inter Bold ±27px, satu baris: "Kalkulator Token & Request AI", berwarna `--ink` (**BUKAN** ungu).
+- **Subjudul header:** Satu kalimat tujuan: "Terjemahkan jatah & batas paket AI menjadi angka yang bisa dibayangkan: request, token, dan perkiraan biaya."
+- **Chip status:** "web statis" · "tanpa login" · "hitung di browser" (teks polos tanpa titik hias).
+- **Hierarki warna ungu (`--accent`):** Ungu dipakai sangat hemat hanya untuk elemen kecil:
+  - Badge nomor modul di tab (`F1` dst.)
+  - Angka hasil **UTAMA saja** (`Request Terjangkau`)
+  - Penanda tab aktif (garis bawah / border)
+  - Tombol primer ("Salin hasil")
+- **Angka sekunder:** `Total Token` dan `Perkiraan Biaya` memakai `--ink` (off-white), bukan ungu.
+- **Label di atas angka:** Inter SemiBold kecil memakai `--accent-light`.
+- **Badge angka hasil:** Bertuliskan `ESTIMASI` (bukan "CONTOH").
+- **Rumus & asumsi:** Monospace kecil, di bawah hasil, selalu terlihat ringkas.
+- **Bahasa:** Bahasa Indonesia di semua label, tombol, dan penjelasan.
 
-- Header: judul + satu kalimat tujuan + chip status (web statis · tanpa login · hitung di browser).
-- Pemilih modul: 4 kartu/tab F1–F4 di bawah header; satu modul aktif dalam satu waktu. Di HP, pemilih jadi daftar vertikal / tab geser.
-- Tiap modul: panel kiri input (label + nilai awal wajar + satuan), panel kanan hasil (angka besar request / token / biaya + rumus + asumsi + tombol "Salin hasil").
-- F4 tampil sebagai tabel: kolom model, provider, harga input / output / cache per 1 jt token, ukuran konteks; tiap sel harga bisa diedit langsung; tombol "Tambah model" menambah satu baris.
-- Footer halaman: penafian satu baris — "Semua hasil adalah perkiraan, bukan angka tagihan" — + tautan sumber harga (per baris di F4).
-- Responsif: nyaman dibuka dari HP (input besar, hasil di atas lipatan) dan laptop. Tanpa sidebar.
+## 3. Layout (Satu Halaman, Web Statis, Target Compact)
+
+- **Target compact (keras):**
+  - Di laptop 1920×1080 zoom 100%, **seluruh halaman F1 (header sampai footer) harus terlihat tanpa scroll vertikal**.
+  - Di layar 1366×768, angka hasil pertama sudah terlihat di atas lipatan.
+  - Ritme vertikal rapat: padding atas halaman ±24px, H1 ±27px, jarak antar seksi ±16px, padding kartu 16px, tinggi kolom masukan ±37px, angka hasil ±30px, strip rumus ringkas.
+- **Bilah tab segmented:**
+  - Tanpa scrollbar horizontal di lebar berapa pun.
+  - Keempat tab berbagi lebar merata (grid 4 kolom / flex) memenuhi kontainer.
+  - Di HP: otomatis menjadi grid 2×2 bila label tidak muat.
+- **Aturan scrollbar global:**
+  - Tidak ada scrollbar bawaan OS yang tampil.
+  - Area yang kelak membutuhkan scroll memakai scrollbar tipis selaras tema (track transparan, thumb `--line`) via CSS global.
+- **Struktur panel:**
+  - Panel kiri: Masukan (label + nilai awal wajar).
+  - Panel kanan: Hasil Perkiraan (baris datar dipisah garis rambut/hairline `--line` + strip rumus monospace + tombol "Salin hasil").
+- **Footer halaman:** Penafian satu baris — "Semua hasil adalah perkiraan, bukan angka tagihan."
+- **Responsif:** Nyaman dibuka dari HP (grid 2×2 tab, input mudah disentuh) dan laptop. Tanpa sidebar.
 
 ## 4. Perilaku
 
@@ -50,8 +75,3 @@ Aturan anti-slop (selera user): latar solid, tanpa gradasi, tanpa glow. Ungu han
 - Tumpukan sama dengan Rak Proyek: React + Vite + GitHub Pages (deploy otomatis tiap push ke `main`), supaya tidak ada permukaan belajar baru.
 - Dokumen proyek: `AGENTS.md` (cara kerja) · `PRD.md` (ini + PRD.md) · `DESIGN.md` (dokumen ini) · `PROGRESS.md` (status).
 - Satu sesi OpenCode = satu fitur (F1 dulu, baru F2, F3, F4). Prompt pembuka tiap sesi menyebut nomor fiturnya dan menunjuk bagian PRD/DESIGN yang relevan saja.
-
-## Keputusan kecil yang masih menunggu user (bukan penghalang mulai)
-
-1. Nama repo & URL GitHub Pages (mis. `kalkulator-token-ai` di bawah akun yang sama seperti Rak Proyek?).
-2. Apakah F1 perlu preset paket siap pakai sejak hari pertama (OpenCode Go, Claude Pro/Max, dst.) atau cukup mode kustom dulu — PRD sudah menulis preset sebagai bagian F1/F4, jadi jawabannya hanya soal isi awalnya.
