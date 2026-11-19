@@ -1,10 +1,21 @@
 /* ============================================================
-   Kalkulator Token & Request AI — Global Styles (Sesi 1D: Strip Rumus Responsif)
-   8 Token Asli DESIGN.md | Datar, Rapat, Hemat Kata, Tanpa Slop
+   Kalkulator Token & Request AI — Global Styles (Sesi 1E: Sistem 3 Tema)
+   Tema: Gelap (Bawaan) · Terang (Ref A) · Hangat (Ref C)
    ============================================================ */
 
+/* ---- Definisi Font Dasar ---- */
 :root {
-  /* 8 Token Dasar DESIGN.md */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  --font-serif: "Fraunces", Georgia, serif;
+
+  --radius: 8px;
+  --radius-sm: 5px;
+}
+
+/* ---- 1. TEMA GELAP (Bawaan — Nilai Token Asli) ---- */
+:root,
+[data-theme="gelap"] {
   --bg: #0D0D12;
   --card: #17171F;
   --line: #38364A;
@@ -14,13 +25,47 @@
   --accent-light: #B197FF;
   --accent-soft: #241D40;
 
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "Fira Code", monospace;
-
-  --radius: 8px;
-  --radius-sm: 5px;
+  --card-shadow: none;
+  --font-heading: var(--font-sans);
+  --font-stat: var(--font-mono);
 
   color-scheme: dark;
+}
+
+/* ---- 2. TEMA TERANG (Referensi A: Bersih & Modern) ---- */
+[data-theme="terang"] {
+  --bg: #F6F7FB;
+  --card: #FFFFFF;
+  --line: #CBD5E1;
+  --ink: #0F172A;
+  --muted: #475569;
+  --accent: #3730A3;
+  --accent-light: #3730A3;
+  --accent-soft: #EEF0FB;
+
+  --card-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+  --font-heading: var(--font-sans);
+  --font-stat: var(--font-mono);
+
+  color-scheme: light;
+}
+
+/* ---- 3. TEMA HANGAT (Referensi C: Editorial Hangat) ---- */
+[data-theme="hangat"] {
+  --bg: #FAF9F5;
+  --card: #FFFFFF;
+  --line: #DDDACE;
+  --ink: #141413;
+  --muted: #6B6A63;
+  --accent: #D97757;
+  --accent-light: #9A4524;
+  --accent-soft: #F0EEE6;
+
+  --card-shadow: none;
+  --font-heading: var(--font-serif);
+  --font-stat: var(--font-serif);
+
+  color-scheme: light;
 }
 
 /* ---- Reset ---- */
@@ -45,6 +90,7 @@ body {
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* ---- Aturan Scrollbar Global (Tanpa Scrollbar Bawaan OS) ---- */
@@ -84,14 +130,65 @@ body {
   margin-block-end: 16px;
 }
 
+.header__title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-block-end: 4px;
+}
+
 .header__title {
-  font-family: var(--font-sans);
+  font-family: var(--font-heading);
   font-weight: 700;
   font-size: 1.688rem; /* ±27px */
   line-height: 1.2;
-  color: var(--ink); /* H1 adalah --ink, BUKAN ungu */
+  color: var(--ink);
   letter-spacing: -0.02em;
-  margin-block-end: 4px;
+}
+
+/* Pengalih Tema: 3 Tombol Teks di Kanan Atas (Gelap · Terang · Hangat) */
+.theme-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  user-select: none;
+}
+
+.theme-switcher__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.theme-btn {
+  background: transparent;
+  border: none;
+  padding: 2px 4px;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: color 0.15s ease;
+}
+
+.theme-btn:hover {
+  color: var(--ink);
+}
+
+.theme-btn--active {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.theme-switcher__sep {
+  color: var(--muted);
+  opacity: 0.6;
 }
 
 .header__subtitle {
@@ -121,13 +218,16 @@ body {
   white-space: nowrap;
 }
 
-/* ---- Bilah Tab Segmented (Tanpa Scrollbar, 4 Kolom Merata / 2x2 di HP) ---- */
+/* ---- Bilah Tab Segmented (Referensi A: Rel track --accent-soft, tab aktif pil terangkat --card) ---- */
 .module-tabs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  gap: 4px;
   margin-block-end: 16px;
   width: 100%;
+  background-color: var(--accent-soft);
+  padding: 4px;
+  border-radius: var(--radius);
 }
 
 @media (max-width: 600px) {
@@ -141,24 +241,23 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  min-height: 38px;
-  padding-inline: 10px;
+  min-height: 36px;
+  padding-inline: 8px;
   padding-block: 6px;
   font-family: var(--font-sans);
   font-size: 0.813rem;
   font-weight: 600;
-  border: 1px solid var(--line);
+  border: 1px solid transparent;
   border-radius: var(--radius-sm);
-  background-color: var(--card);
+  background-color: transparent;
   color: var(--muted);
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
-  transition: border-color 0.15s, color 0.15s;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .module-tab:hover {
-  border-color: var(--muted);
   color: var(--ink);
 }
 
@@ -167,18 +266,12 @@ body {
   outline-offset: 1px;
 }
 
+/* Tab Aktif: Pil terangkat berlatar --card dengan teks --accent */
 .module-tab[aria-selected="true"] {
-  border-color: var(--accent);
-  color: var(--ink);
-  position: relative;
-}
-
-.module-tab[aria-selected="true"]::after {
-  content: "";
-  position: absolute;
-  inset-block-end: -1px;
-  inset-inline: 10px;
-  border-block-end: 2px solid var(--accent);
+  background-color: var(--card);
+  color: var(--accent);
+  border-color: var(--line);
+  box-shadow: var(--card-shadow);
 }
 
 .module-tab__badge {
@@ -187,8 +280,9 @@ body {
   padding-inline: 5px;
   padding-block: 1px;
   border-radius: 3px;
-  background-color: var(--accent-soft);
-  color: var(--accent-light);
+  background-color: var(--line);
+  color: var(--ink);
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .module-tab[aria-selected="true"] .module-tab__badge {
@@ -231,9 +325,11 @@ body {
   background-color: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
   padding: 16px;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card__title {
@@ -275,7 +371,7 @@ body {
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
   box-sizing: border-box;
 }
 
@@ -298,6 +394,14 @@ body {
   background-repeat: no-repeat;
   background-position: right 10px center;
   padding-inline-end: 28px;
+}
+
+[data-theme="terang"] .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23475569'%3E%3Cpath d='M5 7 1 3h8z'/%3E%3C/svg%3E");
+}
+
+[data-theme="hangat"] .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%236B6A63'%3E%3Cpath d='M5 7 1 3h8z'/%3E%3C/svg%3E");
 }
 
 .form-hint {
@@ -340,16 +444,20 @@ body {
   color: var(--accent-light);
 }
 
-.result-row__badge {
-  font-size: 0.563rem;
+/* Pil ESTIMASI (Cukup 1 di samping angka hasil utama, referensi C) */
+.estimate-pill {
+  font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--accent-light);
   background-color: var(--accent-soft);
+  border: 1px solid var(--line);
   padding-inline: 6px;
   padding-block: 1px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
+  margin-inline-start: 6px;
+  align-self: center;
 }
 
 .result-row__value-wrap {
@@ -359,7 +467,7 @@ body {
 }
 
 .result-row__value {
-  font-family: var(--font-sans);
+  font-family: var(--font-stat);
   font-size: 1.875rem; /* ±30px */
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -377,7 +485,52 @@ body {
   color: var(--muted);
 }
 
-/* ---- Strip Rumus Responsif (Sesi 1D: Segmen Terstruktur, Tanpa Scroll Horizontal) ---- */
+/* ---- Bar Pemakaian Jatah (Referensi B) ---- */
+.usage-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-block-start: 6px;
+  padding-block-start: 2px;
+}
+
+.usage-bar__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.688rem;
+  font-weight: 600;
+}
+
+.usage-bar__label {
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.usage-bar__value {
+  color: var(--ink);
+  font-family: var(--font-stat);
+  font-size: 0.75rem;
+}
+
+.usage-bar__track {
+  width: 100%;
+  height: 5px;
+  background-color: var(--accent-soft);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.usage-bar__fill {
+  height: 100%;
+  background-color: var(--accent);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+/* ---- Strip Rumus: Versi Monospace (Gelap & Terang) + Prosa (Hangat) ---- */
 .formula-strip {
   background-color: var(--accent-soft);
   border-radius: var(--radius-sm);
@@ -394,9 +547,9 @@ body {
   margin-block-end: 4px;
 }
 
-.formula-strip__body {
+/* Versi Monospace Tersegmentasi (Sesi 1D Responsif) */
+.formula-strip__code-view {
   font-family: var(--font-mono);
-  /* Huruf cair dengan LANTAI keterbacaan 12px */
   font-size: clamp(12px, 0.72rem + 0.2vw, 13px);
   color: var(--ink);
   line-height: 1.45;
@@ -474,9 +627,39 @@ body {
   word-break: break-word;
 }
 
-/* Penyesuaian Layar Sempit (<=480px): Indentasi Menggantung & Line-Height Longgar */
+/* Versi Prosa Biasa (Khusus Tema Hangat / Referensi C) */
+.formula-strip__prose-view {
+  display: none;
+}
+
+[data-theme="hangat"] .formula-strip__code-view {
+  display: none;
+}
+
+[data-theme="hangat"] .formula-strip__prose-view {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-sans);
+  font-size: clamp(12px, 0.75rem + 0.1vw, 13px);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.formula-prose__text {
+  margin: 0;
+  font-weight: 500;
+}
+
+.formula-prose__assumptions {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+/* Penyesuaian Layar Sempit (<=480px) untuk Monospace */
 @container card (max-width: 480px) {
-  .formula-strip__body {
+  .formula-strip__code-view {
     line-height: 1.6;
     gap: 6px;
   }
@@ -490,7 +673,7 @@ body {
   .formula-rhs {
     flex-direction: column;
     align-items: flex-start;
-    padding-inline-start: 1.25em; /* Indentasi menggantung */
+    padding-inline-start: 1.25em;
     gap: 1px;
   }
 
@@ -504,7 +687,7 @@ body {
 }
 
 @media (max-width: 480px) {
-  .formula-strip__body {
+  .formula-strip__code-view {
     line-height: 1.6;
     gap: 6px;
   }
@@ -518,7 +701,7 @@ body {
   .formula-rhs {
     flex-direction: column;
     align-items: flex-start;
-    padding-inline-start: 1.25em; /* Indentasi menggantung */
+    padding-inline-start: 1.25em;
     gap: 1px;
   }
 
@@ -549,7 +732,7 @@ body {
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
   user-select: none;
 }
 

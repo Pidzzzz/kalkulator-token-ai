@@ -32,4 +32,28 @@ dan ukuran huruf cair berlantai 12px.
 - **Bebas Scroll Horizontal:** Dihapus `overflow-x: auto`; seluruh rumus terbaca penuh di lebar 360px tanpa geser horizontal atau pemotongan teks.
 - **Dokumentasi:** Dicatat ke DESIGN.md dan PROGRESS.md.
 
+**Status:** ✅ Selesai.
+
+---
+
+## Sesi 1E — Sistem 3 Tema (19 Nov 2026)
+
+**Tujuan:** Mengadopsi bagian terbaik dari 3 referensi desain (A Terang Bersih,
+B Gelap Dashboard, C Editorial Hangat) menjadi sistem 3 tema yang dapat dipilih
+pengguna di atas tata letak yang sudah terkunci.
+
+**Cakupan Rombakan:**
+- **Sistem 3 Tema:** Mengimplementasikan tema `gelap` (bawaan), `terang` (Ref A), dan `hangat` (Ref C) melalui atribut `data-theme` di `<html>`, persisten di `localStorage`.
+- **Pengalih Tema:** 3 tombol teks kecil di kanan atas header sejajar judul (`Gelap` · `Terang` · `Hangat`) tanpa ikon maupun badge dekoratif.
+- **Tipografi & Font Angka:**
+  - Font angka hasil di tema Gelap & Terang memakai `JetBrains Mono` (tabular).
+  - Khusus tema Hangat, judul halaman H1 & angka hasil memakai font `Fraunces` (serif hangat dimuat dari Google Fonts).
+  - Teks UI umum tetap `Inter` di semua tema (tanpa Space Grotesk).
+- **Bilah Tab Segmented (Ref A):** Rel (*track*) berlatar `--accent-soft`, tab aktif berupa pil terangkat berlatar `--card` dengan teks `--accent`, tab nonaktif berlatar transparan teks `--muted`.
+- **Badge ESTIMASI (Ref C):** Disederhanakan menjadi satu pil tunggal di samping angka hasil utama.
+- **Bar Pemakaian Jatah (Ref B):** Ditambahkan di bawah angka hasil utama: teks "PEMAKAIAN JATAH" ($10 dari $100) dan rel tipis dengan isian aksen 10%.
+- **Strip Rumus Dwi-Tampilan:** Monospace responsif segmen (Sesi 1D) pada tema Gelap & Terang, bertransisi menjadi paragraf prosa editorial alami pada tema Hangat.
+- **Compact Tetap Terjaga:** Pergantian tema tidak mengubah ritme vertikal, tetap muat 1 layar 1080p tanpa scroll.
+- **Dokumentasi:** Dicatat ke DESIGN.md dan PROGRESS.md.
+
 **Status:** ✅ Selesai — `npm run build` 0 error, siap review visual oleh user.

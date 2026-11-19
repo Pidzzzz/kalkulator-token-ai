@@ -4,21 +4,40 @@ export default function ResultPanel() {
       <h2 className="card__title">Hasil Perkiraan</h2>
 
       <div className="result-rows">
-        <div className="result-row">
+        {/* Angka Utama: Request Terjangkau + Pil ESTIMASI + Bar Pemakaian */}
+        <div className="result-row result-row--primary">
           <div className="result-row__header">
             <span className="result-row__label">REQUEST TERJANGKAU</span>
-            <span className="result-row__badge">ESTIMASI</span>
           </div>
           <div className="result-row__value-wrap">
             <span className="result-row__value result-row__value--accent">~167</span>
             <span className="result-row__unit">request</span>
+            <span className="estimate-pill">ESTIMASI</span>
+          </div>
+
+          {/* Bar Pemakaian Jatah (Referensi B) */}
+          <div className="usage-bar">
+            <div className="usage-bar__meta">
+              <span className="usage-bar__label">PEMAKAIAN JATAH</span>
+              <span className="usage-bar__value">$10 dari $100</span>
+            </div>
+            <div
+              className="usage-bar__track"
+              role="progressbar"
+              aria-valuenow={10}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Persentase pemakaian jatah"
+            >
+              <div className="usage-bar__fill" style={{ width: "10%" }}></div>
+            </div>
           </div>
         </div>
 
+        {/* Angka Sekunder 1: Total Token (Tanpa badge) */}
         <div className="result-row">
           <div className="result-row__header">
             <span className="result-row__label">TOTAL TOKEN</span>
-            <span className="result-row__badge">ESTIMASI</span>
           </div>
           <div className="result-row__value-wrap">
             <span className="result-row__value">~1.670.000</span>
@@ -26,10 +45,10 @@ export default function ResultPanel() {
           </div>
         </div>
 
+        {/* Angka Sekunder 2: Perkiraan Biaya (Tanpa badge) */}
         <div className="result-row">
           <div className="result-row__header">
             <span className="result-row__label">PERKIRAAN BIAYA</span>
-            <span className="result-row__badge">ESTIMASI</span>
           </div>
           <div className="result-row__value-wrap">
             <span className="result-row__value">$10.00</span>
@@ -37,9 +56,12 @@ export default function ResultPanel() {
         </div>
       </div>
 
+      {/* Strip Rumus: Versi Segmen Monospace (Gelap & Terang) + Versi Prosa (Hangat) */}
       <div className="formula-strip">
         <div className="formula-strip__title">RUMUS &amp; ASUMSI</div>
-        <div className="formula-strip__body">
+
+        {/* Tampilan Monospace untuk Gelap & Terang */}
+        <div className="formula-strip__code-view">
           <div className="formula-line">
             <span className="formula-lhs">
               <span className="formula-var">request</span>
@@ -99,6 +121,18 @@ export default function ResultPanel() {
               <span className="formula-assumptions__val">$0.054</span>
             </div>
           </div>
+        </div>
+
+        {/* Tampilan Prosa untuk Hangat (Editorial C) */}
+        <div className="formula-strip__prose-view">
+          <p className="formula-prose__text">
+            Rumus: request = jatah ÷ biaya_per_request, dengan biaya_per_request =
+            (input × harga_input) + (output × harga_output).
+          </p>
+          <p className="formula-prose__assumptions">
+            Asumsi dasar: input ~8.000 token/request ($3.00/1jt), output ~2.000
+            token/request ($15.00/1jt), dengan perkiraan biaya ~$0.054 per request.
+          </p>
         </div>
       </div>
 
