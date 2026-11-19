@@ -56,8 +56,10 @@ function CheckIcon() {
  *
  * Opsi datar:  options={[{ value, label }]}
  * Opsi bergrup: groups={[{ label, options: [{ value, label, short, detail }] }]}
- *   - `short`  -> imbuhan harga ringkas di pemicu ("— $2/$10")
- *   - `detail` -> baris kedua mono di dalam daftar (khusus Model)
+ *   - `short`        -> imbuhan harga ringkas di pemicu ("— $2/$10")
+ *   - `detail`       -> baris kedua mono di dalam daftar (khusus Model/Mata uang)
+ *   - `triggerLabel` -> teks pemicu bila berbeda dari label baris (mis. kode "IDR")
+ * `compact` -> ukuran ringkas (dipakai pemilih mata uang di judul kartu Hasil).
  */
 export default function Dropdown({
   id,
@@ -67,6 +69,7 @@ export default function Dropdown({
   options,
   groups,
   placeholder = "Pilih",
+  compact = false,
 }) {
   const menuId = `${id}-listbox`;
   const rootRef = useRef(null);
@@ -304,7 +307,7 @@ export default function Dropdown({
       : "dropdown__panel";
 
   return (
-    <div className="dropdown" ref={rootRef}>
+    <div className={compact ? "dropdown dropdown--ringkas" : "dropdown"} ref={rootRef}>
       <button
         ref={triggerRef}
         type="button"
@@ -325,7 +328,9 @@ export default function Dropdown({
         onKeyDown={onKeyDown}
       >
         <span className="dropdown__nilai">
-          {terpilih ? terpilih.label : placeholder}
+          {terpilih
+            ? terpilih.triggerLabel ?? terpilih.label
+            : placeholder}
           {terpilih?.short ? (
             <span className="dropdown__ringkas"> — {terpilih.short}</span>
           ) : null}

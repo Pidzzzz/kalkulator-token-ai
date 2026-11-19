@@ -1,6 +1,21 @@
 import { useEffect, useRef, useState } from "react";
+import Dropdown from "./Dropdown";
 import { formatRibuan, formatUSD } from "../utils/calculator";
+import { formatMataUang, opsiMataUang } from "../utils/currency";
+import { KODE_MATA_UANG_BAWAAN, getCurrency } from "../data/currencies";
 import { useCountUp } from "../utils/useCountUp";
+
+const MATA_UANG_KEY = "kalkulator-mata-uang";
+
+function bacaMataUang() {
+  if (typeof window === "undefined") return KODE_MATA_UANG_BAWAAN;
+  try {
+    const tersimpan = window.localStorage.getItem(MATA_UANG_KEY);
+    return getCurrency(tersimpan) ? tersimpan : KODE_MATA_UANG_BAWAAN;
+  } catch {
+    return KODE_MATA_UANG_BAWAAN;
+  }
+}
 
 function salinLama(teks) {
   const area = document.createElement("textarea");
@@ -24,7 +39,16 @@ function salinLama(teks) {
 
 export default function ResultPanel({ result, preset, model, jendelaLabel }) {
   const [tersalin, setTersalin] = useState(false);
+  const [mataUang, setMataUang] = useState(bacaMataUang);
   const timerRef = useRef(null);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(MATA_UANG_KEY, mataUang);
+    } catch {
+      // Penyimpanan tidak tersedia — pilihan tetap berlaku selama sesi.
+    }
+  }, [mataUang]);
 
   useEffect(
     () => () => {
@@ -40,6 +64,11 @@ export default function ResultPanel({ result, preset, model, jendelaLabel }) {
   const susunRingkasan = () => {
     const namaPaket = preset?.nama || "Kustom";
     const namaModel = model?.nama || "—";
+    const biayaUSD = formatUSD(result.perkiraanBiaya, 2, 2);
+    const biayaKonversi =
+      mataUang !== "USD"
+        ? ` (= ${formatMataUang(result.perkiraanBiaya, mataUang)})`
+        : "";
     return [
       "Perkiraan Kalkulator Token AI",
       `Paket: ${namaPaket}`,
@@ -47,7 +76,7 @@ export default function ResultPanel({ result, preset, model, jendelaLabel }) {
       `Jatah: ${formatUSD(result.jatah, 2, 2)} (${jendelaLabel})`,
       `Request terjangkau: ~${formatRibuan(result.requestTampil)} request`,
       `Total token: ~${formatRibuan(result.totalToken)} token`,
-      `Perkiraan biaya: ${formatUSD(result.perkiraanBiaya, 2, 2)}`,
+      `Perkiraan biaya: ${biayaUSD}${biayaKonversi}`,
       "Semua angka adalah perkiraan, bukan angka tagihan.",
     ].join("\n");
   };
@@ -77,7 +106,17 @@ export default function ResultPanel({ result, preset, model, jendelaLabel }) {
 
   return (
     <article className="card">
-      <h2 className="card__title">Hasil Perkiraan</h2>
+      <div className="card__header">
+        <h2 className="card__title">Hasil Perkiraan</h2>
+        <Dropdown
+          id="mata-uang"
+          compact
+          label="Mata uang konversi"
+          value={mataUang}
+          onChange={setMataUang}
+          options={opsiMataUang}
+        />
+      </div>
 
       <div className="result-rows">
         {result.isValid ? (
@@ -144,6 +183,11 @@ export default function ResultPanel({ result, preset, model, jendelaLabel }) {
                 <span className="result-row__value">
                   {formatUSD(tampilBiaya, 2, 2)}
                 </span>
+                {mataUang !== "USD" && (
+                  <span className="result-row__konversi">
+                    = {formatMataUang(tampilBiaya, mataUang)}
+                  </span>
+                )}
               </div>
             </div>
           </>

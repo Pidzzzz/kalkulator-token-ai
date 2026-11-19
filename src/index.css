@@ -373,6 +373,11 @@ body {
   min-width: 0;
 }
 
+/* Panel mata uang di kartu Hasil ikut menutupi kartu Masukan saat terbuka. */
+.module-f1 > .card:has(.dropdown__panel) {
+  z-index: 30;
+}
+
 @media (min-width: 680px) {
   .module-f1 {
     grid-template-columns: 1fr 1fr;
@@ -399,6 +404,20 @@ body {
   font-weight: 700;
   color: var(--ink);
   margin-block-end: 12px;
+}
+
+/* Baris judul kartu: judul + pemilih mata uang ringkas */
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-block-end: 12px;
+}
+
+.card__header .card__title {
+  min-width: 0;
+  margin-block-end: 0;
 }
 
 /* ---- Input Panel Form (Tinggi ±37px, Rapat) ---- */
@@ -533,6 +552,31 @@ body {
 
 .dropdown__trigger--open .dropdown__chevron {
   transform: rotate(180deg);
+}
+
+/* Varian ringkas: pemilih mata uang di baris judul kartu Hasil */
+.dropdown--ringkas {
+  width: auto;
+  flex-shrink: 0;
+}
+
+.dropdown--ringkas .dropdown__trigger {
+  width: auto;
+  min-height: 27px;
+  padding: 3px 8px;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.dropdown--ringkas .dropdown__panel {
+  left: auto;
+  right: 0;
+  width: max-content;
+  min-width: 176px;
+  max-width: min(260px, calc(100vw - 24px));
 }
 
 .dropdown__panel {
@@ -777,8 +821,19 @@ body {
 
 .result-row__value-wrap {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: 6px;
+}
+
+/* Konversi mata uang: di samping biaya USD bila muat, membungkus bila sempit */
+.result-row__konversi {
+  font-size: 0.813rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
 .result-row__value {

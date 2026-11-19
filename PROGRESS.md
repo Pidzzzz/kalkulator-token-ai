@@ -269,3 +269,25 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
 **Verifikasi:** `npm run build` 0 error. Aplikasi tidak dijalankan; verifikasi visual (ganti paket → Jendela ikut berubah, Kustom tidak mereset) adalah tugas user.
 
 **Status:** Selesai — commit `feat: jendela bawaan per paket + opsi Per hari (Sesi 2D-1)`.
+
+---
+
+## Sesi 2D-2 — Konversi Mata Uang pada Perkiraan Biaya (19 Nov 2026)
+
+**Tujuan:** Angka utama Perkiraan Biaya tetap USD, dengan konversi opsional di sampingnya. Rumus F1, input Jatah, chip, dan bilah pemakaian tetap USD.
+
+**Cakupan:**
+- **Data baru** `src/data/currencies.js`: 9 baris `{ kode, nama, kurs }` (kurs = nilai per 1 USD), semuanya `cek: "2026-11-19"`, `sumber: "Kurs tengah pasar (mid-market) dari tabel forex publik"`.
+  - USD 1 · IDR 18.250 · EUR 0,91 · GBP 0,76 · JPY 160 · SGD 1,29 · MYR 4,11 · INR 93,3 · CNY 6,67.
+- **Helper** `src/utils/currency.js`: `formatMataUang(nilaiUSD, kode)` memakai `Intl.NumberFormat("id-ID", { style: "currency", currency: kode })`; IDR & JPY dipaksa 0 desimal; spasi setelah simbol dirapatkan agar ringkas.
+- **Tampilan:** baris Perkiraan Biaya menampilkan USD seperti sebelumnya, lalu `= Rp182.500` berwarna `--muted` ukuran 13px. `flex-wrap` membuatnya pindah ke bawah bila sempit. Bila USD dipilih, teks konversi disembunyikan.
+- **Pemilih mata uang:** `Dropdown` Sesi 2B dengan prop baru `compact` di sisi kanan baris judul "Hasil Perkiraan"; label pemicu = kode terpilih. Panel ringkas rata kanan dengan lebar minimum 176px, baris menampilkan `KODE — Nama` + kurs `Rp18.250 per $1`.
+- **Persistensi:** `localStorage` kunci `kalkulator-mata-uang`, bawaan IDR; kode tak dikenal jatuh ke IDR.
+- **Salin hasil:** baris biaya menjadi `Perkiraan biaya: $10,00 (= Rp182.500)` bila bukan USD.
+- **Tumpukan lapisan:** `.module-f1 > .card:has(.dropdown__panel) { z-index: 30 }` agar panel mata uang yang membuka ke atas tidak tertutup kartu Masukan (yang ber-`z-index: 20`).
+
+**Kasus uji (fungsi murni, headless):** `formatMataUang(10, "IDR")` → `Rp182.500`; `formatMataUang(10, "EUR")` → `€9,10`; `formatMataUang(10, "USD")` → `US$10,00`.
+
+**Berkas:** baru `src/data/currencies.js`, `src/utils/currency.js`; diubah `src/components/Dropdown.jsx` (`compact`, `triggerLabel`), `src/components/ResultPanel.jsx` (pemilih, konversi, persistensi, salin), `src/index.css` (baris judul kartu, dropdown ringkas, teks konversi, z-index), `PROGRESS.md`, `DESIGN.md`.
+
+**Status:** Selesai — `npm run build` 0 error, commit `feat: konversi mata uang pada Perkiraan Biaya (Sesi 2D-2)`.

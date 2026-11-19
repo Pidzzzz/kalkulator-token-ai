@@ -199,3 +199,14 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - **Kustom tidak punya jendela bawaan** (`null`): berpindah ke Kustom mempertahankan jendela yang sedang dipilih, tidak mereset ke nilai paket sebelumnya.
 - Bawaan aplikasi (tanpa `localStorage`) memakai `bulan`, selaras dengan paket OpenCode Go; nilai `hari` yang tersimpan diterima validasi.
 - Nilai bawaan per paket: OpenCode Go `bulan`; Claude Pro, Claude Max 5×, ChatGPT Plus, Gemini `5jam`; Kustom tanpa perubahan.
+
+
+## 9. Konversi Mata Uang pada Perkiraan Biaya (Sesi 2D-2)
+
+- **Angka utama tetap USD.** Konversi hanya pelengkap di kanan angka biaya: `= Rp182.500`, warna `--muted`, 13px, `tabular-nums`, membungkus ke bawah bila tidak muat. Tidak ada perubahan pada masukan Jatah, chip, atau label bilah pemakaian.
+- **Pemilih** memakai `Dropdown` Sesi 2B varian `dropdown--ringkas` di kanan baris judul kartu Hasil: pemicu setinggi ±27px berisi kode mata uang (mis. `IDR`), panel rata kanan dengan lebar minimum 176px. Baris panel menampilkan `KODE — Nama` dan kurs per $1.
+- **9 mata uang** dari `src/data/currencies.js` (USD, IDR, EUR, GBP, JPY, SGD, MYR, INR, CNY), kurs per 1 USD, cek `2026-11-19`, sumber kurs tengah pasar. Pembaruan kurs cukup di berkas data ini.
+- **Format** `Intl.NumberFormat("id-ID", { style: "currency", currency })`; IDR & JPY 0 desimal. Spasi setelah simbol dirapatkan (`Rp182.500`, `€9,10`). USD menyembunyikan teks konversi.
+- **Persistensi:** `localStorage` kunci `kalkulator-mata-uang`, bawaan `IDR`; kode tak dikenal dikembalikan ke IDR.
+- **Salin hasil** menyertakan konversi: `Perkiraan biaya: $10,00 (= Rp182.500)`.
+- **Lapisan:** kartu Hasil memakai `z-index: 30` hanya saat panel dropdown-nya terbuka (`:has`), supaya panel ke atas tidak tertutup kartu Masukan (`z-index: 20`).
