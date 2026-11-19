@@ -289,7 +289,8 @@ export const presets = [
     nama: "OpenCode Go",
     jatahBawaan: 10,
     totalKuota: 50,
-    jendelaBawaan: "5jam",
+    // Jatah dolar bulanan; batas 5 jam & mingguan hanyalah sub-batas.
+    jendelaBawaan: "bulan",
     modelBawaan: "claude-sonnet",
   },
   {
@@ -297,6 +298,7 @@ export const presets = [
     nama: "Claude Pro",
     jatahBawaan: 20,
     totalKuota: 20,
+    // Batas sesi 5 jam (plus batas mingguan) pada dokumentasi Claude.
     jendelaBawaan: "5jam",
     modelBawaan: "claude-sonnet",
   },
@@ -305,6 +307,7 @@ export const presets = [
     nama: "Claude Max 5×",
     jatahBawaan: 100,
     totalKuota: 100,
+    // Pola batas sesi yang sama dengan Claude Pro, kuota lebih besar.
     jendelaBawaan: "5jam",
     modelBawaan: "claude-sonnet",
   },
@@ -313,7 +316,8 @@ export const presets = [
     nama: "ChatGPT Plus",
     jatahBawaan: 20,
     totalKuota: 20,
-    jendelaBawaan: "bulan",
+    // Batas pemakaian Work/Codex dihitung per jendela 5 jam.
+    jendelaBawaan: "5jam",
     modelBawaan: "gpt-4o",
   },
   {
@@ -321,7 +325,8 @@ export const presets = [
     nama: "Gemini",
     jatahBawaan: 20,
     totalKuota: 20,
-    jendelaBawaan: "bulan",
+    // Batas aplikasi Gemini (Google AI Pro) dihitung per jendela 5 jam.
+    jendelaBawaan: "5jam",
     modelBawaan: "gemini-2-5-pro",
   },
   {
@@ -329,13 +334,15 @@ export const presets = [
     nama: "Kustom",
     jatahBawaan: 10,
     totalKuota: 50,
-    jendelaBawaan: "5jam",
+    // Tanpa bawaan: jendela pilihan user tidak diubah saat beralih ke Kustom.
+    jendelaBawaan: null,
     modelBawaan: "claude-sonnet",
   },
 ];
 
 export const jendelaOptions = [
   { id: "5jam", label: "Per 5 jam" },
+  { id: "hari", label: "Per hari" },
   { id: "minggu", label: "Per minggu" },
   { id: "bulan", label: "Per bulan" },
 ];

@@ -240,3 +240,32 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
 **Verifikasi:** `npm run build` 0 error. Tidak ada perubahan pada `models.js`, `calculator.js`, `useF1State.js`, atau komponen lain. Aplikasi tidak dijalankan dan tidak ada screenshot sesuai aturan sesi — verifikasi visual (3 tema, navigasi keyboard penuh, daftar Model menggulir, Jendela membuka ke atas, lebar HP) adalah tugas user.
 
 **Status:** ✅ Selesai — `npm run build` 0 error, commit `feat: dropdown kustom untuk Paket, Model, dan Jendela (Sesi 2B)`.
+
+---
+
+## Sesi 2D-1 — Jendela Bawaan per Paket + Opsi "Per hari" (19 Nov 2026)
+
+**Tujuan:** Jendela waktu ikut menyesuaikan saat paket dipilih, plus satu opsi baru "Per hari". Rumus F1, data model, dan desain lain tidak berubah.
+
+**Cakupan:**
+- Opsi Jendela sekarang berurutan: **Per 5 jam, Per hari, Per minggu, Per bulan** (`jendelaOptions` di `src/data/models.js`). Opsi `hari` otomatis muncul di dropdown Jendela karena daftar digerakkan data.
+- Validasi `localStorage` (`kalkulator-f1-input`) memakai `jendelaOptions.some(...)`, bukan daftar tetap — nilai `hari` yang tersimpan tidak lagi jatuh ke bawaan.
+- `DEFAULTS.jendela` menjadi `bulan` agar selaras dengan jendela bawaan paket OpenCode Go.
+- `pilihPaket` hanya menulis `jendela` bila preset punya `jendelaBawaan`. Preset **Kustom** memakai `jendelaBawaan: null`, sehingga beralih ke Kustom **tidak** mengatur ulang jendela pilihan user. Setelah preset dipilih, user tetap bebas mengganti Jendela.
+
+**Dasar tiap nilai jendela (dokumentasi resmi, dibaca 19 Nov 2026):**
+
+| Paket | Jendela bawaan | Dasar |
+| --- | --- | --- |
+| OpenCode Go | Per bulan | Jatah paket berupa dolar bulanan; batas 5 jam dan mingguan adalah sub-batas dari kuota bulanan tersebut (dokumentasi OpenCode Go). |
+| Claude Pro | Per 5 jam | Batas pemakaian Claude Pro dihitung per sesi 5 jam (ditambah batas mingguan) pada halaman bantuan penggunaan Claude. |
+| Claude Max 5× | Per 5 jam | Pola batas sesi yang sama dengan Claude Pro, hanya kuota per sesi lebih besar. |
+| ChatGPT Plus | Per 5 jam | Batas pemakaian Work/Codex dihitung per jendela 5 jam pada dokumentasi OpenAI Codex/ChatGPT Plus. |
+| Gemini | Per 5 jam | Batas aplikasi Gemini untuk Google AI Pro dihitung per jendela 5 jam pada halaman bantuan Google. |
+| Kustom | (tanpa bawaan) | Paket bebas: jendela milik user tidak boleh berubah hanya karena berpindah ke Kustom. |
+
+**Berkas:** `src/data/models.js` (opsi `hari`, `jendelaBawaan` per preset, komentar dasar), `src/utils/useF1State.js` (bawaan `bulan`, validasi dinamis, guard Kustom), `PROGRESS.md`, `DESIGN.md`.
+
+**Verifikasi:** `npm run build` 0 error. Aplikasi tidak dijalankan; verifikasi visual (ganti paket → Jendela ikut berubah, Kustom tidak mereset) adalah tugas user.
+
+**Status:** Selesai — commit `feat: jendela bawaan per paket + opsi Per hari (Sesi 2D-1)`.

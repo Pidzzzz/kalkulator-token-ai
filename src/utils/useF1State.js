@@ -1,18 +1,19 @@
 import { useState, useEffect, useCallback } from "react";
-import { models, presets } from "../data/models.js";
+import { jendelaOptions, models, presets } from "../data/models.js";
 
 const STORAGE_KEY = "kalkulator-f1-input";
 
 /**
  * Nilai awal: paket OpenCode Go, model Claude Sonnet 5.5 ($2/$10),
  * jatah $10, input 10.000, output 2.000.
+ * Jendela awal "bulan" mengikuti jendelaBawaan paket OpenCode Go (Sesi 2D).
  */
 const DEFAULTS = {
   paketId: "opencode-go",
   modelId: "claude-sonnet-5-5",
   jatah: "10",
   totalKuota: "50",
-  jendela: "5jam",
+  jendela: "bulan",
   tokenInput: "10000",
   tokenOutput: "2000",
 };
@@ -37,7 +38,7 @@ function bacaSimpanan() {
     const modelId = models.some((m) => m.id === data.modelId)
       ? data.modelId
       : DEFAULTS.modelId;
-    const jendela = ["5jam", "minggu", "bulan"].includes(data.jendela)
+    const jendela = jendelaOptions.some((o) => o.id === data.jendela)
       ? data.jendela
       : DEFAULTS.jendela;
 
@@ -82,7 +83,8 @@ export function useF1State() {
       paketId: preset.id,
       jatah: String(preset.jatahBawaan),
       totalKuota: String(preset.totalKuota),
-      jendela: preset.jendelaBawaan,
+      // Kustom tidak punya jendela bawaan: jangan ubah pilihan user.
+      ...(preset.jendelaBawaan ? { jendela: preset.jendelaBawaan } : {}),
     }));
   }, []);
 

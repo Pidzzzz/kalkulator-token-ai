@@ -190,3 +190,12 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - Setara select bawaan: klik pemicu membuka/menutup, klik di luar menutup, Esc menutup dan mengembalikan fokus ke pemicu, memilih baris menutup dan menerapkan nilai.
 - Keyboard: panah atas/bawah memindah baris aktif (melingkar), Enter/Spasi memilih, Home/End melompat, Tab menutup lalu melanjutkan urutan fokus, dan typeahead huruf awal (buffer 700ms; menekan huruf yang sama berulang menggulir di antara opsi berawalan huruf itu).
 - ARIA: pemicu `aria-haspopup="listbox"`, `aria-expanded`, `aria-controls`, `aria-activedescendant`; panel `role="listbox"`; baris `role="option"` + `aria-selected`.
+
+
+## 8. Jendela Bawaan per Paket + Opsi Per hari (Sesi 2D-1)
+
+- Daftar Jendela waktu berurutan: **Per 5 jam → Per hari → Per minggu → Per bulan**. Tetap satu dropdown yang sama (Sesi 2B), tanpa komponen baru.
+- Setiap preset punya `jendelaBawaan`; memilih paket mengisi Jendela dengan nilai itu. User tetap dapat menggantinya lewat dropdown setelahnya.
+- **Kustom tidak punya jendela bawaan** (`null`): berpindah ke Kustom mempertahankan jendela yang sedang dipilih, tidak mereset ke nilai paket sebelumnya.
+- Bawaan aplikasi (tanpa `localStorage`) memakai `bulan`, selaras dengan paket OpenCode Go; nilai `hari` yang tersimpan diterima validasi.
+- Nilai bawaan per paket: OpenCode Go `bulan`; Claude Pro, Claude Max 5×, ChatGPT Plus, Gemini `5jam`; Kustom tanpa perubahan.
