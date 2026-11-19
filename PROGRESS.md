@@ -57,3 +57,25 @@ pengguna di atas tata letak yang sudah terkunci.
 - **Dokumentasi:** Dicatat ke DESIGN.md dan PROGRESS.md.
 
 **Status:** ✅ Selesai — `npm run build` 0 error, siap review visual oleh user.
+
+---
+
+## Sesi 1G — Font Hangat Selaras + Pengalih Tema Ikon (19 Nov 2026)
+
+**Tujuan:** Dua penyempurnaan mikro pasca-Sesi 1E: font Fraunces diperluas ke
+judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
+
+**Cakupan:**
+- **Font Judul Panel Hangat:** Menambahkan `font-family: var(--font-heading)` ke
+  `.card__title` sehingga judul panel "Masukan" & "Hasil Perkiraan" ikut memakai
+  Fraunces di tema Hangat. Tema Gelap & Terang tidak terpengaruh (`--font-heading`
+  tetap Inter di keduanya).
+- **Pengalih Tema → Ikon:** Mengganti 3 tombol teks (`Gelap` · `Terang` · `Hangat`)
+  dengan 3 tombol ikon SVG garis gaya Lucide: bulan (Gelap), matahari (Terang),
+  kopi (Hangat). Wadah `--accent-soft`; aktif = pil `--card` ikon `--accent`;
+  nonaktif = ikon `--muted`. Tiap tombol punya `aria-label`, `title`, dan target
+  sentuh minimal 36×36 px.
+- **Dokumentasi:** Dicatat ke DESIGN.md (aturan tipografi Hangat untuk judul panel
+  + aturan pengalih tema ikon) dan PROGRESS.md.
+
+**Status:** ✅ Selesai — `npm run build` 0 error, commit `style: font Hangat selaras + pengalih tema ikon (Sesi 1G)`.

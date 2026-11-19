@@ -5,7 +5,7 @@
 
 ## 1. Sistem 3 Tema
 
-Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan melalui atribut `data-theme` di elemen `<html>`. Pengalih tema berupa 3 tombol teks kecil di kanan atas header sejajar judul (`Gelap` · `Terang` · `Hangat`), tombol aktif ditandai aksen tema tanpa ikon/badge dekoratif.
+Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan melalui atribut `data-theme` di elemen `<html>`. Pengalih tema berupa **3 tombol ikon** di kanan atas header sejajar judul. Ikon memakai SVG garis (*stroke*) gaya Lucide, tidak ada teks maupun emoji: **bulan** (moon) = Gelap, **matahari** (sun) = Terang, **kopi** (coffee) = Hangat. Wadahnya rel kecil berlatar `--accent-soft` seperti bilah tab; tombol aktif berupa pil terangkat berlatar `--card` dengan ikon berwarna `--accent`, nonaktif berwarna `--muted`. Tiap tombol wajib punya `aria-label` **dan** `title` ("Tema Gelap", "Tema Terang", "Tema Hangat") dan target sentuh minimal 36×36 px.
 
 ### Token Warna per Tema
 
@@ -40,6 +40,10 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - **Judul Halaman (H1):**
   - Tema **Gelap** & **Terang**: Inter Bold ±27px, berwarna `--ink` (**BUKAN** ungu).
   - Tema **Hangat**: Fraunces SemiBold ±27px, berwarna `--ink`.
+- **Judul Panel (`.card__title` — "Masukan", "Hasil Perkiraan"):**
+  - Tema **Gelap** & **Terang**: Inter Bold 1rem.
+  - Tema **Hangat**: **Fraunces** Bold 1rem — mengikuti `--font-heading: var(--font-serif)`.
+  - Judul panel berdiri sendiri tanpa subjudul di bawahnya (aturan anti-slop).
 - **Subjudul header:** Satu kalimat tujuan: "Terjemahkan jatah & batas paket AI menjadi angka yang bisa dibayangkan: request, token, dan perkiraan biaya."
 - **Chip status:** "web statis" · "tanpa login" · "hitung di browser" (teks polos tanpa titik hias).
 - **Hierarki warna aksen (`--accent`):** Aksen dipakai sangat hemat hanya untuk elemen fungsional kecil:

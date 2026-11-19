@@ -148,33 +148,31 @@ body {
   letter-spacing: -0.02em;
 }
 
-/* Pengalih Tema: 3 Tombol Teks di Kanan Atas (Gelap · Terang · Hangat) */
+/* Pengalih Tema: 3 Tombol Ikon (Bulan · Matahari · Kopi) */
 .theme-switcher {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
+  gap: 3px;
+  background-color: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 3px;
   user-select: none;
 }
 
-.theme-switcher__item {
+.theme-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-}
-
-.theme-btn {
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
   background: transparent;
   border: none;
-  padding: 2px 4px;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 500;
+  border-radius: calc(var(--radius-sm) - 1px);
   color: var(--muted);
   cursor: pointer;
-  border-radius: 3px;
-  transition: color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .theme-btn:hover {
@@ -182,13 +180,14 @@ body {
 }
 
 .theme-btn--active {
+  background-color: var(--card);
   color: var(--accent);
-  font-weight: 700;
+  box-shadow: var(--card-shadow);
 }
 
-.theme-switcher__sep {
-  color: var(--muted);
-  opacity: 0.6;
+.theme-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .header__subtitle {
@@ -333,6 +332,7 @@ body {
 }
 
 .card__title {
+  font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 700;
   color: var(--ink);
