@@ -59,8 +59,14 @@
 - **Struktur panel:**
   - Panel kiri: Masukan (label + nilai awal wajar).
   - Panel kanan: Hasil Perkiraan (baris datar dipisah garis rambut/hairline `--line` + strip rumus monospace + tombol "Salin hasil").
+- **Strip rumus responsif:**
+  - Konten monospace/rumus membungkus terstruktur (segmen per unsur: variabel, operator, suku dalam kurung), tanpa scroll horizontal (`overflow-x`).
+  - Di layar sempit (breakpoint kontainer/panel <=480px): rumus pecah menjadi tumpukan baris dengan indentasi menggantung (*hanging indent*) — kelanjutan baris menjorok masuk dan operator pindah ke awal baris kelanjutannya.
+  - Baris "asumsi:" dan isinya membungkus rapi sebagai teks biasa.
+  - Ukuran huruf memakai `clamp()` yang cair mengikuti lebar layar dengan LANTAI keterbacaan 12px (tidak boleh lebih kecil di ukuran layar berapa pun). Line-height di layar sempit sedikit lebih longgar agar tumpukan baris nyaman dibaca.
+  - Dilarang: scroll horizontal dalam strip, mengecilkan paksa dengan transform scale, atau menyembunyikan/memotong rumus.
 - **Footer halaman:** Penafian satu baris — "Semua hasil adalah perkiraan, bukan angka tagihan."
-- **Responsif:** Nyaman dibuka dari HP (grid 2×2 tab, input mudah disentuh) dan laptop. Tanpa sidebar.
+- **Responsif:** Nyaman dibuka dari HP (grid 2×2 tab, input mudah disentuh, rumus menumpuk rapi tanpa geser horizontal) dan laptop. Tanpa sidebar.
 
 ## 4. Perilaku
 

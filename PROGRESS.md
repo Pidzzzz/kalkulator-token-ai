@@ -13,4 +13,23 @@ hemat kata, padat (compact), dan bebas dari dekorasi berlebih (anti-slop).
 - **Aturan Scrollbar Global:** Menghilangkan scrollbar bawaan OS; area yang memerlukan scroll menggunakan scrollbar tipis selaras tema (track transparan, thumb `--line`).
 - **Target Compact (Keras):** Rapatkan ritme vertikal (padding atas ±24px, H1 ±27px, jarak seksi ±16px, padding kartu 16px, tinggi input ±37px, angka hasil ±30px). Seluruh halaman F1 (header sampai footer) muat 1 layar penuh pada laptop 1920×1080 zoom 100% tanpa scroll vertikal.
 
+**Status:** ✅ Selesai.
+
+---
+
+## Sesi 1D — Strip Rumus Responsif (19 Nov 2026)
+
+**Tujuan:** Menyusun ulang strip "RUMUS & ASUMSI" menjadi segmen-segmen terstruktur
+agar responsif di layar HP (±360px) tanpa scroll horizontal, dengan indentasi menggantung
+dan ukuran huruf cair berlantai 12px.
+
+**Cakupan Rombakan:**
+- **Segmen Terstruktur:** Rumus dipecah menjadi span per unsur (variabel, operator, suku kurung) yang siap diisi angka dinamis di sesi hitung kelak tanpa merombak struktur.
+- **Tampilan Desktop Utuh:** Pada layar lebar, rumus tetap tampil 1 baris utuh seperti sebelumnya.
+- **Tumpukan Baris di Layar Sempit (<=480px):** Rumus otomatis pecah bertumpuk dengan indentasi menggantung (*hanging indent*) — suku lanjutan menjorok masuk dan operator berada di awal baris kelanjutannya.
+- **Asumsi Membungkus Rapi:** Bagian "asumsi:" membungkus alami sebagai teks biasa.
+- **Ukuran Huruf Cair Berlantai 12px:** Memakai `clamp(12px, 0.72rem + 0.25vw, 13px)` sehingga tidak akan pernah mengecil di bawah 12px di layar mana pun, dengan line-height yang lebih longgar saat bertumpuk.
+- **Bebas Scroll Horizontal:** Dihapus `overflow-x: auto`; seluruh rumus terbaca penuh di lebar 360px tanpa geser horizontal atau pemotongan teks.
+- **Dokumentasi:** Dicatat ke DESIGN.md dan PROGRESS.md.
+
 **Status:** ✅ Selesai — `npm run build` 0 error, siap review visual oleh user.

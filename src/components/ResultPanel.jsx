@@ -39,17 +39,67 @@ export default function ResultPanel() {
 
       <div className="formula-strip">
         <div className="formula-strip__title">RUMUS &amp; ASUMSI</div>
-        <pre className="formula-strip__pre">
-          <code className="formula-strip__code">
-{`request = jatah ÷ biaya_per_request
-biaya_per_request = (input × harga_input) + (output × harga_output)
+        <div className="formula-strip__body">
+          <div className="formula-line">
+            <span className="formula-lhs">
+              <span className="formula-var">request</span>
+              <span className="formula-op">=</span>
+            </span>
+            <span className="formula-rhs">
+              <span className="formula-term">
+                <span className="formula-var">jatah</span>
+                <span className="formula-op">÷</span>
+                <span className="formula-var">biaya_per_request</span>
+              </span>
+            </span>
+          </div>
 
-asumsi:
-  input  = ~8.000 token/request ($3.00 / 1jt)
-  output = ~2.000 token/request ($15.00 / 1jt)
-  biaya/request ≈ $0.054`}
-          </code>
-        </pre>
+          <div className="formula-line">
+            <span className="formula-lhs">
+              <span className="formula-var">biaya_per_request</span>
+              <span className="formula-op">=</span>
+            </span>
+            <span className="formula-rhs">
+              <span className="formula-term">
+                <span className="formula-paren">(</span>
+                <span className="formula-var">input</span>
+                <span className="formula-op">×</span>
+                <span className="formula-var">harga_input</span>
+                <span className="formula-paren">)</span>
+              </span>
+              <span className="formula-term formula-term--continuation">
+                <span className="formula-op">+</span>
+                <span className="formula-paren">(</span>
+                <span className="formula-var">output</span>
+                <span className="formula-op">×</span>
+                <span className="formula-var">harga_output</span>
+                <span className="formula-paren">)</span>
+              </span>
+            </span>
+          </div>
+
+          <div className="formula-assumptions">
+            <div className="formula-assumptions__title">asumsi:</div>
+            <div className="formula-assumptions__item">
+              <span className="formula-assumptions__indent" aria-hidden="true">  </span>
+              <span className="formula-assumptions__key">input</span>
+              <span className="formula-op">=</span>
+              <span className="formula-assumptions__val">~8.000 token/request ($3.00 / 1jt)</span>
+            </div>
+            <div className="formula-assumptions__item">
+              <span className="formula-assumptions__indent" aria-hidden="true">  </span>
+              <span className="formula-assumptions__key">output</span>
+              <span className="formula-op">=</span>
+              <span className="formula-assumptions__val">~2.000 token/request ($15.00 / 1jt)</span>
+            </div>
+            <div className="formula-assumptions__item">
+              <span className="formula-assumptions__indent" aria-hidden="true">  </span>
+              <span className="formula-assumptions__key">biaya/request</span>
+              <span className="formula-op">≈</span>
+              <span className="formula-assumptions__val">$0.054</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <button

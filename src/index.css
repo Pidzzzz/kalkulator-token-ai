@@ -1,5 +1,5 @@
 /* ============================================================
-   Kalkulator Token & Request AI — Global Styles (Sesi 1C: Anti-Slop Compact)
+   Kalkulator Token & Request AI — Global Styles (Sesi 1D: Strip Rumus Responsif)
    8 Token Asli DESIGN.md | Datar, Rapat, Hemat Kata, Tanpa Slop
    ============================================================ */
 
@@ -226,6 +226,8 @@ body {
 }
 
 .card {
+  container-type: inline-size;
+  container-name: card;
   background-color: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -375,7 +377,7 @@ body {
   color: var(--muted);
 }
 
-/* ---- Strip Rumus Ringkas ---- */
+/* ---- Strip Rumus Responsif (Sesi 1D: Segmen Terstruktur, Tanpa Scroll Horizontal) ---- */
 .formula-strip {
   background-color: var(--accent-soft);
   border-radius: var(--radius-sm);
@@ -392,17 +394,141 @@ body {
   margin-block-end: 4px;
 }
 
-.formula-strip__pre {
-  margin: 0;
-  overflow-x: auto;
-}
-
-.formula-strip__code {
+.formula-strip__body {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  /* Huruf cair dengan LANTAI keterbacaan 12px */
+  font-size: clamp(12px, 0.72rem + 0.2vw, 13px);
   color: var(--ink);
   line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.formula-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.35em;
+}
+
+.formula-lhs {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  white-space: nowrap;
+}
+
+.formula-rhs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.35em;
+}
+
+.formula-term {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2em;
+  white-space: nowrap;
+}
+
+.formula-op {
+  color: var(--accent-light);
+}
+
+.formula-paren {
+  color: var(--muted);
+}
+
+.formula-assumptions {
+  margin-block-start: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.formula-assumptions__title {
+  color: var(--muted);
+  font-size: inherit;
+}
+
+.formula-assumptions__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.35em;
+}
+
+.formula-assumptions__indent {
   white-space: pre;
+}
+
+.formula-assumptions__key {
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.formula-assumptions__val {
+  color: var(--ink);
+  word-break: break-word;
+}
+
+/* Penyesuaian Layar Sempit (<=480px): Indentasi Menggantung & Line-Height Longgar */
+@container card (max-width: 480px) {
+  .formula-strip__body {
+    line-height: 1.6;
+    gap: 6px;
+  }
+
+  .formula-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+  }
+
+  .formula-rhs {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-inline-start: 1.25em; /* Indentasi menggantung */
+    gap: 1px;
+  }
+
+  .formula-assumptions__item {
+    padding-inline-start: 1em;
+  }
+
+  .formula-assumptions__indent {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .formula-strip__body {
+    line-height: 1.6;
+    gap: 6px;
+  }
+
+  .formula-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+  }
+
+  .formula-rhs {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-inline-start: 1.25em; /* Indentasi menggantung */
+    gap: 1px;
+  }
+
+  .formula-assumptions__item {
+    padding-inline-start: 1em;
+  }
+
+  .formula-assumptions__indent {
+    display: none;
+  }
 }
 
 /* ---- Tombol Salin (Tinggi ±36px) ---- */
