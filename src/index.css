@@ -1,29 +1,58 @@
 /* ============================================================
    Kalkulator Token & Request AI — Global Styles
-   Token: DESIGN.md | Panduan: Modern Web Guidance (Baseline 2024)
+   Baseline 2026 | Anti-Slop Violet Aesthetic (Matte, Calm & Focused)
    ============================================================ */
 
-:root {
-  --bg: #0D0D12;
-  --card: #17171F;
-  --line: #38364A;
-  --ink: #EEEBE6;
-  --muted: #A39DAF;
-  --accent: #7C5CFF;
-  --accent-light: #B197FF;
-  --accent-soft: #241D40;
+/* Baseline 2026: Custom property registration for smooth scroll-driven mask animations */
+@property --fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
 
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+@property --fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+:root {
+  /* Palet Dasar: Deep Obsidian & Matte Graphite (Nyaman di mata, tanpa glare) */
+  --bg: #0C0C11;
+  --card: #15151F;
+  --card-elevated: #1A1A26;
+  --line: #2A283A;
+  --line-strong: #3D3A52;
+
+  /* Tipografi: Warm off-white & Lavender-slate */
+  --ink: #EEEBE6;
+  --ink-secondary: #C8C4D4;
+  --muted: #9A94A8;
+  --muted-soft: #6E687D;
+
+  /* Aksen Ungu: Iris-Violet (Hemat, presisi, anti-slop) */
+  --accent: #7C5CFF;
+  --accent-hover: #8F72FF;
+  --accent-light: #BAA3FF;
+  --accent-soft: #201A36;
+  --accent-border: #3A305D;
+
+  /* Font */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "Fira Code", monospace;
 
-  --radius: 10px;
-  --radius-sm: 6px;
-  --space-xs: 6px;
-  --space-sm: 10px;
+  /* Spasi & Bentuk */
+  --radius: 12px;
+  --radius-sm: 7px;
+  --radius-full: 999px;
+
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
   --space-md: 16px;
   --space-lg: 24px;
-  --space-xl: 32px;
-  --space-2xl: 48px;
+  --space-xl: 36px;
+  --space-2xl: 52px;
 
   color-scheme: dark;
 }
@@ -41,6 +70,7 @@ html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -49,14 +79,16 @@ body {
   color: var(--ink);
   line-height: 1.6;
   min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ---- Page shell ---- */
+/* ---- Page Shell ---- */
 .page {
   max-width: 960px;
   margin-inline: auto;
   padding-inline: var(--space-md);
-  padding-block: var(--space-lg);
+  padding-block: var(--space-xl);
 }
 
 @media (min-width: 640px) {
@@ -75,6 +107,7 @@ body {
   font-family: var(--font-sans);
   font-weight: 700;
   font-size: 1.75rem;
+  letter-spacing: -0.02em;
   line-height: 1.25;
   color: var(--accent);
   margin-block-end: var(--space-xs);
@@ -82,15 +115,16 @@ body {
 
 @media (min-width: 640px) {
   .header__title {
-    font-size: 2.125rem;
+    font-size: 2.15rem;
   }
 }
 
 .header__subtitle {
   color: var(--muted);
   font-size: 0.938rem;
+  line-height: 1.55;
   margin-block-end: var(--space-md);
-  max-width: 65ch;
+  max-width: 62ch;
 }
 
 .header__chips {
@@ -102,18 +136,19 @@ body {
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--accent-light);
   background-color: var(--accent-soft);
-  padding-inline: 10px;
+  border: 1px solid var(--accent-border);
+  padding-inline: 11px;
   padding-block: 4px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   white-space: nowrap;
 }
 
-/* ---- Module tabs (Tabs Guide: single-row scroll, button primitives) ---- */
+/* ---- Module Tabs (Baseline 2026: Scroll-Driven Fade Animation) ---- */
 .module-tabs {
   display: flex;
   flex-wrap: nowrap;
@@ -123,8 +158,30 @@ body {
   scrollbar-color: var(--line) transparent;
   gap: var(--space-xs);
   margin-block-end: var(--space-lg);
-  padding-block-end: 4px;
+  padding-block: 2px;
   -webkit-overflow-scrolling: touch;
+
+  /* Scroll-driven edge masking (Baseline 2026) */
+  --fade-size: 2rem;
+  mask:
+    linear-gradient(black, black) no-clip subtract,
+    linear-gradient(to right, black, transparent) 0 0 / var(--fade-start) 100% no-repeat no-clip,
+    linear-gradient(to right, transparent, black) 100% 0 / var(--fade-end) 100% no-repeat no-clip;
+  animation: reveal-fade-start linear both, hide-fade-end linear both;
+  animation-timeline: scroll(self inline);
+  animation-range: 0 var(--fade-size), calc(100% - var(--fade-size)) 100%;
+}
+
+@keyframes reveal-fade-start {
+  to {
+    --fade-start: var(--fade-size);
+  }
+}
+
+@keyframes hide-fade-end {
+  from {
+    --fade-end: var(--fade-size);
+  }
 }
 
 .module-tab {
@@ -134,9 +191,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 40px;
-  padding-inline: 14px;
-  padding-block: 8px;
+  min-height: 42px;
+  padding-inline: 15px;
+  padding-block: 9px;
   font-family: var(--font-sans);
   font-size: 0.875rem;
   font-weight: 600;
@@ -145,13 +202,14 @@ body {
   background-color: var(--card);
   color: var(--muted);
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
   user-select: none;
 }
 
 .module-tab:hover {
-  border-color: var(--muted);
+  border-color: var(--line-strong);
   color: var(--ink);
+  background-color: var(--card-elevated);
 }
 
 .module-tab:focus-visible {
@@ -159,17 +217,18 @@ body {
   outline-offset: 2px;
 }
 
-/* Selected tab styled via [aria-selected="true"] with shape + color (WCAG 1.4.1) */
+/* Tab Aktif: Dipandu atribut ARIA, tegas tanpa color-only (WCAG 1.4.1) */
 .module-tab[aria-selected="true"] {
   border-color: var(--accent);
   color: var(--ink);
+  background-color: var(--card);
 }
 
 .module-tab[aria-selected="true"]::after {
   content: "";
   position: absolute;
   inset-block-end: -1px;
-  inset-inline: 12px;
+  inset-inline: 14px;
   border-block-end: 2px solid var(--accent);
 }
 
@@ -183,9 +242,10 @@ body {
   font-weight: 700;
   padding-inline: 7px;
   padding-block: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background-color: var(--accent-soft);
   color: var(--accent-light);
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .module-tab__text {
@@ -195,13 +255,12 @@ body {
 .module-tab__soon {
   font-size: 0.688rem;
   font-weight: 500;
-  color: var(--muted);
-  opacity: 0.7;
+  color: var(--muted-soft);
   font-style: italic;
   margin-inline-start: 2px;
 }
 
-/* ---- Card (Card Guide: <article> root, container-type) ---- */
+/* ---- Card Container (Modern Web Guidance: <article> root + container queries) ---- */
 .card {
   container-type: inline-size;
   container-name: card;
@@ -215,9 +274,11 @@ body {
 
 .card__header {
   margin-block-end: var(--space-md);
+  border-block-end: 1px solid var(--line);
+  padding-block-end: var(--space-sm);
 }
 
-/* ---- Main Panel & F1 Layout (CSS Layout Guide: grid 2D) ---- */
+/* ---- Panel Utama & F1 2D Grid ---- */
 .main-panel {
   outline: none;
 }
@@ -234,13 +295,14 @@ body {
   }
 }
 
-/* ---- Input Panel (Forms Guide: min 48px touch, semantic form, no iOS zoom) ---- */
+/* ---- Panel Masukan ---- */
 .input-panel__title,
 .result-panel__title {
   font-family: var(--font-sans);
   font-weight: 700;
   font-size: 1.125rem;
   color: var(--ink);
+  letter-spacing: -0.01em;
 }
 
 .input-form {
@@ -252,20 +314,20 @@ body {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: var(--space-2xs);
 }
 
 .form-label {
   font-size: 0.813rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--ink-secondary);
 }
 
 .form-input,
 .form-select {
   width: 100%;
   min-height: 44px;
-  padding-inline: 12px;
+  padding-inline: 13px;
   padding-block: 10px;
   font-family: var(--font-sans);
   font-size: max(1rem, 1em); /* Mencegah auto-zoom di browser iOS */
@@ -274,13 +336,13 @@ body {
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   outline: none;
-  transition: border-color 0.15s, outline-color 0.15s;
+  transition: border-color 0.15s ease, outline-color 0.15s ease, background-color 0.15s ease;
   box-sizing: border-box;
 }
 
 .form-input:hover,
 .form-select:hover {
-  border-color: var(--muted);
+  border-color: var(--line-strong);
 }
 
 .form-input:focus-visible,
@@ -293,18 +355,19 @@ body {
 .form-select {
   appearance: none;
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23A39DAF'%3E%3Cpath d='M6 8.5 1 3.5h10z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239A94A8'%3E%3Cpath d='M6 8.5 1 3.5h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
-  padding-inline-end: 36px;
+  padding-inline-end: 38px;
 }
 
 .form-hint {
   font-size: 0.75rem;
   color: var(--muted);
+  line-height: 1.4;
 }
 
-/* ---- Result Panel ---- */
+/* ---- Panel Hasil ---- */
 .result-items {
   display: flex;
   flex-direction: column;
@@ -323,20 +386,21 @@ body {
   font-weight: 600;
   color: var(--accent-light);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .result-item__value {
   font-family: var(--font-sans);
   font-size: 1.875rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--accent);
   line-height: 1.2;
 }
 
 @container card (min-width: 380px) {
   .result-item__value {
-    font-size: 2.125rem;
+    font-size: 2.15rem;
   }
 }
 
@@ -346,18 +410,20 @@ body {
   font-weight: 600;
   color: var(--muted);
   background-color: var(--accent-soft);
-  padding-inline: 6px;
+  border: 1px solid var(--accent-border);
+  padding-inline: 7px;
   padding-block: 2px;
-  border-radius: 4px;
-  margin-inline-start: 8px;
+  border-radius: var(--radius-sm);
+  margin-inline-start: 10px;
   vertical-align: super;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-/* ---- Formula strip (Monospace, selalu terlihat) ---- */
+/* ---- Strip Rumus (Monospace, Transparan Terbuka) ---- */
 .formula-strip {
   background-color: var(--accent-soft);
+  border: 1px solid var(--accent-border);
   border-radius: var(--radius-sm);
   padding: var(--space-sm) var(--space-md);
   margin-block-end: var(--space-lg);
@@ -368,7 +434,7 @@ body {
   font-weight: 600;
   color: var(--accent-light);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   margin-block-end: var(--space-xs);
 }
 
@@ -376,7 +442,7 @@ body {
   margin: 0;
   overflow-x: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--line) transparent;
+  scrollbar-color: var(--accent-border) transparent;
 }
 
 .formula-strip__code {
@@ -387,7 +453,7 @@ body {
   white-space: pre;
 }
 
-/* ---- Copy button (Copy Button Guide: touch target, semantic status) ---- */
+/* ---- Tombol Salin (Touch Target Aman, Fokus Tegas) ---- */
 .copy-action-wrapper {
   display: flex;
   align-items: center;
@@ -401,7 +467,7 @@ body {
   justify-content: center;
   gap: 8px;
   min-height: 44px;
-  min-inline-size: 120px;
+  min-inline-size: 130px;
   padding-inline: 20px;
   padding-block: 10px;
   font-family: var(--font-sans);
@@ -412,12 +478,12 @@ body {
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
   user-select: none;
 }
 
 .btn-copy:hover:not(:disabled) {
-  opacity: 0.9;
+  background-color: var(--accent-hover);
 }
 
 .btn-copy:disabled {
@@ -450,4 +516,5 @@ body {
 .footer__text {
   font-size: 0.813rem;
   color: var(--muted);
+  line-height: 1.5;
 }

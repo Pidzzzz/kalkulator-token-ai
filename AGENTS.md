@@ -9,11 +9,12 @@
 
 ## Baseline
 
-This project's Baseline target is Baseline 2024.
+This project's Baseline target is Baseline 2026.
 
 Skill **Modern Web Guidance** sudah terpasang untuk proyek ini lewat wizard resminya
 (`npx modern-web-guidance@latest install`). Pakai panduannya saat memilih pola HTML/CSS
-dan sediakan fallback untuk browser yang belum mendukung.
+dan manfaatkan kapabilitas modern Baseline 2026 (seperti CSS scroll-driven animations,
+container queries, native popover/invokers, logical properties) dengan fallback terukur.
 
 ## Struktur proyek
 
