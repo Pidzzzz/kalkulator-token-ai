@@ -10,12 +10,18 @@ export default function App() {
       <Header />
       <ModuleTabs />
 
-      <section aria-label="Modul F1 — Penerjemah Batas">
+      <main
+        id="panel-f1"
+        role="tabpanel"
+        aria-labelledby="tab-f1"
+        tabIndex={0}
+        className="main-panel"
+      >
         <div className="module-f1">
           <InputPanel />
           <ResultPanel />
         </div>
-      </section>
+      </main>
 
       <Footer />
     </div>

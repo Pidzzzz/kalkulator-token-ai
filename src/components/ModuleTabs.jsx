@@ -7,20 +7,26 @@ const MODULES = [
 
 export default function ModuleTabs() {
   return (
-    <nav className="module-tabs" aria-label="Pilih modul">
+    <div
+      className="module-tabs"
+      role="tablist"
+      aria-label="Pilihan modul kalkulator token"
+    >
       {MODULES.map((m) => (
-        <div
+        <button
           key={m.id}
-          className={`module-tab${m.active ? " module-tab--active" : ""}`}
+          type="button"
           role="tab"
+          id={`tab-${m.id.toLowerCase()}`}
           aria-selected={m.active}
           tabIndex={m.active ? 0 : -1}
+          className="module-tab"
         >
           <span className="module-tab__badge">{m.id}</span>
-          <span>{m.label}</span>
+          <span className="module-tab__text">{m.label}</span>
           {!m.active && <span className="module-tab__soon">segera</span>}
-        </div>
+        </button>
       ))}
-    </nav>
+    </div>
   );
 }

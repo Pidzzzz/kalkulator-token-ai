@@ -11,6 +11,7 @@ sungguhan.
 - Dokumen proyek: AGENTS.md, PROGRESS.md.
 - Halaman statis satu halaman: header, pemilih modul F1–F4, panel F1 (input + hasil contoh statis), footer.
 - Token DESIGN.md diterapkan persis: warna, tipografi Inter, monospace rumus.
+- Penyesuaian Modern Web Guidance (Baseline 2024): semantik `<article>` card, container queries, pola ARIA `tablist`/`tabpanel` dengan native `<button>`, pencegahan iOS zoom (`font-size: max(1rem, 1em)`), minimum touch target 44px, dan `scrollbar-gutter: stable`.
 - Logika hitung BELUM dibuat — angka yang tampil adalah contoh statis.
 - Konfigurasi GitHub Pages (workflow deploy otomatis).
 

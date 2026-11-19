@@ -1,7 +1,9 @@
 export default function ResultPanel() {
   return (
-    <div className="card">
-      <h2 className="result-panel__title">Hasil Perkiraan</h2>
+    <article className="card result-panel">
+      <header className="card__header">
+        <h2 className="result-panel__title">Hasil Perkiraan</h2>
+      </header>
 
       <div className="result-items">
         <div className="result-item">
@@ -31,7 +33,8 @@ export default function ResultPanel() {
 
       <div className="formula-strip">
         <div className="formula-strip__title">Rumus &amp; Asumsi</div>
-        <code className="formula-strip__code">
+        <pre className="formula-strip__pre">
+          <code className="formula-strip__code">
 {`request = jatah ÷ biaya_per_request
 biaya_per_request = (input × harga_input) + (output × harga_output)
 
@@ -41,34 +44,44 @@ asumsi:
   harga input  = $3.00 / 1jt token
   harga output = $15.00 / 1jt token
   biaya/request ≈ $0.054 + $0.030 = $0.06`}
-        </code>
+          </code>
+        </pre>
       </div>
 
-      <button className="btn-copy" type="button" disabled>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          aria-hidden="true"
+      <div className="copy-action-wrapper">
+        <button
+          className="btn-copy"
+          type="button"
+          disabled
+          aria-label="Salin hasil perkiraan"
         >
-          <rect
-            x="5"
-            y="5"
-            width="9"
-            height="9"
-            rx="1.5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          />
-          <path
-            d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          />
-        </svg>
-        Salin hasil
-      </button>
-    </div>
+          <svg
+            className="btn-copy__icon"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="5"
+              y="5"
+              width="9"
+              height="9"
+              rx="1.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+            <path
+              d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+          </svg>
+          <span>Salin hasil</span>
+        </button>
+        <span className="copy-status" role="status" aria-live="polite"></span>
+      </div>
+    </article>
   );
 }
