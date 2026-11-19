@@ -10,7 +10,9 @@ export default function ResultPanel() {
             <span className="result-row__label">REQUEST TERJANGKAU</span>
           </div>
           <div className="result-row__value-wrap">
-            <span className="result-row__value result-row__value--accent">~167</span>
+            <span className="result-row__value result-row__value--accent">
+              ~167
+            </span>
             <span className="result-row__unit">request</span>
             <span className="estimate-pill">ESTIMASI</span>
           </div>
@@ -53,86 +55,6 @@ export default function ResultPanel() {
           <div className="result-row__value-wrap">
             <span className="result-row__value">$10.00</span>
           </div>
-        </div>
-      </div>
-
-      {/* Strip Rumus: Versi Segmen Monospace (Gelap & Terang) + Versi Prosa (Hangat) */}
-      <div className="formula-strip">
-        <div className="formula-strip__title">RUMUS &amp; ASUMSI</div>
-
-        {/* Tampilan Monospace untuk Gelap & Terang */}
-        <div className="formula-strip__code-view">
-          <div className="formula-line">
-            <span className="formula-lhs">
-              <span className="formula-var">request</span>
-              <span className="formula-op">=</span>
-            </span>
-            <span className="formula-rhs">
-              <span className="formula-term">
-                <span className="formula-var">jatah</span>
-                <span className="formula-op">÷</span>
-                <span className="formula-var">biaya_per_request</span>
-              </span>
-            </span>
-          </div>
-
-          <div className="formula-line">
-            <span className="formula-lhs">
-              <span className="formula-var">biaya_per_request</span>
-              <span className="formula-op">=</span>
-            </span>
-            <span className="formula-rhs">
-              <span className="formula-term">
-                <span className="formula-paren">(</span>
-                <span className="formula-var">input</span>
-                <span className="formula-op">×</span>
-                <span className="formula-var">harga_input</span>
-                <span className="formula-paren">)</span>
-              </span>
-              <span className="formula-term formula-term--continuation">
-                <span className="formula-op">+</span>
-                <span className="formula-paren">(</span>
-                <span className="formula-var">output</span>
-                <span className="formula-op">×</span>
-                <span className="formula-var">harga_output</span>
-                <span className="formula-paren">)</span>
-              </span>
-            </span>
-          </div>
-
-          <div className="formula-assumptions">
-            <div className="formula-assumptions__title">asumsi:</div>
-            <div className="formula-assumptions__item">
-              <span className="formula-assumptions__indent" aria-hidden="true">  </span>
-              <span className="formula-assumptions__key">input</span>
-              <span className="formula-op">=</span>
-              <span className="formula-assumptions__val">~8.000 token/request ($3.00 / 1jt)</span>
-            </div>
-            <div className="formula-assumptions__item">
-              <span className="formula-assumptions__indent" aria-hidden="true">  </span>
-              <span className="formula-assumptions__key">output</span>
-              <span className="formula-op">=</span>
-              <span className="formula-assumptions__val">~2.000 token/request ($15.00 / 1jt)</span>
-            </div>
-            <div className="formula-assumptions__item">
-              <span className="formula-assumptions__indent" aria-hidden="true">  </span>
-              <span className="formula-assumptions__key">biaya/request</span>
-              <span className="formula-op">≈</span>
-              <span className="formula-assumptions__val">$0.054</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Tampilan Prosa untuk Hangat (Editorial C) */}
-        <div className="formula-strip__prose-view">
-          <p className="formula-prose__text">
-            Rumus: request = jatah ÷ biaya_per_request, dengan biaya_per_request =
-            (input × harga_input) + (output × harga_output).
-          </p>
-          <p className="formula-prose__assumptions">
-            Asumsi dasar: input ~8.000 token/request ($3.00/1jt), output ~2.000
-            token/request ($15.00/1jt), dengan perkiraan biaya ~$0.054 per request.
-          </p>
         </div>
       </div>
 

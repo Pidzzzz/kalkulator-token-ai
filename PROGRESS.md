@@ -119,3 +119,28 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
 - **Dokumentasi:** Dicatat ke DESIGN.md dan PROGRESS.md.
 
 **Status:** ✅ Selesai — `npm run build` 0 error, commit `feat: navigasi dock melayang (Sesi 1H)`.
+
+---
+
+## Sesi 1I — Rumus & Asumsi Lebar Penuh + Sakelar Angka (19 Nov 2026)
+
+**Tujuan:** Memindahkan blok "Rumus & Asumsi" keluar dari kartu Hasil Perkiraan menjadi bagian mandiri selebar penuh di bawah kedua panel, menampilkannya sebagai baris kode bernomor dengan sakelar "Simbol | Dengan angka", serta menyediakan tabel asumsi tiga kolom bebas scroll horizontal.
+
+**Cakupan Rombakan:**
+- **Penempatan Mandiri:** Blok Rumus & Asumsi dikeluarkan dari kartu Hasil Perkiraan menjadi komponen `FormulaSection` selebar penuh wadah di bawah `module-f1` dan di atas footer, menyatu dengan latar belakang dan dipisahkan garis rambut `--line`. Kartu Hasil kini murni berisi angka hasil, bar Pemakaian Jatah, dan tombol salin.
+- **Rumus = Baris Kode Bernomor:**
+  - Menampilkan baris kode monospace bernomor (nomor baris di kiri berwarna `--muted`), tetap mempertahankan aturan pembungkusan responsif dengan indentasi menggantung (Sesi 1D).
+  - Pada tema Hangat, rumus tetap disajikan sebagai format prosa editorial alami.
+- **Sakelar "Simbol | Dengan angka":**
+  - Sakelar segmented ringkas di kanan atas blok rumus (aktif berlatar solid `--accent` teks `--on-accent`, nonaktif transparan teks `--muted`).
+  - Mode *Simbol* (bawaan) menampilkan rumus simbolik murni.
+  - Mode *Dengan angka* menampilkan rumus dengan angka contoh riil terpasang serta hasil antara tebal berwarna `--accent-light`:
+    - `biaya_per_request = (10.000 × $3 + 2.000 × $15) ÷ 1.000.000 = $0,06`
+    - `request = $10 ÷ $0,06 = 167`
+  - Sakelar disembunyikan otomatis pada tema Hangat.
+- **Tabel Asumsi Tiga Kolom:**
+  - Menampilkan 3 kolom: *Parameter* (mono), *Nilai* (mono bold `--accent-light`), dan *Keterangan* (`--muted`) untuk parameter acuan `input`, `output`, dan `jatah`.
+  - Responsif tanpa scroll horizontal: Pada layar sempit/HP (<=520px), tiap baris otomatis menumpuk (*stacked*): parameter dan nilai berdampingan di baris atas, keterangan di bawahnya.
+- **Dokumentasi:** Dicatat ke DESIGN.md dan PROGRESS.md.
+
+**Status:** ✅ Selesai — `npm run build` 0 error, commit `style: rumus & asumsi lebar penuh + sakelar angka (Sesi 1I)`.

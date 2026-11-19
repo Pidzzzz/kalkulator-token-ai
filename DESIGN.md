@@ -74,19 +74,33 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - **Bar pemakaian jatah (Ref B):**
   - Terletak di panel hasil tepat di bawah angka utama.
   - Berisi baris kecil "PEMAKAIAN JATAH" + nilai contoh "$10 dari $100" + rel tipis dengan isian `--accent` selebar 10% (contoh statis; dihubungkan ke logika hitung di sesi fungsi).
-- **Strip rumus:**
-  - Tema **Gelap** & **Terang**: strip monospace terpecah segmen terstruktur (Sesi 1D), membungkus rapi dengan indentasi menggantung di layar sempit, huruf cair `clamp()` berlantai 12px, tanpa scroll horizontal.
-  - Tema **Hangat**: tampil sebagai paragraf prosa biasa (bukan monospace):  
-    *"Rumus: request = jatah ÷ biaya_per_request, dengan biaya_per_request = (input × harga_input) + (output × harga_output)."*  
-    plus baris asumsi dasar sebagai kalimat biasa.
+- **Bagian Rumus & Asumsi Lebar Penuh (Sesi 1I):**
+  - Terletak mandiri selebar penuh di bawah kedua panel (Masukan + Hasil Perkiraan) dan di atas footer.
+  - Menyatu dengan latar belakang (tanpa kotak berlatar warna), dipisah garis rambut `--line`, dengan label kecil `"RUMUS & ASUMSI"` di kiri atas.
+  - **Rumus = Baris Kode Bernomor:**
+    - Monospace bernomor baris (nomor baris `--muted` di kiri: `1`, `2`).
+    - Menggunakan variabel & struktur segmen terstruktur; di layar sempit membungkus rapi dengan indentasi menggantung (aturan Sesi 1D), bebas scroll horizontal.
+    - Pada tema **Hangat**, rumus tetap ditampilkan dalam format prosa editorial tanpa sakelar angka.
+  - **Sakelar "Simbol | Dengan angka":**
+    - Sakelar segmented kecil di kanan atas blok rumus (aktif = solid `--accent`, teks `--on-accent`, tanpa gradasi/glow).
+    - Mode *Simbol* (bawaan) menampilkan rumus simbolik.
+    - Mode *Dengan angka* menampilkan baris perhitungan dengan nilai contoh terpasang serta hasil antara tebal berwarna `--accent-light`:
+      - `biaya_per_request = (10.000 × $3 + 2.000 × $15) ÷ 1.000.000 = $0,06`
+      - `request = $10 ÷ $0,06 = 167`
+    - Sakelar tidak berlaku / disembunyikan pada tema Hangat.
+  - **Tabel Asumsi Tiga Kolom:**
+    - Memuat 3 kolom: *Parameter* (monospace), *Nilai* (monospace tebal `--accent-light`), dan *Keterangan* (`--muted`).
+    - Baris dipisah garis rambut `--line`.
+    - Bebas scroll horizontal: pada layar sempit/HP, tiap baris otomatis menumpuk (parameter + nilai sebaris, keterangan di bawahnya).
+    - Berisi parameter acuan `input`, `output`, dan `jatah`.
 - **Aturan scrollbar global:**
   - Tidak ada scrollbar bawaan OS yang tampil.
   - Area yang kelak membutuhkan scroll memakai scrollbar tipis selaras tema (track transparan, thumb `--line`) via CSS global.
 - **Struktur panel:**
   - Panel kiri: Masukan (label + nilai awal wajar).
-  - Panel kanan: Hasil Perkiraan (baris datar dipisah hairline `--line` + bar pemakaian + strip rumus + tombol "Salin hasil").
+  - Panel kanan: Hasil Perkiraan (baris datar dipisah hairline `--line` + bar Pemakaian Jatah + tombol "Salin hasil"). Blok Rumus & Asumsi keluar menjadi bagian mandiri di bawahnya.
 - **Footer halaman:** Penafian satu baris — "Semua hasil adalah perkiraan, bukan angka tagihan."
-- **Responsif:** Nyaman dibuka dari HP (grid 2×2 tab, input mudah disentuh, rumus bebas geser horizontal) dan laptop. Tanpa sidebar.
+- **Responsif:** Nyaman dibuka dari HP (dock melayang, input mudah disentuh, rumus & tabel asumsi bebas geser horizontal) dan laptop. Tanpa sidebar.
 
 ## 4. Perilaku
 

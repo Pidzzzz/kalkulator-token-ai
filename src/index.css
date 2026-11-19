@@ -586,35 +586,105 @@ body {
   transition: width 0.3s ease;
 }
 
-/* ---- Strip Rumus: Versi Monospace (Gelap & Terang) + Prosa (Hangat) ---- */
-.formula-strip {
-  background-color: var(--accent-soft);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
+/* ---- 5. Bagian Rumus & Asumsi Lebar Penuh (Sesi 1I) ---- */
+.formula-section {
+  width: 100%;
+  margin-block-start: 18px;
+  padding-block-start: 14px;
+  border-block-start: 1px solid var(--line);
+}
+
+.formula-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-block-end: 12px;
 }
 
-.formula-strip__title {
-  font-size: 0.625rem;
+.formula-section__label {
+  font-family: var(--font-sans);
+  font-size: 0.688rem;
   font-weight: 700;
   color: var(--accent-light);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  margin-block-end: 4px;
+  margin: 0;
 }
 
-/* Versi Monospace Tersegmentasi (Sesi 1D Responsif) */
-.formula-strip__code-view {
+/* Sakelar Segmented: Simbol | Dengan angka */
+.formula-mode-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background-color: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  user-select: none;
+}
+
+.formula-mode-btn {
+  font-family: var(--font-sans);
+  font-size: 0.688rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border: none;
+  border-radius: calc(var(--radius-sm) - 1px);
+  background-color: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.formula-mode-btn:hover {
+  color: var(--ink);
+}
+
+.formula-mode-btn--active {
+  background-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.formula-mode-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* Sembunyikan sakelar di Tema Hangat (aturan Sesi 1E / 1I) */
+[data-theme="hangat"] .formula-mode-switch {
+  display: none;
+}
+
+/* Tampilan Baris Kode Bernomor (Gelap & Terang) */
+.formula-code-view {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-block-end: 16px;
+}
+
+.code-line {
+  display: flex;
+  align-items: baseline;
   font-family: var(--font-mono);
   font-size: clamp(12px, 0.72rem + 0.2vw, 13px);
   color: var(--ink);
-  line-height: 1.45;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+  line-height: 1.5;
 }
 
-.formula-line {
+.code-line__num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  opacity: 0.7;
+  user-select: none;
+  width: 1.5em;
+  text-align: right;
+  margin-inline-end: 0.75em;
+  flex-shrink: 0;
+}
+
+.code-line__content {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -642,6 +712,11 @@ body {
   white-space: nowrap;
 }
 
+.formula-term--continuation,
+.formula-term--result {
+  margin-inline-start: 0.1em;
+}
+
 .formula-op {
   color: var(--accent-light);
 }
@@ -650,56 +725,35 @@ body {
   color: var(--muted);
 }
 
-.formula-assumptions {
-  margin-block-start: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.formula-assumptions__title {
-  color: var(--muted);
-  font-size: inherit;
-}
-
-.formula-assumptions__item {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0 0.35em;
-}
-
-.formula-assumptions__indent {
-  white-space: pre;
-}
-
-.formula-assumptions__key {
+.formula-var {
   color: var(--ink);
-  white-space: nowrap;
 }
 
-.formula-assumptions__val {
+.formula-num {
   color: var(--ink);
-  word-break: break-word;
 }
 
-/* Versi Prosa Biasa (Khusus Tema Hangat / Referensi C) */
-.formula-strip__prose-view {
+.formula-val-highlight {
+  font-weight: 700;
+  color: var(--accent-light);
+}
+
+/* Tampilan Prosa (Khusus Tema Hangat) */
+.formula-prose-view {
   display: none;
 }
 
-[data-theme="hangat"] .formula-strip__code-view {
+[data-theme="hangat"] .formula-code-view {
   display: none;
 }
 
-[data-theme="hangat"] .formula-strip__prose-view {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+[data-theme="hangat"] .formula-prose-view {
+  display: block;
   font-family: var(--font-sans);
   font-size: clamp(12px, 0.75rem + 0.1vw, 13px);
   color: var(--ink);
-  line-height: 1.5;
+  line-height: 1.55;
+  margin-block-end: 16px;
 }
 
 .formula-prose__text {
@@ -707,66 +761,88 @@ body {
   font-weight: 500;
 }
 
-.formula-prose__assumptions {
-  margin: 0;
+/* Tabel Asumsi Tiga Kolom */
+.assumptions-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.813rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.assumptions-row {
+  display: grid;
+  grid-template-columns: 130px 140px 1fr;
+  align-items: baseline;
+  gap: 12px;
+  padding-block: 7px;
+  border-block-end: 1px solid var(--line);
+}
+
+.assumptions-row--head {
+  font-size: 0.688rem;
+  font-weight: 700;
   color: var(--muted);
-  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding-block: 6px;
 }
 
-/* Penyesuaian Layar Sempit (<=480px) untuk Monospace */
-@container card (max-width: 480px) {
-  .formula-strip__code-view {
-    line-height: 1.6;
-    gap: 6px;
-  }
+.assumptions-row__top {
+  display: contents;
+}
 
-  .formula-line {
+.assumptions-col--param {
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+
+.assumptions-col--val {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--accent-light);
+}
+
+.assumptions-col--desc {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* Penyesuaian Layar Sempit (<=520px): Hanging Indent & Tabel Menumpuk */
+@media (max-width: 520px) {
+  .code-line__content {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1px;
+    gap: 2px;
   }
 
   .formula-rhs {
     flex-direction: column;
     align-items: flex-start;
     padding-inline-start: 1.25em;
-    gap: 1px;
+    gap: 2px;
   }
 
-  .formula-assumptions__item {
-    padding-inline-start: 1em;
-  }
-
-  .formula-assumptions__indent {
+  .assumptions-table__head {
     display: none;
   }
-}
 
-@media (max-width: 480px) {
-  .formula-strip__code-view {
-    line-height: 1.6;
-    gap: 6px;
-  }
-
-  .formula-line {
+  .assumptions-row {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1px;
+    gap: 3px;
+    padding-block: 8px;
   }
 
-  .formula-rhs {
-    flex-direction: column;
-    align-items: flex-start;
-    padding-inline-start: 1.25em;
-    gap: 1px;
+  .assumptions-row__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
   }
 
-  .formula-assumptions__item {
-    padding-inline-start: 1em;
-  }
-
-  .formula-assumptions__indent {
-    display: none;
+  .assumptions-col--desc {
+    font-size: 0.75rem;
   }
 }
 

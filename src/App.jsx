@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import DockNav, { MODULES } from "./components/DockNav";
 import InputPanel from "./components/InputPanel";
 import ResultPanel from "./components/ResultPanel";
+import FormulaSection from "./components/FormulaSection";
 import Footer from "./components/Footer";
 
 function getModuleFromHash() {
@@ -86,6 +87,7 @@ export default function App() {
             <InputPanel />
             <ResultPanel />
           </div>
+          <FormulaSection />
         </main>
       ) : (
         <main
