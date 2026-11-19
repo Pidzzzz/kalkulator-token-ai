@@ -33,17 +33,11 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 
 ## 2. Tipografi & Hierarki Warna
 
-- **Font UI:** **Inter** di semua tema untuk teks antarmuka umum, form, label, dan tombol (JANGAN memakai Space Grotesk).
-- **Font Angka Hasil (Ref B):**
-  - Tema **Gelap** & **Terang**: memakai **JetBrains Mono** agar angka berjajar tabular rapi.
-  - Tema **Hangat**: memakai **Fraunces** (serif hangat).
-- **Judul Halaman (H1):**
-  - Tema **Gelap** & **Terang**: Inter Bold ±27px, berwarna `--ink` (**BUKAN** ungu).
-  - Tema **Hangat**: Fraunces SemiBold ±27px, berwarna `--ink`.
-- **Judul Panel (`.card__title` — "Masukan", "Hasil Perkiraan"):**
-  - Tema **Gelap** & **Terang**: Inter Bold 1rem.
-  - Tema **Hangat**: **Fraunces** Bold 1rem — mengikuti `--font-heading: var(--font-serif)`.
-  - Judul panel berdiri sendiri tanpa subjudul di bawahnya (aturan anti-slop).
+- **Font UI:** **Inter** di semua tema untuk teks antarmuka umum, form, label, tombol, bilah tab, dan chip (JANGAN memakai Space Grotesk).
+- **Font Judul (H1 & Panel):** **Fraunces** (serif hangat) di **SEMUA TEMA** (Gelap, Terang, Hangat) melalui `--font-heading: var(--font-serif)`.
+  - H1: Fraunces SemiBold ±27px, berwarna `--ink` (**BUKAN** ungu).
+  - Judul Panel (`.card__title` — "Masukan", "Hasil Perkiraan"): Fraunces Bold 1rem, berdiri sendiri tanpa subjudul (aturan anti-slop).
+- **Font Angka Hasil & Stat:** **Fraunces** di **SEMUA TEMA** melalui `--font-stat: var(--font-serif)` untuk angka hasil perkiraan (`.result-row__value`) dan nilai pemakaian jatah (`.usage-bar__value`).
 - **Subjudul header:** Satu kalimat tujuan: "Terjemahkan jatah & batas paket AI menjadi angka yang bisa dibayangkan: request, token, dan perkiraan biaya."
 - **Chip status:** "web statis" · "tanpa login" · "hitung di browser" (teks polos tanpa titik hias).
 - **Hierarki warna aksen (`--accent`):** Aksen dipakai sangat hemat hanya untuk elemen fungsional kecil:

@@ -79,3 +79,17 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
   + aturan pengalih tema ikon) dan PROGRESS.md.
 
 **Status:** ✅ Selesai — `npm run build` 0 error, commit `style: font Hangat selaras + pengalih tema ikon (Sesi 1G)`.
+
+---
+
+## Sesi 1G+ — Penyeragaman Font ke Semua Tema (19 Nov 2026)
+
+**Tujuan:** Menyeragamkan paduan tipografi yang disukai di tema Hangat (Fraunces untuk judul & angka, Inter untuk antarmuka UI) ke seluruh tema (Gelap, Terang, Hangat).
+
+**Cakupan:**
+- Mengatur `--font-heading: var(--font-serif)` dan `--font-stat: var(--font-serif)` secara global di `:root` dan di semua blok tema (`[data-theme="gelap"]`, `[data-theme="terang"]`, `[data-theme="hangat"]`).
+- Judul H1, judul panel ("Masukan" & "Hasil Perkiraan"), angka hasil perkiraan (`.result-row__value`), serta nilai pemakaian jatah (`.usage-bar__value`) kini konsisten memakai font Fraunces di tema mana pun.
+- Teks UI umum (label form, input, select, bilah tab, chip, tombol) tetap memakai font Inter.
+- Dokumentasi diperbarui di DESIGN.md dan PROGRESS.md.
+
+**Status:** ✅ Selesai — `npm run build` 0 error.
