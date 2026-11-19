@@ -188,3 +188,31 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
 > Seluruh 15 baris di atas belum diverifikasi ke halaman resmi; `hargaCache`, `konteks`, nilai jatah/kuota preset, dan tanggal `cek` juga masih acuan awal. Jangan menganggapnya angka tagihan final.
 
 **Status:** ✅ Selesai — `npm run build` 0 error, commit `feat: fungsi F1 Penerjemah Batas (Sesi 2)`.
+
+---
+
+## Sesi 2C — Data Model Terverifikasi 19 Nov 2026 (19 Nov 2026)
+
+**Tujuan:** Mengganti seluruh isi data model dengan 23 baris harga terverifikasi dari halaman resmi tiap provider. Desain, komponen, rumus, fungsi hitung, dan preset paket tidak diubah.
+
+**Cakupan:**
+- **23 model / 9 provider** di `src/data/models.js`; seluruh baris lama (Claude 4 Sonnet, GPT-4o, Gemini 2.5 Pro, DeepSeek V3, Llama 3.3, Grok 2, dst.) dihapus — tidak ada lagi baris placeholder.
+  - Anthropic 4 · OpenAI 4 · Google 4 · DeepSeek 2 · xAI 2 · Mistral 2 · Moonshot 2 · Z.ai 2 · Alibaba 1.
+- **Sumber per provider & cek seragam `2026-11-19`:**
+  - Anthropic — `https://platform.claude.com/docs/en/about-claude/pricing`
+  - OpenAI — `https://developers.openai.com/api/docs/pricing`
+  - Google — `https://ai.google.dev/gemini-api/docs/pricing`
+  - DeepSeek — `https://api-docs.deepseek.com/quick_start/pricing` (tarif off-peak; jam sibuk 2x)
+  - xAI — `https://docs.x.ai/developers/pricing`
+  - Mistral — `https://mistral.ai/pricing/api`
+  - Moonshot — `https://platform.kimi.ai`
+  - Z.ai — `https://docs.z.ai/guides/overview/pricing`
+  - Alibaba — Alibaba Cloud Model Studio, halaman pricing resmi (region Singapura)
+- **Model bawaan** menjadi `claude-sonnet-5-5` (satu baris `DEFAULTS` di `src/utils/useF1State.js`).
+- **Persistensi aman:** id model lama di `localStorage` (`kalkulator-f1-input`) tidak lagi cocok dengan data baru, sehingga validasi `models.some(...)` otomatis jatuh ke model bawaan baru — tidak kosong, error, atau NaN.
+- **Preset tidak berubah sama sekali** (termasuk field `modelBawaan` lama; field ini belum dipakai UI). Dropdown model tetap otomatis memakai format `"Nama — $input/$output per 1 jt"` dari data.
+
+**Kasus uji baru (terverifikasi lewat fungsi murni):**
+`Claude Sonnet 5.5 ($2/$10) · jatah $10 · input 10.000 · output 2.000` → biaya per request **$0,04**; request **~250**; total token **~3.000.000**; perkiraan biaya **$10,00**.
+
+**Status:** ✅ Selesai — `npm run build` 0 error, commit `data: perbarui models.js ke harga resmi 19 Nov 2026 (Sesi 2C)`.

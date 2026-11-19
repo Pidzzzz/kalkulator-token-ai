@@ -4,12 +4,12 @@ import { models, presets } from "../data/models.js";
 const STORAGE_KEY = "kalkulator-f1-input";
 
 /**
- * Nilai awal wajib cocok dengan kasus uji sesi 2:
- * jatah $10, input 10.000 @ $3, output 2.000 @ $15.
+ * Nilai awal: paket OpenCode Go, model Claude Sonnet 5.5 ($2/$10),
+ * jatah $10, input 10.000, output 2.000.
  */
 const DEFAULTS = {
   paketId: "opencode-go",
-  modelId: "claude-sonnet",
+  modelId: "claude-sonnet-5-5",
   jatah: "10",
   totalKuota: "50",
   jendela: "5jam",
