@@ -241,6 +241,17 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
   max-width: calc(100vw - 24px);
   width: max-content;
+  opacity: 1;
+  transition: opacity 250ms ease;
+}
+
+/* Redup saat diam: hanya opacity, tanpa blur/kaca. */
+.dock-nav--redup {
+  opacity: 0.55;
+}
+
+.dock-nav--redup .dock-btn {
+  color: var(--ink);
 }
 
 .dock-btn {
@@ -333,6 +344,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .dock-nav {
+    transition: none;
+  }
+
   .dock-btn,
   .dock-btn__label,
   .dock-btn__dot {

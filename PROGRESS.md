@@ -291,3 +291,22 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
 **Berkas:** baru `src/data/currencies.js`, `src/utils/currency.js`; diubah `src/components/Dropdown.jsx` (`compact`, `triggerLabel`), `src/components/ResultPanel.jsx` (pemilih, konversi, persistensi, salin), `src/index.css` (baris judul kartu, dropdown ringkas, teks konversi, z-index), `PROGRESS.md`, `DESIGN.md`.
 
 **Status:** Selesai — `npm run build` 0 error, commit `feat: konversi mata uang pada Perkiraan Biaya (Sesi 2D-2)`.
+
+---
+
+## Sesi 2D-3 — Dock Memudar saat Tidak Disentuh (19 Nov 2026)
+
+**Tujuan:** Dock navigasi bawah meredup saat benar-benar diam, tanpa blur/kaca — hanya opacity, demi performa HP kelas bawah. Fungsi navigasi dan tampilan lain tidak berubah.
+
+**Cakupan:**
+- **Redup 0,55** setelah **2,5 detik** tanpa interaksi: pointer tidak di atas dock, fokus keyboard tidak di dalamnya, dan tidak ada sentuhan baru. Transisi opacity **250 ms**.
+- **Bangun seketika ke opacity 1** saat pointer masuk, sentuhan/`pointerdown`, fokus masuk, atau berpindah modul. Setelah ganti modul, dock dijamin penuh **1 detik**, baru kemudian hitung diam 2,5 detik.
+- **Reduced motion:** `prefers-reduced-motion: reduce` mematikan fitur — dock selalu opacity 1, tanpa transisi. Listener `matchMedia` dibersihkan saat unmount dan mengikuti perubahan setelan OS.
+- **Fokus vs sentuhan:** hanya fokus `:focus-visible` yang menahan dock tetap penuh. Fokus sisa setelah tap di HP tidak membuat dock redup selamanya.
+- **Tanpa kebocoran:** satu timer dijaga di `useRef`, selalu dibersihkan sebelum dijadwalkan ulang dan saat unmount; listener hover/fokus memakai event React di `<nav>`.
+- **Keterbacaan 0,55:** teks tombol non-aktif memakai `--ink` saat redup, pil aktif tetap `--accent`/`--on-accent`, titik status tetap `--accent` — ketiganya bertahan di tema gelap, terang, dan hangat.
+- **Hanya opacity:** tidak ada `backdrop-filter`, blur, atau efek kaca; latar dock tetap solid `--card`.
+
+**Berkas:** `src/components/DockNav.jsx` (state redup, timer, listener pointer/fokus, guard reduced motion), `src/index.css` (opacity + transisi 250ms, keadaan redup, override reduced motion), `PROGRESS.md`, `DESIGN.md`.
+
+**Verifikasi:** `npm run build` 0 error. Aplikasi tidak dijalankan; verifikasi visual (diam ±2,5 detik → meredup, sentuh → penuh, 3 tema) adalah tugas user.

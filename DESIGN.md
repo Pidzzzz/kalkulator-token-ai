@@ -210,3 +210,12 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - **Persistensi:** `localStorage` kunci `kalkulator-mata-uang`, bawaan `IDR`; kode tak dikenal dikembalikan ke IDR.
 - **Salin hasil** menyertakan konversi: `Perkiraan biaya: $10,00 (= Rp182.500)`.
 - **Lapisan:** kartu Hasil memakai `z-index: 30` hanya saat panel dropdown-nya terbuka (`:has`), supaya panel ke atas tidak tertutup kartu Masukan (`z-index: 20`).
+
+
+## 10. Dock Memudar saat Diam (Sesi 2D-3)
+
+- Dock bawah meredup ke **opacity 0,55** setelah **2,5 detik** tanpa interaksi (pointer tidak di atasnya, fokus keyboard tidak di dalamnya, tidak ada sentuhan baru), dengan transisi **250 ms**. Hanya opacity — tanpa blur, `backdrop-filter`, atau efek kaca; latar tetap solid `--card`.
+- Interaksi mengembalikan opacity 1 seketika: `pointerenter`, `pointerdown`/sentuhan, fokus masuk, dan klik/panah modul. Setelah pindah modul, dock bertahan penuh **1 detik** sebelum hitung diam 2,5 detik.
+- `prefers-reduced-motion: reduce` mematikan fitur: dock selalu opacity 1 dan transisi dimatikan. Perubahan setelan OS diikuti lewat listener `matchMedia` yang dibersihkan saat unmount.
+- Hanya fokus `:focus-visible` yang menahan dock tetap penuh; fokus sisa dari tap di HP tidak menahan redup selamanya.
+- Saat redup, teks tombol non-aktif memakai `--ink` agar tetap terbaca di 3 tema; pil aktif dan titik status mempertahankan warna aksennya.
