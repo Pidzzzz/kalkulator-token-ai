@@ -157,3 +157,36 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - Jatah kosong/0: panel Hasil menampilkan “Isi jatah dulu untuk melihat perkiraan.” — tidak pernah `~0`, `NaN`, atau `Infinity`.
 - Harga model 0 atau token 0 juga menghasilkan pesan ramah, bukan pembagian tak terdefinisi.
 - Total jatah kosong/tidak valid menyembunyikan bilah pemakaian, bukan menampilkan rel kosong yang menyesatkan.
+
+## 7. Dropdown Kustom — Paket, Model, Jendela (Sesi 2B)
+
+> Menggantikan tiga `<select>` bawaan dengan satu komponen pakai-ulang `src/components/Dropdown.jsx`. Hanya tampilan & interaksi yang berubah: data opsi, nilai terpilih, persistensi `localStorage`, dan seluruh hitungan tetap identik. Warna tetap solid — tanpa gradasi, tanpa glow berwarna.
+
+### 7.1 Pemicu (trigger)
+
+- Berbentuk tombol selebar kolom dengan latar `--card`, border 1px `--line`, radius `--radius-sm`, tinggi minimum 37px, padding 10px/7px — sama dengan kolom isian lain.
+- Teks rata kiri berisi nama terpilih. Khusus **Model**, ditambah imbuhan harga `— $2/$10` berwarna `--muted`; imbuhan disembunyikan pada lebar < 480px.
+- Chevron SVG 12px di kanan, warna `--muted`, berputar 180° dengan transisi 150ms saat daftar terbuka.
+- Hover menaikkan border ke `--muted`; fokus keyboard memakai cincin `2px solid --accent` (`:focus-visible`).
+
+### 7.2 Panel daftar
+
+- `position: absolute`, 6px di bawah pemicu, lebar persis sama (`left: 0; right: 0`).
+- Latar solid `--card`, border 1px `--line`, radius `--radius-sm`, padding dalam 5px, `max-height` 264px dengan gulir internal tipis (`scrollbar-width: thin`, thumb `--line`) dan `overscroll-behavior: contain`.
+- **Pengecualian bayangan yang disetujui:** panel melayang memakai `box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22)` — bayangan hitam netral agar terangkat dari panel di bawahnya, bukan glow berwarna. Pengecualian ini hanya untuk panel dropdown; kartu dan komponen lain tetap mengikuti aturan bayangan yang sudah ada.
+- Arah buka diukur saat panel dibuka: bila ruang bawah (dibatasi tepi atas dock `.dock-nav` yang `fixed`, bukan hanya viewport) tidak cukup dan ruang atas lebih besar, panel membuka ke **atas**. `max-height` mengikuti ruang tersedia (batas bawah 88px).
+- Animasi buka: opacity + geser 2px (arah sesuai posisi), 140ms `ease-out`; `prefers-reduced-motion: reduce` mematikan animasi dan rotasi chevron.
+- Wrapper `.module-f1__input` diberi `position: relative; z-index: 20` agar panel tidak tertutup kartu Hasil — `.card` memakai `container-type: inline-size` (membentuk stacking context sendiri).
+
+### 7.3 Baris pilihan
+
+- Grid 13px + teks, padding 8px/9px, radius `--radius-sm`; hover dan baris aktif keyboard memakai `--accent-soft`.
+- Baris terpilih: ikon centang kecil di kiri + teks `--accent-light` + latar `--accent-soft`.
+- Judul grup provider (khusus Model): 10px kapital, `letter-spacing 0.08em`, `--muted`, tidak bisa dipilih, padding lebih rapat.
+- Model memakai dua baris: nama (`--ink`) dan harga JetBrains Mono 11px `--muted` — `input $2 · output $10 · cache $0,10 per 1 jt` (format `formatHarga`/`formatDesimal` yang sudah dipakai aplikasi). Paket & Jendela satu baris.
+
+### 7.4 Perilaku & aksesibilitas
+
+- Setara select bawaan: klik pemicu membuka/menutup, klik di luar menutup, Esc menutup dan mengembalikan fokus ke pemicu, memilih baris menutup dan menerapkan nilai.
+- Keyboard: panah atas/bawah memindah baris aktif (melingkar), Enter/Spasi memilih, Home/End melompat, Tab menutup lalu melanjutkan urutan fokus, dan typeahead huruf awal (buffer 700ms; menekan huruf yang sama berulang menggulir di antara opsi berawalan huruf itu).
+- ARIA: pemicu `aria-haspopup="listbox"`, `aria-expanded`, `aria-controls`, `aria-activedescendant`; panel `role="listbox"`; baris `role="option"` + `aria-selected`.

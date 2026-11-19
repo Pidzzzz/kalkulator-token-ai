@@ -368,6 +368,8 @@ body {
 }
 
 .module-f1__input {
+  position: relative;
+  z-index: 20; /* panel dropdown melayang di atas kartu Hasil */
   min-width: 0;
 }
 
@@ -469,6 +471,202 @@ body {
   font-size: 0.688rem;
   color: var(--muted);
   line-height: 1.35;
+}
+
+/* ---- Dropdown Kustom (Paket, Model, Jendela) ---- */
+.dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 37px;
+  padding-inline: 10px;
+  padding-block: 7px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--ink);
+  text-align: left;
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.dropdown__trigger:hover {
+  border-color: var(--muted);
+}
+
+.dropdown__trigger:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.dropdown__nilai {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown__ringkas {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.dropdown__chevron {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: transform 0.15s ease;
+}
+
+.dropdown__trigger--open .dropdown__chevron {
+  transform: rotate(180deg);
+}
+
+.dropdown__panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 60;
+  padding: 5px;
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  /* Satu-satunya bayangan yang diizinkan: hitam lembut untuk lapisan melayang. */
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+  max-height: 264px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  box-sizing: border-box;
+  animation: dropdown-bawah 0.14s ease-out;
+}
+
+.dropdown__panel--atas {
+  top: auto;
+  bottom: calc(100% + 6px);
+  animation-name: dropdown-atas;
+}
+
+@keyframes dropdown-bawah {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdown-atas {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown__grup + .dropdown__grup {
+  margin-block-start: 2px;
+}
+
+.dropdown__grup-label {
+  padding: 7px 9px 3px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  user-select: none;
+}
+
+.dropdown__opsi {
+  display: grid;
+  grid-template-columns: 13px minmax(0, 1fr);
+  align-items: start;
+  gap: 6px;
+  padding: 8px 9px;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-size: 0.813rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdown__opsi:hover,
+.dropdown__opsi--aktif {
+  background-color: var(--accent-soft);
+}
+
+.dropdown__opsi--dipilih {
+  background-color: var(--accent-soft);
+}
+
+.dropdown__opsi--dipilih .dropdown__opsi-nama {
+  color: var(--accent-light);
+}
+
+.dropdown__centang {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.35em;
+  color: var(--accent-light);
+}
+
+.dropdown__opsi-teks {
+  display: block;
+  min-width: 0;
+}
+
+.dropdown__opsi-nama {
+  display: block;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.dropdown__opsi-detail {
+  display: block;
+  margin-block-start: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.688rem; /* 11px */
+  line-height: 1.4;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 480px) {
+  .dropdown__ringkas {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdown__chevron {
+    transition: none;
+  }
+
+  .dropdown__panel {
+    animation: none;
+  }
 }
 
 /* Chip preset cepat (di bawah kolom Jatah) */

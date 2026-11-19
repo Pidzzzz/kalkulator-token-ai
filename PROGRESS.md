@@ -216,3 +216,27 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
 `Claude Sonnet 5.5 ($2/$10) · jatah $10 · input 10.000 · output 2.000` → biaya per request **$0,04**; request **~250**; total token **~3.000.000**; perkiraan biaya **$10,00**.
 
 **Status:** ✅ Selesai — `npm run build` 0 error, commit `data: perbarui models.js ke harga resmi 19 Nov 2026 (Sesi 2C)`.
+
+---
+
+## Sesi 2B — Dropdown Kustom Paket, Model, Jendela (19 Nov 2026)
+
+**Tujuan:** Mengganti tiga `<select>` bawaan di panel Masukan dengan satu komponen dropdown kustom yang mengikuti 3 tema. Data, nilai masuk/keluar, rumus, dan persistensi tidak berubah.
+
+**Cakupan:**
+- **Satu komponen pakai-ulang** `src/components/Dropdown.jsx` untuk Paket, Model, dan Jendela — bukan tiga komponen terpisah. Opsi digerakkan data yang sudah ada (`presets`, `models` per provider, `jendelaOptions`); `onChange` meneruskan nilai yang sama seperti `<select>` sebelumnya.
+- **Pemicu:** latar `--card`, border 1px `--line`, radius/tinggi/padding sama dengan kolom isian, teks kiri, chevron SVG 12px yang berputar 180° (150ms). Hover border `--muted`; `:focus-visible` cincin `--accent`. Khusus Model, imbuhan `— $2/$10` berwarna `--muted`, disembunyikan di lebar < 480px.
+- **Panel:** absolute 6px dari pemicu, lebar sama, `--card` solid, border `--line`, radius sama, padding 5px, `max-height` 264px, gulir internal dengan scrollbar tipis bertema. Satu-satunya pengecualian bayangan: `0 8px 22px rgba(0,0,0,.22)` (hitam netral, bukan glow).
+- **Arah buka adaptif:** membuka ke atas bila ruang bawah tidak cukup; ruang bawah dihitung sampai tepi atas dock `.dock-nav` (fixed), sehingga daftar Jendela tidak tertutup dock. `max-height` mengikuti ruang tersedia.
+- **Baris:** padding 8px/9px, radius kecil; hover & baris aktif keyboard `--accent-soft`; baris terpilih memakai centang + teks `--accent-light` + latar `--accent-soft`. Judul grup provider kapital 10px `--muted` (khusus Model). Baris Model dua baris: nama `--ink` lalu `input $2 · output $10 · cache $0,10 per 1 jt` dalam JetBrains Mono 11px `--muted`. Paket & Jendela satu baris.
+- **Animasi:** opacity + geser 2px, 140ms `ease-out`; `prefers-reduced-motion` menonaktifkan animasi dan rotasi chevron.
+- **Perilaku & ARIA setara select:** klik pemicu buka/tutup, klik luar menutup, Esc menutup + fokus kembali, pilih baris menutup + menerapkan nilai; panah atas/bawah (melingkar), Enter/Spasi, Home/End, Tab menutup lalu lanjut, typeahead huruf awal (buffer 700ms, siklus huruf sama). Pemicu `aria-haspopup="listbox"` + `aria-expanded` + `aria-controls` + `aria-activedescendant`; panel `role="listbox"`; baris `role="option"` + `aria-selected`.
+- **Penyesuaian tata letak kecil:** `.module-f1__input` diberi `position: relative; z-index: 20` karena `.card` memakai `container-type: inline-size` (stacking context sendiri) — tanpa ini panel bisa tertutup kartu Hasil.
+
+**Berkas:**
+- Baru: `src/components/Dropdown.jsx`.
+- Diubah: `src/components/InputPanel.jsx` (tiga select → Dropdown, data opsi dimemo), `src/index.css` (gaya dropdown + z-index wrapper), `DESIGN.md` (Bagian 7), `PROGRESS.md` (bagian ini).
+
+**Verifikasi:** `npm run build` 0 error. Tidak ada perubahan pada `models.js`, `calculator.js`, `useF1State.js`, atau komponen lain. Aplikasi tidak dijalankan dan tidak ada screenshot sesuai aturan sesi — verifikasi visual (3 tema, navigasi keyboard penuh, daftar Model menggulir, Jendela membuka ke atas, lebar HP) adalah tugas user.
+
+**Status:** ✅ Selesai — `npm run build` 0 error, commit `feat: dropdown kustom untuk Paket, Model, dan Jendela (Sesi 2B)`.

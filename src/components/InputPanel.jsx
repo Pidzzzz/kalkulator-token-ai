@@ -1,9 +1,18 @@
 import { useMemo } from "react";
+import Dropdown from "./Dropdown";
 import { models, presets, jendelaOptions } from "../data/models";
-import { formatHarga, parseAngka } from "../utils/calculator";
+import {
+  formatDesimal,
+  formatHarga,
+  parseAngka,
+} from "../utils/calculator";
 
 const NOMINAL_CEPAT = [5, 10, 20, 50];
 const PERSEN_CEPAT = [25, 50];
+
+function formatHargaCache(nilai) {
+  return formatDesimal(nilai, 2, 4);
+}
 
 export default function InputPanel({
   paketId,
@@ -17,15 +26,35 @@ export default function InputPanel({
   onUbahTotal,
   onUbahJendela,
 }) {
-  // Kelompokkan model per provider untuk <optgroup>.
-  const modelPerProvider = useMemo(() => {
+  // Data opsi dropdown — dipakai bersama oleh Paket, Model, dan Jendela.
+  const opsiPaket = useMemo(
+    () => presets.map((p) => ({ value: p.id, label: p.nama })),
+    []
+  );
+
+  const grupModel = useMemo(() => {
     const grup = new Map();
     for (const m of models) {
       if (!grup.has(m.provider)) grup.set(m.provider, []);
-      grup.get(m.provider).push(m);
+      grup.get(m.provider).push({
+        value: m.id,
+        label: m.nama,
+        short: `$${formatHarga(m.hargaInput)}/$${formatHarga(m.hargaOutput)}`,
+        detail: `input $${formatHarga(m.hargaInput)} · output $${formatHarga(
+          m.hargaOutput
+        )} · cache $${formatHargaCache(m.hargaCache)} per 1 jt`,
+      });
     }
-    return Array.from(grup.entries());
+    return Array.from(grup.entries()).map(([label, options]) => ({
+      label,
+      options,
+    }));
   }, []);
+
+  const opsiJendela = useMemo(
+    () => jendelaOptions.map((j) => ({ value: j.id, label: j.label })),
+    []
+  );
 
   const totalAngka = parseAngka(totalKuota);
   const totalValid = Number.isFinite(totalAngka) && totalAngka > 0;
@@ -45,44 +74,26 @@ export default function InputPanel({
           <label className="form-label" htmlFor="paket">
             Paket langganan
           </label>
-          <select
-            className="form-select"
+          <Dropdown
             id="paket"
-            name="paket"
+            label="Paket langganan"
             value={paketId}
-            onChange={(e) => onPilihPaket(e.target.value)}
-          >
-            {presets.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.nama}
-              </option>
-            ))}
-          </select>
+            onChange={onPilihPaket}
+            options={opsiPaket}
+          />
         </div>
 
         <div className="form-group">
           <label className="form-label" htmlFor="model">
             Model
           </label>
-          <select
-            className="form-select"
+          <Dropdown
             id="model"
-            name="model"
+            label="Model"
             value={modelId}
-            onChange={(e) => onPilihModel(e.target.value)}
-          >
-            {modelPerProvider.map(([provider, daftar]) => (
-              <optgroup key={provider} label={provider}>
-                {daftar.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {`${m.nama} — $${formatHarga(m.hargaInput)}/$${formatHarga(
-                      m.hargaOutput
-                    )} per 1 jt`}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
+            onChange={onPilihModel}
+            groups={grupModel}
+          />
         </div>
 
         <div className="form-group">
@@ -163,19 +174,13 @@ export default function InputPanel({
           <label className="form-label" htmlFor="jendela">
             Jendela waktu
           </label>
-          <select
-            className="form-select"
+          <Dropdown
             id="jendela"
-            name="jendela"
+            label="Jendela waktu"
             value={jendela}
-            onChange={(e) => onUbahJendela(e.target.value)}
-          >
-            {jendelaOptions.map((j) => (
-              <option key={j.id} value={j.id}>
-                {j.label}
-              </option>
-            ))}
-          </select>
+            onChange={onUbahJendela}
+            options={opsiJendela}
+          />
         </div>
       </form>
     </article>
