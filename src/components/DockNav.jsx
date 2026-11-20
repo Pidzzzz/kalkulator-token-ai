@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export const MODULES = [
   { id: "f1", badge: "F1", label: "Penerjemah Batas" },
   { id: "f2", badge: "F2", label: "Simulator Sesi" },
-  { id: "f3", badge: "F3", label: "Token Teks", hasDot: true },
+  { id: "f3", badge: "F3", label: "Penghitung Token" },
   { id: "f4", badge: "F4", label: "Data Model", hasDot: true },
 ];
 

@@ -1840,3 +1840,133 @@ body {
 .module-f2 .form-group > .form-hint {
   margin-block-end: 1px;
 }
+
+/* ---- Sesi 4: F3 Penghitung Token Teks ---- */
+
+/* Textarea besar: fondasi .form-input (token --field), tinggi wajar desktop,
+   bisa di-resize vertikal saja agar tata letak dua panel tidak jebol. */
+.form-textarea {
+  min-height: 164px;
+  line-height: 1.5;
+  resize: vertical;
+  font-variant-numeric: normal;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+.form-textarea::placeholder {
+  color: var(--muted);
+}
+
+/* Dua tombol kecil di bawah textarea (gaya chip F1) */
+.teks-aksi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-block-start: 2px;
+}
+
+/* Teks pendamping bilah pemakaian konteks */
+.usage-bar__teks {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--muted-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tabel perbandingan keluarga di dalam kartu Hasil */
+.keluarga-table {
+  display: flex;
+  flex-direction: column;
+  margin-block-end: 12px;
+  padding-block-start: 4px;
+  border-block-start: 1px solid var(--line);
+  font-size: 0.813rem;
+}
+.keluarga-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px 84px;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-block-end: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.keluarga-row--head {
+  padding-block: 6px;
+  border-radius: 0;
+  font-size: 0.688rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.keluarga-col--nama {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.keluarga-col--faktor,
+.keluarga-col--token {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.keluarga-col--faktor {
+  color: var(--muted-strong);
+}
+
+.keluarga-col--token {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Baris penyedia dari model terpilih: gaya baris terpilih dropdown
+   (latar aksen lembut + teks --accent-light). */
+.keluarga-row--aktif {
+  background-color: var(--accent-soft);
+}
+
+.keluarga-row--aktif .keluarga-col--nama,
+.keluarga-row--aktif .keluarga-col--token {
+  color: var(--accent-light);
+}
+
+/* Baris keluarga terpilih pada tabel faktor metode (teks --accent-light) */
+.metode-table .assumptions-row--aktif .assumptions-col--param {
+  color: var(--accent-light);
+  font-weight: 700;
+}
+
+/* Catatan kejujuran: teks biasa, tanpa kotak berwarna */
+.metode-catatan {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-block-start: 12px;
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.5;
+  color: var(--muted-strong);
+}
+
+.metode-catatan p {
+  margin: 0;
+}
+
+@media (max-width: 520px) {
+  .keluarga-row {
+    grid-template-columns: minmax(0, 1fr) 74px 72px;
+    font-size: 0.75rem;
+  }
+
+  .keluarga-row--head {
+    font-size: 0.625rem;
+  }
+}
+
+

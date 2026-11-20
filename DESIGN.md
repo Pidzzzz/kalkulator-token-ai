@@ -259,3 +259,30 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - Tabel asumsi F2 memakai pemformat yang sama (nilai tetap terformat seperti sebelumnya).
 - **Legenda bar tumpuk** kini menampilkan porsi biaya (%) untuk ketiga suku — angka 10px mono `--muted` di ujung tiap baris — sehingga "Segar · Cache · Output" konsisten. Persen rasio cache tidak lagi ditempelkan di nama suku (sudah terbaca dari baris masukan/slider).
 - **Rata-rata per putaran** membaca jumlah putaran dari hasil hitung (`dari N putaran`), bukan teks masukan mentah.
+
+## 12. F3 Hidup — Penghitung Token Teks (Sesi 4)
+
+> Tata letak, 3 tema, dock, dropdown kustom, konversi mata uang, dan pola pita Rumus & Asumsi tidak berubah. Panel F3 memakai grup `.module-f1` (kolom & lapisan dropdown sama) dengan penanda `.module-f3`.
+
+### 12.1 Panel Masukan
+
+- **Dropdown Model** — komponen & data sama dengan F1/F2 (`buatOpsiModel()`), grup per penyedia + logo, harga menempel, bawaan `claude-sonnet-5-5`.
+- **Textarea "Teks"** — satu-satunya isian besar: `min-height` ±164px (±8 baris), `resize: vertical`, latar `--field` + garis `--field-line` (token Sesi 3F), fokus ring 3px `var(--field-ring)`. Placeholder "Tempel atau ketik teks di sini…". Microcopy `.form-hint` di bawah label: "Tempel teks apa pun — prompt, artikel, atau kode. Semua dihitung di browser; teksmu tidak dikirim ke mana pun."
+- **Dua tombol** di bawah textarea (`Contoh teks`, `Bersihkan`) memakai gaya chip `.preset-chip` F1; `Bersihkan` nonaktif saat teks kosong.
+- **Persistensi:** `kalkulator-f3-input` (`{ teks, modelId }`); kegagalan penyimpanan diabaikan diam-diam.
+- **Pita Metode & Asumsi** di bawah kedua panel memakai struktur Sesi 1I persis: label `METODE & ASUMSI`, sakelar Simbol | Dengan angka (disembunyikan di tema Hangat), rumus bernomor, prosa untuk Hangat, tabel 3 kolom (Keluarga | Faktor | Keterangan), lalu catatan kejujuran sebagai teks biasa (`.metode-catatan`, 12px `--muted-strong`, tanpa kotak berwarna).
+
+### 12.2 Panel Hasil
+
+- Baris: **PERKIRAAN TOKEN** (aktor utama `--accent`, label "token · perkiraan", pil `ESTIMASI`) → **JUMLAH KARAKTER** → **JUMLAH KATA** → **PERKIRAAN BIAYA MASUKAN** (USD + konversi muted di sampingnya).
+- Bilah pemakaian konteks menumpang di baris utama (pola bilah jatah F1): label `PEMAKAIAN KONTEKS` + persen, baris teks `±{token} dari {konteks} token jendela konteks`, rel 5px isian `--accent`.
+- **Tabel perbandingan keluarga** di dalam kartu, di atas tombol Salin: 3 kolom grid (Keluarga | Faktor | Perkiraan token), angka mono `tabular-nums` rata kanan. Baris penyedia terpilih memakai latar `--accent-soft` + teks `--accent-light` — sama dengan baris terpilih dropdown.
+- **Peringatan konteks** memakai blok `.context-warning` F2 (Sesi 11.3) bila perkiraan token melebihi jendela model.
+- **Salin hasil** menyalin ANGKA saja (model, karakter, kata, perkiraan token, biaya + konversi, pemakaian konteks) — isi teks pengguna tidak pernah disalin.
+- Strip HP (`.mobile-result-strip` bersama) berisi `~{token} token · {karakter} karakter` (+ `· konteks terlampaui`).
+
+### 12.3 Format khusus F3
+
+- **Biaya masukan:** 2 desimal; bila nilai > 0 tetapi terbulatkan `$0,00` → s.d. 6 desimal tanpa nol ekor (`$0,00012`).
+- **Persen konteks:** 2 desimal; di bawah 0,01% ditulis `<0,01%`.
+- **Keadaan kosong:** hanya pesan "Tempel atau ketik teks untuk melihat perkiraan jumlah tokennya.", tabel perbandingan disembunyikan, tanpa angka 0.

@@ -9,15 +9,21 @@ import SimulatorInput from "./components/SimulatorInput";
 import SimulatorResult from "./components/SimulatorResult";
 import SimulatorFormula from "./components/SimulatorFormula";
 import SimulatorMobileStrip from "./components/SimulatorMobileStrip";
+import TeksInput from "./components/TeksInput";
+import TeksResult from "./components/TeksResult";
+import TeksFormula from "./components/TeksFormula";
+import TeksMobileStrip from "./components/TeksMobileStrip";
 import Footer from "./components/Footer";
 import { useF1State } from "./utils/useF1State";
 import { useF2State } from "./utils/useF2State";
+import { useF3State } from "./utils/useF3State";
 import {
   getJendelaLabel,
   getPresetById,
   hitungF1,
 } from "./utils/calculator";
 import { hitungF2 } from "./utils/calculatorF2";
+import { hitungF3 } from "./utils/calculatorF3";
 import { MATA_UANG_KEY } from "./utils/uiHelpers";
 import { KODE_MATA_UANG_BAWAAN, getCurrency } from "./data/currencies";
 
@@ -123,14 +129,39 @@ export default function App() {
 
   const inputPanelF2Ref = useRef(null);
 
+  // ---- F3 Penghitung Token Teks ----
+  const {
+    state: f3,
+    aturTeks,
+    pilihModel: pilihModelF3,
+    isiContoh: isiContohF3,
+    bersihkan: bersihkanF3,
+  } = useF3State();
+
+  const resultF3 = useMemo(
+    () => hitungF3({ teks: f3.teks, modelId: f3.modelId }),
+    [f3.teks, f3.modelId]
+  );
+
+  const inputPanelF3Ref = useRef(null);
+
   useEffect(() => {
-    if (activeModule !== "f1" && activeModule !== "f2") {
+    if (
+      activeModule !== "f1" &&
+      activeModule !== "f2" &&
+      activeModule !== "f3"
+    ) {
       setStripVisible(false);
       return;
     }
 
     let raf = null;
-    const panelRef = activeModule === "f1" ? inputPanelRef : inputPanelF2Ref;
+    const panelRef =
+      activeModule === "f1"
+        ? inputPanelRef
+        : activeModule === "f2"
+          ? inputPanelF2Ref
+          : inputPanelF3Ref;
 
     const perbarui = () => {
       const el = panelRef.current;
@@ -299,6 +330,37 @@ export default function App() {
           />
 
           <SimulatorMobileStrip result={resultF2} visible={stripVisible} />
+        </main>
+      ) : activeModule === "f3" ? (
+        <main
+          id="panel-f3"
+          role="tabpanel"
+          aria-labelledby="tab-f3"
+          tabIndex={0}
+          className="main-panel"
+        >
+          <div className="module-f1 module-f3">
+            <div className="module-f1__input" ref={inputPanelF3Ref}>
+              <TeksInput
+                modelId={f3.modelId}
+                teks={f3.teks}
+                onPilihModel={pilihModelF3}
+                onUbahTeks={aturTeks}
+                onContoh={isiContohF3}
+                onBersihkan={bersihkanF3}
+              />
+            </div>
+
+            <TeksResult
+              result={resultF3}
+              mataUang={mataUang}
+              onUbahMataUang={ubahMataUang}
+            />
+          </div>
+
+          <TeksFormula result={resultF3} />
+
+          <TeksMobileStrip result={resultF3} visible={stripVisible} />
         </main>
       ) : (
         <main

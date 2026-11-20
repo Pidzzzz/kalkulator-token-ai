@@ -511,6 +511,44 @@ rata-rata   = biaya / N · konteks_akhir = konteks_awal + (N − 1) × pertumbuh
 
 **Berkas:** `src/index.css`, `PROGRESS.md`.
 
-**Cek visual (tugas pemilik):** gulir mentok di F1 & F2 (isian Rasio cache terlihat utuh), strip di atas dock saat digulir di HP, keterbacaan legenda biaya, ring fokus isian, semuanya di 3 tema.
-
 **Status:** Selesai — `npm run build` 0 error.
+
+---
+
+## Sesi 4 — Fungsi F3 Penghitung Token Teks (20 Nov 2026)
+
+**Tujuan:** Membuat F3 hidup — menempel teks lalu mendapat perkiraan jumlah token per keluarga model, biaya masukan, pemakaian jendela konteks, dan tabel perbandingan 9 keluarga. F1 & F2 tidak disentuh; F4 tetap "segera hadir".
+
+**Mesin perkiraan** (`src/utils/calculatorF3.js`, fungsi murni):
+```
+jumlah_karakter           = teks.length            (termasuk spasi & baris baru)
+jumlah_kata               = potongan non-kosong hasil pisah spasi/baris baru
+perkiraan_token(keluarga) = ceil(jumlah_karakter ÷ faktor_keluarga)
+biaya_masukan             = perkiraan_token ÷ 1.000.000 × harga_input model
+persen_konteks            = perkiraan_token ÷ konteks model × 100
+```
+- Faktor per penyedia disimpan di **berkas data baru `src/data/tokenFaktor.js`** (satu baris per penyedia: `id` = `provider` di `models.js`, `faktor`, `keterangan`): Anthropic 3,5 · DeepSeek 3,5 · OpenAI 4,0 · Google 4,0 · xAI 4,0 · Mistral 3,8 · Moonshot 3,8 · Z.ai 3,8 · Alibaba 3,8.
+- **Faktor adalah kalibrasi awal aturan praktis, bukan tokenizer resmi.** Tidak ada BPE/pustaka penokenan, tidak ada hitungan token keluaran, tanpa unggah berkas & riwayat teks.
+- **Kandidat penyempurnaan (untuk F4):** faktor per keluaran penokenan dihitung ulang dengan tokenizer resmi (mis. dihitung ulang dari contoh prosa Bahasa Indonesia vs kode vs Bahasa Inggris); faktor dibedakan per model bila keluarga berselisih; hitungan kata mengikuti tokenizer (bukan sekadar pisah spasi); ringkasan salin menyertakan perbandingan semua keluarga.
+
+**Cakupan UI:**
+- **Masukan** (`TeksInput.jsx`): Dropdown Model (data & komponen sama dengan F1/F2, bawaan `claude-sonnet-5-5`), satu textarea besar (min 8 baris, `resize: vertical`) dengan microcopy di bawah label, tombol `Contoh teks` (mengisi teks contoh terkunci) dan `Bersihkan`. Teks + model tersimpan di `kalkulator-f3-input`; kuota penuh diabaikan diam-diam.
+- **Hasil** (`TeksResult.jsx`): PERKIRAAN TOKEN (hero `--accent` + pil ESTIMASI + label perkiraan), JUMLAH KARAKTER, JUMLAH KATA, PERKIRAAN BIAYA MASUKAN (+ konversi muted dari keadaan mata uang bersama), bilah pemakaian jendela konteks (`±60 dari 1.000.000 token jendela konteks`, persen 2 desimal / `<0,01%`), peringatan konteks gaya F2 bila terlampaui, tabel perbandingan 9 keluarga (baris penyedia terpilih disorot `--accent-soft`/`--accent-light`), dan `Salin hasil` yang menyalin **angka saja**.
+- **Metode & Asumsi** (`TeksFormula.jsx`): pita selebar halaman pola Sesi 1I — rumus bernomor, sakelar Simbol | Dengan angka (hilang di tema Hangat, prosa memakai nilai hidup), tabel faktor 9 keluarga, catatan kejujuran 3 paragraf sebagai teks biasa.
+- **Strip HP** (`TeksMobileStrip.jsx`): kelas `.mobile-result-strip` bersama, menempel di atas dock (posisi Sesi 3F).
+- **Dock:** titik status F3 dicabut, label pill aktif menjadi "Penghitung Token"; titik F4 tetap; hash `#f3` & tombol keyboard F3 bekerja.
+
+**Uji wajib (headless: fungsi murni + komponen di-mount di DOM jsdom, 56 + 10 pemeriksaan) — semua lulus:**
+1. Klik "Contoh teks" → jumlah karakter **207**, jumlah kata **29**.
+2. Perkiraan per keluarga: Anthropic **60**, OpenAI **52**, Google **52**, DeepSeek **60**, Mistral **55**, Moonshot **55**, Z.ai **55**, Alibaba **55**, xAI **52**.
+3. Model bawaan Claude Sonnet 5.5 → perkiraan utama **60 token**; biaya masukan **$0,00012** (bukan `$0,00`); konversi **Rp2** (kurs 18.250); pemakaian konteks `±60 dari 1.000.000` dengan `<0,01%`.
+4. Teks dikosongkan → pesan ramah tampil, tabel perbandingan hilang, tombol Salin nonaktif, tidak ada `NaN`/`Infinity`/`undefined`.
+5. Regresi: F1 bawaan tetap 250 request & $10,00; F2 kasus Sesi 3 tetap $0,0892; dock F3 tanpa titik, F4 bertitik; hash #f1/#f2/#f4 utuh.
+
+**Format khusus:** biaya masukan 2 desimal, tetapi bila > 0 dan terbulatkan `$0,00` dipakai s.d. 6 desimal tanpa nol ekor (`$0,00012`); persen konteks `<0,01%` di bawah 0,01%.
+
+**Berkas:** baru `src/data/tokenFaktor.js`, `src/utils/calculatorF3.js`, `src/utils/useF3State.js`, `src/components/TeksInput.jsx`, `src/components/TeksResult.jsx`, `src/components/TeksFormula.jsx`, `src/components/TeksMobileStrip.jsx`; diubah `src/App.jsx` (modul F3 + strip), `src/components/DockNav.jsx` (titik F3, label pill), `src/index.css` (textarea, tabel perbandingan, catatan metode), `AGENTS.md` (status F3), `DESIGN.md` (Bagian 12), `PROGRESS.md`.
+
+**Cek visual (tugas pemilik):** textarea & tombol kecil di 3 tema (Gelap/Terang/Hangat) termasuk ring fokus; tabel perbandingan + sorotan baris terpilih di kartu yang sempit; keadaan kosong; strip HP di atas dock saat digulir; pita Metode & Asumsi (sakelar hilang di Hangat, rumus membungkus tanpa geser horizontal di 360px).
+
+**Status:** Selesai — `npm run build` 0 error, commit `feat: fungsi F3 Penghitung Token Teks (Sesi 4)`.

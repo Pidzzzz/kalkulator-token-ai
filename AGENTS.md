@@ -35,5 +35,5 @@ container queries, native popover/invokers, logical properties) dengan fallback 
 |---|------|--------|
 | F1 | Penerjemah Batas | 🔵 Sesi 2: fungsi hitung hidup |
 | F2 | Simulator Sesi Agen | 🔵 Sesi 3: fungsi hitung hidup |
-| F3 | Penghitung Token Teks | ⏳ Belum |
+| F3 | Penghitung Token Teks | 🔵 Sesi 4: fungsi hitung hidup |
 | F4 | Basis Data Model & Harga | ⏳ Belum (harga masih placeholder) |
