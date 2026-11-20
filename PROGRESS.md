@@ -552,3 +552,36 @@ persen_konteks            = perkiraan_token ÷ konteks model × 100
 **Cek visual (tugas pemilik):** textarea & tombol kecil di 3 tema (Gelap/Terang/Hangat) termasuk ring fokus; tabel perbandingan + sorotan baris terpilih di kartu yang sempit; keadaan kosong; strip HP di atas dock saat digulir; pita Metode & Asumsi (sakelar hilang di Hangat, rumus membungkus tanpa geser horizontal di 360px).
 
 **Status:** Selesai — `npm run build` 0 error, commit `feat: fungsi F3 Penghitung Token Teks (Sesi 4)`.
+---
+
+## Sesi 4B - Pita Metode Bisa Dilipat + Tabel Faktor Ringkas (20 Nov 2026)
+
+**Aturan desain (keputusan pemilik):** "Pita metode bawaan selalu terbuka (kewajiban PRD); lipatan adalah pilihan pengguna yang tersimpan per modul - keputusan pemilik 20 Nov 2026."
+
+**Bagian A - Lipatan seragam F1/F2/F3**
+
+- Baris judul pita kini `<button>` asli selebar baris (`.pita-toggle`): judul pita + chevron rumah di ujung kanan (`--muted-strong`, berputar 180 derajat saat tertutup), `aria-expanded` + `aria-controls` menunjuk ke wilayah isi, ring fokus rumah, hover hanya mengubah chevron/judul ke `--ink`. Sakelar Simbol | Dengan angka dirender sebagai **saudara** tombol (`.pita-header__aksi`), bukan di dalamnya, supaya tidak ada tombol bersarang.
+- Keadaan awal **selalu terbuka**. Lipatan disimpan per modul di localStorage kunci bersama `kalkulator-pita` = `{ f1, f2, f3 }` boolean (bawaan semua `true`); kegagalan penyimpanan diabaikan diam-diam; melipat F3 tidak memengaruhi F1/F2; antar-tab disinkronkan lewat event `storage`.
+- Isi pita TIDAK dilepas dari DOM saat tertutup - hanya diberi atribut `hidden` (aksesibel, keluar dari pohon aksesibilitas & urutan fokus), jadi sakelar Simbol/Dengan angka tetap pada pilihannya setelah dibuka lagi.
+- Transisi tinggi + opacity 250ms (`interpolate-size: allow-keywords` + `transition-behavior: allow-discrete`); dimatikan total di `@media (prefers-reduced-motion: reduce)`. Tanpa glow, tanpa latar baru. Garis rambut pemisah menempel pada baris judul sehingga tetap tampil saat terlipat.
+
+**Bagian B - Tabel faktor F3 diringkas (hanya pita Metode F3)**
+
+- 9 baris menjadi **3 baris terkelompok** yang DITURUNKAN dari `src/data/tokenFaktor.js` lewat `kelompokFaktor()` (bukan tabel ketik tangan). Urut menaik: `3,5 -> Anthropic · DeepSeek`, `3,8 -> Mistral · Moonshot · Z.ai · Alibaba`, `4,0 -> OpenAI · Google · xAI`.
+- Dua kolom saja: "Faktor (karakter/token)" dan "Keluarga"; kolom Keterangan yang berulang dihapus. Di bawah tabel satu baris catatan: "Faktor adalah aturan praktis karakter-per-token; bukan tokenizer resmi penyedia." (konstanta `CATATAN_FAKTOR` di `tokenFaktor.js`).
+- Tiga catatan kejujuran tidak berubah kata-katanya. Tabel perbandingan per keluarga di kartu Hasil F3 tetap 9 baris.
+
+**Uji wajib (headless, jsdom + esbuild bundle di luar repo) - 49 asersi lulus, 0 gagal**
+
+1. Penyimpanan bersih: F1, F2, F3 semua `aria-expanded=true` dan isi tampil. LULUS
+2. Lipat F3 -> isi `hidden`, `aria-expanded=false`, `kalkulator-pita={"f1":true,"f2":true,"f3":false}`; muat ulang tetap tertutup; F1 & F2 tetap terbuka. LULUS
+3. Buka lagi F3 -> muat ulang -> tetap terbuka (`{"f1":true,"f2":true,"f3":true}`), persisten dua arah. LULUS
+4. F1: sakelar "Dengan angka" -> lipat -> buka lagi -> sakelar masih "Dengan angka" dan baris rumus angka hidup tetap tampil (isi tetap di DOM saat terlipat). LULUS
+5. Tabel faktor tepat 3 baris dengan pengelompokan di atas, dua header tanpa Keterangan, satu baris catatan faktor, tiga catatan kejujuran utuh, tabel Hasil tetap 9 baris. LULUS
+6. Regresi angka: F1 250 request/$10,00; F2 $0,0892; F3 207 karakter -> Anthropic 60, OpenAI 52, Mistral 55. CSS memuat pengaman `prefers-reduced-motion` untuk `.pita-body`. LULUS
+
+**Berkas:** baru `src/utils/usePitaTerbuka.js`, `src/components/PitaHeader.jsx`, `src/components/PitaBody.jsx`; diubah `src/components/FormulaSection.jsx`, `src/components/SimulatorFormula.jsx`, `src/components/TeksFormula.jsx` (`kelompokFaktor` + tabel 3 baris), `src/data/tokenFaktor.js` (`CATATAN_FAKTOR`), `src/index.css` (blok "Sesi 4B" + `.metode-table` dua kolom + tumpukan <=520px), `DESIGN.md` (Bagian 13), `PROGRESS.md`.
+
+**Cek visual (tugas pemilik):** rasa tombol lipat di 3 tema (Gelap/Terang/Hangat, termasuk varian prosa Hangat di mana sakelar disembunyikan), lebar 360px (tabel faktor menumpuk, judul + chevron tidak terpotong), fokus keyboard pada baris judul, dan denyut animasi 250ms vs langsung di mode reduced-motion.
+
+**Status:** Selesai - `npm run build` 0 error, commit `feat: pita metode bisa dilipat + tabel faktor ringkas (Sesi 4B)`.

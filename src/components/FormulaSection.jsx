@@ -1,4 +1,7 @@
 import { useState } from "react";
+import PitaHeader from "./PitaHeader";
+import PitaBody from "./PitaBody";
+import { usePitaTerbuka } from "../utils/usePitaTerbuka";
 import {
   formatDesimal,
   formatHarga,
@@ -14,6 +17,7 @@ export default function FormulaSection({
   onTokenOutputChange,
 }) {
   const [mode, setMode] = useState("simbol"); // "simbol" | "angka"
+  const { terbuka, toggle } = usePitaTerbuka("f1");
 
   const inputTeks = formatRibuan(result.tokenInput);
   const outputTeks = formatRibuan(result.tokenOutput);
@@ -30,32 +34,41 @@ export default function FormulaSection({
 
   return (
     <section className="formula-section" aria-label="Rumus dan Asumsi Perhitungan">
-      <div className="formula-section__header">
+      <PitaHeader
+        id="pita-toggle-f1"
+        controlsId="pita-isi-f1"
+        label="Rumus dan Asumsi"
+        terbuka={terbuka}
+        onToggle={toggle}
+        actions={
+          <div
+            className="formula-mode-switch"
+            role="group"
+            aria-label="Pilih mode tampilan rumus"
+          >
+            <button
+              type="button"
+              className={`formula-mode-btn ${mode === "simbol" ? "formula-mode-btn--active" : ""}`}
+              onClick={() => setMode("simbol")}
+              aria-pressed={mode === "simbol"}
+            >
+              Simbol
+            </button>
+            <button
+              type="button"
+              className={`formula-mode-btn ${mode === "angka" ? "formula-mode-btn--active" : ""}`}
+              onClick={() => setMode("angka")}
+              aria-pressed={mode === "angka"}
+            >
+              Dengan angka
+            </button>
+          </div>
+        }
+      >
         <h3 className="formula-section__label">RUMUS &amp; ASUMSI</h3>
-        <div
-          className="formula-mode-switch"
-          role="group"
-          aria-label="Pilih mode tampilan rumus"
-        >
-          <button
-            type="button"
-            className={`formula-mode-btn ${mode === "simbol" ? "formula-mode-btn--active" : ""}`}
-            onClick={() => setMode("simbol")}
-            aria-pressed={mode === "simbol"}
-          >
-            Simbol
-          </button>
-          <button
-            type="button"
-            className={`formula-mode-btn ${mode === "angka" ? "formula-mode-btn--active" : ""}`}
-            onClick={() => setMode("angka")}
-            aria-pressed={mode === "angka"}
-          >
-            Dengan angka
-          </button>
-        </div>
-      </div>
+      </PitaHeader>
 
+      <PitaBody id="pita-isi-f1" terbuka={terbuka}>
       {/* Tampilan Baris Kode Monospace Bernomor (Gelap & Terang) */}
       <div className="formula-code-view">
         {mode === "simbol" ? (
@@ -301,6 +314,7 @@ export default function FormulaSection({
           </div>
         </div>
       </div>
+      </PitaBody>
     </section>
   );
 }

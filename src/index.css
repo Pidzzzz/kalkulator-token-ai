@@ -1160,7 +1160,7 @@ body {
 
 .formula-section__header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   margin-block-end: 12px;
@@ -1217,6 +1217,106 @@ body {
 /* Sembunyikan sakelar di Tema Hangat (aturan Sesi 1E / 1I) */
 [data-theme="hangat"] .formula-mode-switch {
   display: none;
+}
+
+/* ---- Sesi 4B: baris judul pita sebagai tombol lipat (F1/F2/F3) ---- */
+
+/* Baris judul pita tetap sebaris: tombol lipat selebar ruang yang tersisa,
+   aksi kecil (sakelar Simbol | Dengan angka) duduk di kanan sebagai saudara. */
+.formula-section__header {
+  align-items: center;
+  gap: 10px;
+}
+
+.pita-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 28px;
+  padding: 2px 0;
+  margin: 0;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: none;
+  border-block-end: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.pita-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Chevron rumah (gaya dropdown): --muted-strong, berputar 180° saat tertutup */
+.pita-toggle__chevron {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--muted-strong);
+  transition: transform 0.2s ease, color 0.15s ease;
+}
+
+.pita-toggle__chevron[data-terbuka="false"] {
+  transform: rotate(180deg);
+}
+
+.pita-toggle:hover .pita-toggle__chevron,
+.pita-toggle:hover .formula-section__label,
+.pita-toggle:hover .formula-section__model {
+  color: var(--ink);
+}
+
+.pita-header__aksi {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Isi pita: tetap di DOM saat tertutup (atribut hidden), cukup disembunyikan
+   secara aksesibel. Transisi tinggi + opacity ±250ms memakai interpolate-size
+   (Baseline 2026); tanpa dukungan, lipatan langsung tampil/hilang. */
+.pita-body {
+  interpolate-size: allow-keywords;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 250ms ease, height 250ms ease;
+}
+
+.pita-body[hidden] {
+  display: flex;
+  flex-direction: column;
+  height: 0;
+  opacity: 0;
+  transition: opacity 250ms ease, height 250ms ease, display 250ms allow-discrete;
+}
+
+/* Garis rambut pemisah baris judul dengan isi — tetap tampil saat terlipat.
+   Padding-block-start dipindah ke baris judul agar ruangnya tidak berubah. */
+.pita-body__inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.pita-body[hidden] .pita-body__inner {
+  padding-block-start: 0;
+  border-block-start: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pita-body,
+  .pita-body[hidden] {
+    transition: none;
+  }
+
+  .pita-toggle__chevron {
+    transition: none;
+  }
 }
 
 /* Tampilan Baris Kode Bernomor (Gelap & Terang) */
@@ -1943,6 +2043,41 @@ body {
   font-weight: 700;
 }
 
+/* Sesi 4B: tabel faktor terkelompok 3 baris — dua kolom (Faktor | Keluarga).
+   Urutan visual: Faktor di kiri (mono tebal aksen), nama penyedia di kanan. */
+.metode-table .assumptions-row {
+  grid-template-columns: 150px 1fr;
+}
+
+.metode-table .assumptions-row--head .assumptions-col--val,
+.metode-table .assumptions-row--head .assumptions-col--desc {
+  font-size: 0.688rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.metode-table .assumptions-row--head .assumptions-col--desc {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metode-table .assumptions-col--desc {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.metode-table .assumptions-row--aktif .assumptions-col--val,
+.metode-table .assumptions-row--aktif .assumptions-col--desc {
+  color: var(--accent-light);
+}
+
+/* Satu baris catatan faktor di bawah tabel — 12px muted-strong, tanpa kotak. */
+.metode-catatan--faktor {
+  display: block;
+  margin-block: 8px 10px;
+}
+
 /* Catatan kejujuran: teks biasa, tanpa kotak berwarna */
 .metode-catatan {
   display: flex;
@@ -1966,6 +2101,13 @@ body {
 
   .keluarga-row--head {
     font-size: 0.625rem;
+  }
+
+  /* Tabel faktor terkelompok menumpuk: faktor di atas, keluarga di bawah. */
+  .metode-table .assumptions-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
   }
 }
 

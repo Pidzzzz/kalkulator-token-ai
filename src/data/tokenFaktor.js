@@ -14,6 +14,13 @@
 export const KETERANGAN_METODE =
   "Aturan praktis karakter-per-token; bukan tokenizer resmi penyedia.";
 
+/**
+ * Satu baris catatan di bawah tabel faktor terkelompok (Sesi 4B).
+ * Disimpan di sini supaya kalimat resminya tetap satu sumber data.
+ */
+export const CATATAN_FAKTOR =
+  "Faktor adalah aturan praktis karakter-per-token; bukan tokenizer resmi penyedia.";
+
 export const tokenFaktor = [
   { id: "Anthropic", faktor: 3.5, keterangan: KETERANGAN_METODE },
   { id: "DeepSeek", faktor: 3.5, keterangan: KETERANGAN_METODE },

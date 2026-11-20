@@ -286,3 +286,35 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - **Biaya masukan:** 2 desimal; bila nilai > 0 tetapi terbulatkan `$0,00` → s.d. 6 desimal tanpa nol ekor (`$0,00012`).
 - **Persen konteks:** 2 desimal; di bawah 0,01% ditulis `<0,01%`.
 - **Keadaan kosong:** hanya pesan "Tempel atau ketik teks untuk melihat perkiraan jumlah tokennya.", tabel perbandingan disembunyikan, tanpa angka 0.
+
+---
+
+## 13. Pita Metode Bisa Dilipat (Sesi 4B)
+
+**Aturan:** pita metode bawaan selalu terbuka (kewajiban PRD); lipatan adalah pilihan pengguna yang tersimpan per modul - keputusan pemilik 20 Nov 2026.
+
+### 13.1 Baris judul
+
+- Seluruh baris judul pita (`RUMUS & ASUMSI` F1/F2, `METODE & ASUMSI` F3) adalah satu `<button>` asli (`.pita-toggle`) selebar baris: judul + chevron rumah di ujung kanan.
+- Chevron: 12px, `--muted-strong`, berputar 180 derajat antara terbuka/tertutup (`.pita-toggle__chevron[data-terbuka="false"]`). Hover tombol hanya mengubah warna chevron/judul ke `--ink` - tanpa glow, tanpa latar baru.
+- Keyboard: tombol native (Enter/Spasi), ring fokus rumah (`outline: 2px solid var(--accent)`). `aria-expanded` + `aria-controls` menunjuk `#pita-isi-f1|f2|f3`.
+- Sakelar Simbol | Dengan angka tinggal di `.pita-header__aksi` sebagai **saudara** tombol (tidak ada tombol bersarang). Di tema Hangat sakelar tetap disembunyikan seperti sebelumnya.
+
+### 13.2 Keadaan & penyimpanan
+
+- Hook bersama `usePitaTerbuka(modul)` (`src/utils/usePitaTerbuka.js`): kunci `kalkulator-pita` = `{ f1, f2, f3 }` boolean, bawaan semua `true`. Nilai tidak dikenal/korup -> terbuka. Kegagalan `localStorage` diabaikan diam-diam. Event `storage` menyinkronkan antar-tab.
+- Melipat F3 tidak memengaruhi F1/F2.
+
+### 13.3 Isi yang terlipat
+
+- Seluruh isi di bawah baris judul (baris rumus, sakelar, tabel, catatan). Garis rambut pemisah menempel pada baris judul sehingga tetap tampil.
+- Isi TIDAK dilepas dari DOM: `PitaBody` hanya memberi atribut `hidden` -> status internal anak (mis. mode "Dengan angka") bertahan saat dibuka lagi.
+- Animasi 250ms tinggi + opacity (`interpolate-size: allow-keywords`, `transition-behavior: allow-discrete`); `prefers-reduced-motion: reduce` -> `transition: none`.
+
+### 13.4 Tabel faktor F3 ringkas
+
+- Tiga baris terkelompok, diturunkan dari `src/data/tokenFaktor.js` (`kelompokFaktor()`), urut menaik: 3,5 -> Anthropic · DeepSeek; 3,8 -> Mistral · Moonshot · Z.ai · Alibaba; 4,0 -> OpenAI · Google · xAI.
+- Dua kolom: Faktor (150px, mono) | Keluarga (nama dipisah ` · `). Kolom Keterangan dihapus; satu catatan di bawah tabel (`CATATAN_FAKTOR`).
+- Baris yang memuat penyedia model terpilih memakai `--accent-light` (`.assumptions-row--aktif`).
+- <=520px: baris menumpuk (faktor di atas, keluarga di bawah).
+- Tiga catatan kejujuran dan tabel perbandingan 9 baris di kartu Hasil tidak berubah.

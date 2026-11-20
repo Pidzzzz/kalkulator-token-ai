@@ -1,19 +1,41 @@
 import { useState } from "react";
+import PitaHeader from "./PitaHeader";
+import PitaBody from "./PitaBody";
+import { usePitaTerbuka } from "../utils/usePitaTerbuka";
 import { formatDesimal, formatRibuan } from "../utils/calculator";
 import {
   formatBiayaMasukan,
   formatFaktor,
 } from "../utils/calculatorF3";
-import { tokenFaktor } from "../data/tokenFaktor";
+import { tokenFaktor, CATATAN_FAKTOR } from "../data/tokenFaktor";
+
+/**
+ * Mengelompokkan penyedia menurut nilai faktor yang sama, urut menaik.
+ * Satu sumber data (`tokenFaktor.js`) — tabel pita TIDAK diketik tangan.
+ * Contoh: [{ faktor: 3.5, keluarga: ["Anthropic", "DeepSeek"] }, …]
+ */
+export function kelompokFaktor(data = tokenFaktor) {
+  const peta = new Map();
+  for (const baris of data) {
+    if (!peta.has(baris.faktor)) peta.set(baris.faktor, []);
+    peta.get(baris.faktor).push(baris.id);
+  }
+  return Array.from(peta.entries())
+    .sort((a, b) => a[0] - b[0])
+    .map(([faktor, keluarga]) => ({ faktor, keluarga }));
+}
 
 /**
  * Pita "METODE & ASUMSI" F3 — pola blok Rumus & Asumsi Sesi 1I:
  * selebar halaman di bawah kedua panel, tanpa kotak berwarna, dipisah garis
- * rambut. Sakelar Simbol | Dengan angka, prosa untuk tema Hangat, lalu tabel
- * faktor 9 keluarga + catatan kejujuran (teks biasa, bukan kotak peringatan).
+ * rambut. Baris judul kini tombol lipat (Sesi 4B). Isi: sakelar
+ * Simbol | Dengan angka, prosa untuk tema Hangat, tabel faktor terkelompok
+ * 3 baris + satu baris catatan faktor, lalu tiga catatan kejujuran.
  */
 export default function TeksFormula({ result }) {
   const [mode, setMode] = useState("simbol"); // "simbol" | "angka"
+  const { terbuka, toggle } = usePitaTerbuka("f3");
+  const kelompok = kelompokFaktor();
 
   const karakterTeks = formatRibuan(result.karakter);
   const faktorTeks = result.faktor ? formatFaktor(result.faktor) : "—";
@@ -25,38 +47,45 @@ export default function TeksFormula({ result }) {
       className="formula-section"
       aria-label="Metode dan Asumsi Penghitung Token Teks"
     >
-      <div className="formula-section__header">
-        <div className="formula-section__judul">
-          <h3 className="formula-section__label">METODE &amp; ASUMSI</h3>
-          <span className="formula-section__model">
-            {result.model?.nama || "Model belum dipilih"}
-          </span>
-        </div>
-        <div
-          className="formula-mode-switch"
-          role="group"
-          aria-label="Pilih mode tampilan rumus"
-        >
-          <button
-            type="button"
-            className={`formula-mode-btn ${mode === "simbol" ? "formula-mode-btn--active" : ""}`}
-            onClick={() => setMode("simbol")}
-            aria-pressed={mode === "simbol"}
+      <PitaHeader
+        id="pita-toggle-f3"
+        controlsId="pita-isi-f3"
+        label="Metode dan Asumsi"
+        terbuka={terbuka}
+        onToggle={toggle}
+        actions={
+          <div
+            className="formula-mode-switch"
+            role="group"
+            aria-label="Pilih mode tampilan rumus"
           >
-            Simbol
-          </button>
-          <button
-            type="button"
-            className={`formula-mode-btn ${mode === "angka" ? "formula-mode-btn--active" : ""}`}
-            onClick={() => setMode("angka")}
-            aria-pressed={mode === "angka"}
-          >
-            Dengan angka
-          </button>
-        </div>
-      </div>
+            <button
+              type="button"
+              className={`formula-mode-btn ${mode === "simbol" ? "formula-mode-btn--active" : ""}`}
+              onClick={() => setMode("simbol")}
+              aria-pressed={mode === "simbol"}
+            >
+              Simbol
+            </button>
+            <button
+              type="button"
+              className={`formula-mode-btn ${mode === "angka" ? "formula-mode-btn--active" : ""}`}
+              onClick={() => setMode("angka")}
+              aria-pressed={mode === "angka"}
+            >
+              Dengan angka
+            </button>
+          </div>
+        }
+      >
+        <h3 className="formula-section__label">METODE &amp; ASUMSI</h3>
+        <span className="formula-section__model">
+          {result.model?.nama || "Model belum dipilih"}
+        </span>
+      </PitaHeader>
 
-      {/* Baris kode monospace bernomor (Gelap & Terang) */}
+      <PitaBody id="pita-isi-f3" terbuka={terbuka}>
+        {/* Baris kode monospace bernomor (Gelap & Terang) */}
       <div className="formula-code-view">
         {mode === "simbol" ? (
           <>
@@ -212,7 +241,7 @@ export default function TeksFormula({ result }) {
         </p>
       </div>
 
-      {/* Tabel faktor 9 keluarga */}
+      {/* Tabel faktor terkelompok (3 baris) — diturunkan dari tokenFaktor.js */}
       <div
         className="assumptions-table metode-table"
         role="table"
@@ -221,63 +250,55 @@ export default function TeksFormula({ result }) {
         <div className="assumptions-table__head" role="rowgroup">
           <div className="assumptions-row assumptions-row--head" role="row">
             <span
-              className="assumptions-col assumptions-col--param"
-              role="columnheader"
-            >
-              Keluarga
-            </span>
-            <span
               className="assumptions-col assumptions-col--val"
               role="columnheader"
             >
-              Faktor
+              Faktor (karakter/token)
             </span>
             <span
               className="assumptions-col assumptions-col--desc"
               role="columnheader"
             >
-              Keterangan
+              Keluarga
             </span>
           </div>
         </div>
         <div className="assumptions-table__body" role="rowgroup">
-          {tokenFaktor.map((baris) => (
-            <div
-              key={baris.id}
-              className={
-                baris.id === result.model?.provider
-                  ? "assumptions-row assumptions-row--aktif"
-                  : "assumptions-row"
-              }
-              role="row"
-              aria-current={
-                baris.id === result.model?.provider ? "true" : undefined
-              }
-            >
-              <div className="assumptions-row__top">
+          {kelompok.map((baris) => {
+            const aktif = baris.keluarga.includes(result.model?.provider);
+            return (
+              <div
+                key={baris.faktor}
+                className={
+                  aktif
+                    ? "assumptions-row assumptions-row--aktif"
+                    : "assumptions-row"
+                }
+                role="row"
+                aria-current={aktif ? "true" : undefined}
+              >
+                <div className="assumptions-row__top">
+                  <span
+                    className="assumptions-col assumptions-col--val"
+                    role="cell"
+                  >
+                    {formatFaktor(baris.faktor)}
+                  </span>
+                </div>
                 <span
-                  className="assumptions-col assumptions-col--param"
+                  className="assumptions-col assumptions-col--desc"
                   role="cell"
                 >
-                  {baris.id}
-                </span>
-                <span
-                  className="assumptions-col assumptions-col--val"
-                  role="cell"
-                >
-                  {formatFaktor(baris.faktor)}
+                  {baris.keluarga.join(" · ")}
                 </span>
               </div>
-              <span
-                className="assumptions-col assumptions-col--desc"
-                role="cell"
-              >
-                {baris.keterangan}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
+      <p className="metode-catatan metode-catatan--faktor">
+        {CATATAN_FAKTOR}
+      </p>
 
       {/* Catatan kejujuran — teks biasa, bukan kotak peringatan berwarna */}
       <div className="metode-catatan">
@@ -292,6 +313,7 @@ export default function TeksFormula({ result }) {
         </p>
         <p>Teks yang ditempel tidak meninggalkan browser.</p>
       </div>
+      </PitaBody>
     </section>
   );
 }
