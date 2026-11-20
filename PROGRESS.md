@@ -428,3 +428,29 @@ rata-rata   = biaya / N · konteks_akhir = konteks_awal + (N − 1) × pertumbuh
 **Cek visual (tugas pemilik):** chip di 3 tema + wrap di HP sempit, jarak microcopy terhadap label & isian, strip hasil sticky di HP tetap bekerja.
 
 **Status:** Selesai — `npm run build` 0 error.
+
+---
+
+## Sesi 3D — Judul Ringkas + Byline + Animasi Masuk Header (20 Nov 2026)
+
+**Tujuan:** Header dipersempit ke inti: judul ringkas, kredit pembuat, dan animasi masuk sekali saat halaman dimuat. Hanya header & `<title>` yang berubah — modul F1–F4, panel, rumus, data, dan footer tidak disentuh.
+
+**Cakupan:**
+- **H1** menjadi persis "Kalkulator Token" (Fraunces, 1.688rem, bobot 700, satu baris — tidak diperbesar).
+- **Byline** `by Pidos` tepat di bawah H1, di dalam blok judul bersama H1 (baris H1–byline satu kesatuan; pengalih tema tetap di kanan baris judul). "by" 12px `--muted`, "Pidos" semibold `--ink` menuju https://github.com/Pidzzzz (`target="_blank"`, `rel="noopener noreferrer"`); hover/fokus ke `--accent` + garis bawah; bukan pil/tombol; tanpa fon/warna baru.
+- **Subjudul & tiga badge** tidak berubah.
+- **Animasi masuk** `@keyframes headerIn` (dari `opacity: 0` + `translateY(0.25em)`), `.header__in` 0.8s `ease-out` `both`, jeda berjenjang H1 0s → byline 0.1s → subjudul 0.2s → badge 0.3s. Hanya transform & opacity; tanpa loop; murni CSS (tidak bergantung state React, jadi tidak terpicu ulang saat berpindah modul/ganti tema — header tidak di-remount). `@media (prefers-reduced-motion: reduce)` mematikan animasi sepenuhnya.
+- **`<title>`** menjadi "Kalkulator Token"; meta description, repo, README, About tidak diubah.
+
+**Uji wajib (headless, 27 pemeriksaan) — semua lulus:**
+1. H1 persis "Kalkulator Token", tanpa sisa "Request AI", satu baris.
+2. Byline "by Pidos" tepat di bawah H1, tautan ke https://github.com/Pidzzzz, bukan pil/tombol, gaya muted+semibold/ink.
+3. `<title>` = "Kalkulator Token"; meta description utuh.
+4. `headerIn` ada (2 properti saja), 0.8s ease-out both, jeda 0/0.1/0.2/0.3s, keempat elemen memakai kelasnya, blok reduced-motion mematikan; header tidak me-remount saat pindah modul (F3 tetap "segera hadir").
+5. Subjudul & tiga badge sama; bawaan F1 utuh (request 250, biaya $10); bawaan F2 10.000 / 2.000 / 5 / 80% / 1.000; kasus uji Sesi 3 tetap $0,0892 / 75.000 token / $0,01784.
+
+**Berkas:** `src/components/Header.jsx`, `src/index.css`, `index.html`, `PROGRESS.md`.
+
+**Cek visual (tugas pemilik):** animasi berjenjang di 3 tema (Gelap/Terang/Hangat), header & pengalih tema di HP sempit (byline tidak mendorong pengalih aneh), dan perilaku saat "kurangi gerak" OS aktif (header tampil langsung).
+
+**Status:** Selesai — `npm run build` 0 error.

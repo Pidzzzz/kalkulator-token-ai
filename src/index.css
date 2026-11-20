@@ -146,6 +146,11 @@ body {
   margin-block-end: 4px;
 }
 
+/* H1 + byline sebagai satu blok; pengalih tema tetap di kanan baris ini */
+.header__title-block {
+  min-width: 0;
+}
+
 .header__title {
   font-family: var(--font-heading);
   font-weight: 700;
@@ -153,6 +158,68 @@ body {
   line-height: 1.2;
   color: var(--ink);
   letter-spacing: -0.02em;
+}
+
+/* Byline "by Pidos": teks sekunder muted, nama semibold berwarna ink */
+.header__byline {
+  margin-block: -2px 6px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.header__byline-link {
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.header__byline-link:hover,
+.header__byline-link:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.header__byline-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-radius: 2px;
+}
+
+/* Animasi masuk header — SEKALI saat halaman dimuat, berjenjang.
+   Hanya transform & opacity; berakhir persis di posisi alami. */
+@keyframes headerIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.25em);
+  }
+}
+
+.header__in {
+  animation: headerIn 0.8s ease-out both;
+}
+
+.header__in--1 {
+  animation-delay: 0s;
+}
+
+.header__in--2 {
+  animation-delay: 0.1s;
+}
+
+.header__in--3 {
+  animation-delay: 0.2s;
+}
+
+.header__in--4 {
+  animation-delay: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header__in {
+    animation: none;
+  }
 }
 
 /* Pengalih Tema: 3 Tombol Ikon (Bulan · Matahari · Kopi) */

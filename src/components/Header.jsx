@@ -44,7 +44,22 @@ export default function Header({ currentTheme, onThemeChange }) {
   return (
     <header className="header">
       <div className="header__title-row">
-        <h1 className="header__title">Kalkulator Token &amp; Request AI</h1>
+        <div className="header__title-block">
+          <h1 className="header__title header__in header__in--1">
+            Kalkulator Token
+          </h1>
+          <p className="header__byline header__in header__in--2">
+            by{" "}
+            <a
+              className="header__byline-link"
+              href="https://github.com/Pidzzzz"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Pidos
+            </a>
+          </p>
+        </div>
         <div className="theme-switcher" role="group" aria-label="Pilih tema tampilan">
           {THEMES.map(({ id, label, Icon }) => (
             <button
@@ -61,11 +76,15 @@ export default function Header({ currentTheme, onThemeChange }) {
           ))}
         </div>
       </div>
-      <p className="header__subtitle">
+      <p className="header__subtitle header__in header__in--3">
         Terjemahkan jatah &amp; batas paket AI menjadi angka yang bisa
         dibayangkan: request, token, dan perkiraan biaya.
       </p>
-      <div className="header__chips" role="list" aria-label="Status aplikasi">
+      <div
+        className="header__chips header__in header__in--4"
+        role="list"
+        aria-label="Status aplikasi"
+      >
         <span className="chip" role="listitem">web statis</span>
         <span className="chip" role="listitem">tanpa login</span>
         <span className="chip" role="listitem">hitung di browser</span>
