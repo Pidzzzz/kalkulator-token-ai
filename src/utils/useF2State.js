@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { models } from "../data/models.js";
+import { getModels } from "./lapisanModel.js";
 
 const STORAGE_KEY = "kalkulator-f2-input";
 
@@ -65,7 +65,7 @@ function bacaSimpanan() {
     const data = JSON.parse(mentah);
     if (!data || typeof data !== "object") return DEFAULTS;
 
-    const modelId = models.some((m) => m.id === data.modelId)
+    const modelId = getModels().some((m) => m.id === data.modelId)
       ? data.modelId
       : DEFAULTS.modelId;
 

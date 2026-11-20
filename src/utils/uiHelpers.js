@@ -1,9 +1,11 @@
-﻿import { models } from "../data/models.js";
-import { formatDesimal, formatHarga } from "./calculator.js";
+﻿import { formatDesimal, formatHarga, formatRibuan } from "./calculator.js";
+import { getModels } from "./lapisanModel.js";
 
 /**
  * Helper tampilan yang dipakai bersama F1 & F2 (Sesi 3).
  * Dipisah agar opsi dropdown Model dan logika salin tidak ditulis dua kali.
+ * Sesi 5: opsi model dibaca dari lapisan bersama (`getModels()`), sehingga
+ * edit harga di F4 langsung terlihat di pemicu & daftar dropdown.
  */
 
 function formatHargaCache(nilai) {
@@ -13,10 +15,12 @@ function formatHargaCache(nilai) {
 /**
  * Opsi dropdown Model (bergrup per provider) — format sama dengan F1:
  * pengenal singkat "$2/$10" di pemicu dan rincian harga di dalam daftar.
+ * (Sesi 3 memakai `buatOpsiModel` dari utils/opsi.js; fungsi ini dipertahankan
+ * untuk pemanggil lama.)
  */
-export function buatOpsiModel() {
+export function buatOpsiModel(daftar = getModels()) {
   const grup = new Map();
-  for (const m of models) {
+  for (const m of daftar) {
     if (!grup.has(m.provider)) grup.set(m.provider, []);
     grup.get(m.provider).push({
       value: m.id,
@@ -39,6 +43,13 @@ export function hargaModelTeks(model) {
   return `input $${formatHarga(model.hargaInput)} · cache $${formatHargaCache(
     model.hargaCache
   )} · output $${formatHarga(model.hargaOutput)} per 1 jt token`;
+}
+
+/** Konteks ringkas untuk salinan: "1.000.000 token". */
+export function konteksTeks(model) {
+  const nilai = model?.konteks;
+  if (typeof nilai !== "number" || !Number.isFinite(nilai) || nilai <= 0) return "—";
+  return `${formatRibuan(nilai)} token`;
 }
 
 function salinLama(teks) {

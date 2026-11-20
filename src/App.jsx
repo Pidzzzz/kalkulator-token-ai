@@ -13,10 +13,13 @@ import TeksInput from "./components/TeksInput";
 import TeksResult from "./components/TeksResult";
 import TeksFormula from "./components/TeksFormula";
 import TeksMobileStrip from "./components/TeksMobileStrip";
+import DataModelPanel from "./components/DataModelPanel.jsx";
 import Footer from "./components/Footer";
 import { useF1State } from "./utils/useF1State";
 import { useF2State } from "./utils/useF2State";
 import { useF3State } from "./utils/useF3State";
+import { useSinkronModel, useModels } from "./utils/useModels";
+import { aksiModel } from "./utils/lapisanModel";
 import {
   getJendelaLabel,
   getPresetById,
@@ -54,6 +57,34 @@ export default function App() {
 
   const [activeModule, setActiveModule] = useState(getModuleFromHash);
 
+  // Sinkronkan daftar model antar-tab (F4 mengubah harga → semua tab ikut).
+  useSinkronModel();
+
+  // Daftar model gabungan (bawaan + kustom F4). Dibaca di komponen teratas agar
+  // App dan seluruh hook di bawahnya berlangganan perubahan store model, lalu
+  // F1–F3 dihitung ulang seketika tanpa tombol Hitung.
+  const daftarModel = useModels();
+
+  /**
+   * Model terpilih yang hilang (mis. model tambahan dihapus, atau id lama di
+   * localStorage) jatuh aman ke model bawaan — tanpa kosong/NaN.
+   */
+  const jagaModel = useCallback(
+    (modelId) => {
+      const ada = daftarModel.some((m) => m.id === modelId);
+      return ada ? modelId : "claude-sonnet-5-5";
+    },
+    [daftarModel]
+  );
+
+  // Usaha memilih model yang sama, tetapi bila DAFTAR model berubah (harga
+  // diedit di F4, model tambahan dihapus) memo di bawah wajib ikut menghitung
+  // ulang — karena harga dibaca dari lapisan, bukan dari potongan state.
+  const [, setVersiModel] = useState(0);
+  useEffect(() => {
+    setVersiModel((v) => v + 1);
+  }, [daftarModel]);
+
   const {
     state: f1,
     pilihPaket,
@@ -65,19 +96,22 @@ export default function App() {
     aturTokenOutput,
   } = useF1State();
 
+  const modelF1 = jagaModel(f1.modelId);
+
   const preset = getPresetById(f1.paketId);
   const jendelaLabel = getJendelaLabel(f1.jendela);
 
   const result = useMemo(
     () =>
       hitungF1({
-        modelId: f1.modelId,
+        modelId: modelF1,
         jatah: f1.jatah,
         tokenInput: f1.tokenInput,
         tokenOutput: f1.tokenOutput,
         totalKuota: f1.totalKuota,
       }),
-    [f1.modelId, f1.jatah, f1.tokenInput, f1.tokenOutput, f1.totalKuota]
+    // `daftarModel` di dependensi: harga model bisa berubah tanpa f1 berubah.
+    [modelF1, f1.jatah, f1.tokenInput, f1.tokenOutput, f1.totalKuota, daftarModel]
   );
 
   // Strip hasil ringkas di HP: muncul setelah panel Masukan terlewati.
@@ -97,6 +131,7 @@ export default function App() {
   } = useF2State();
 
   const [mataUang, setMataUang] = useState(bacaMataUang);
+  const modelF2 = jagaModel(f2.modelId);
 
   const ubahMataUang = useCallback((kode) => {
     setMataUang(kode);
@@ -110,7 +145,7 @@ export default function App() {
   const resultF2 = useMemo(
     () =>
       hitungF2({
-        modelId: f2.modelId,
+        modelId: modelF2,
         konteksAwal: f2.konteksAwal,
         pertumbuhan: f2.pertumbuhan,
         putaran: f2.putaran,
@@ -118,12 +153,13 @@ export default function App() {
         outputPerPutaran: f2.outputPerPutaran,
       }),
     [
-      f2.modelId,
+      modelF2,
       f2.konteksAwal,
       f2.pertumbuhan,
       f2.putaran,
       f2.rasioCache,
       f2.outputPerPutaran,
+      daftarModel,
     ]
   );
 
@@ -138,9 +174,11 @@ export default function App() {
     bersihkan: bersihkanF3,
   } = useF3State();
 
+  const modelF3 = jagaModel(f3.modelId);
+
   const resultF3 = useMemo(
-    () => hitungF3({ teks: f3.teks, modelId: f3.modelId }),
-    [f3.teks, f3.modelId]
+    () => hitungF3({ teks: f3.teks, modelId: modelF3 }),
+    [f3.teks, modelF3, daftarModel]
   );
 
   const inputPanelF3Ref = useRef(null);
@@ -233,9 +271,6 @@ export default function App() {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  const currentModule =
-    MODULES.find((m) => m.id === activeModule) || MODULES[0];
-
   return (
     <div className="page">
       <Header currentTheme={theme} onThemeChange={changeTheme} />
@@ -252,7 +287,7 @@ export default function App() {
             <div className="module-f1__input" ref={inputPanelRef}>
               <InputPanel
                 paketId={f1.paketId}
-                modelId={f1.modelId}
+                modelId={modelF1}
                 jatah={f1.jatah}
                 totalKuota={f1.totalKuota}
                 jendela={f1.jendela}
@@ -293,7 +328,7 @@ export default function App() {
           <div className="module-f1 module-f2">
             <div className="module-f1__input" ref={inputPanelF2Ref}>
               <SimulatorInput
-                modelId={f2.modelId}
+                modelId={modelF2}
                 konteksAwal={f2.konteksAwal}
                 pertumbuhan={f2.pertumbuhan}
                 putaran={f2.putaran}
@@ -342,7 +377,7 @@ export default function App() {
           <div className="module-f1 module-f3">
             <div className="module-f1__input" ref={inputPanelF3Ref}>
               <TeksInput
-                modelId={f3.modelId}
+                modelId={modelF3}
                 teks={f3.teks}
                 onPilihModel={pilihModelF3}
                 onUbahTeks={aturTeks}
@@ -364,16 +399,15 @@ export default function App() {
         </main>
       ) : (
         <main
-          id={`panel-${activeModule}`}
+          id="panel-f4"
           role="tabpanel"
-          aria-labelledby={`tab-${activeModule}`}
+          aria-labelledby="tab-f4"
           tabIndex={0}
           className="main-panel"
         >
-          <article className="card module-placeholder">
-            <h2 className="card__title">{currentModule.label}</h2>
-            <p className="module-placeholder__text">Modul ini segera hadir.</p>
-          </article>
+          <DataModelPanel
+            actions={aksiModel}
+          />
         </main>
       )}
 

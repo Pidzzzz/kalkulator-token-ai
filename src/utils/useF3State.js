@@ -2,10 +2,13 @@
  * Status masukan F3 (teks + model) + persistensi localStorage.
  * Pola sama dengan useF1State / useF2State: nilai tersimpan divalidasi balik
  * ke bawaan; kegagalan penyimpanan (mode privat / kuota penuh) diabaikan.
+ *
+ * Sesi 5: validasi model membaca daftar gabungan (bawaan + kustom) lewat
+ * lapisan bersama, sehingga model tambahan dari F4 bisa dipilih & dipulihkan.
  */
 
 import { useState, useEffect, useCallback } from "react";
-import { models } from "../data/models.js";
+import { getModels } from "./lapisanModel.js";
 import { TEKS_CONTOH_F3 } from "./calculatorF3.js";
 
 export const STORAGE_KEY_F3 = "kalkulator-f3-input";
@@ -25,7 +28,7 @@ function bacaSimpanan() {
 
     return {
       teks: typeof data.teks === "string" ? data.teks : DEFAULTS_F3.teks,
-      modelId: models.some((m) => m.id === data.modelId)
+      modelId: getModels().some((m) => m.id === data.modelId)
         ? data.modelId
         : DEFAULTS_F3.modelId,
     };

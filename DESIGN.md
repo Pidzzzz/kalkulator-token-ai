@@ -318,3 +318,38 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - Baris yang memuat penyedia model terpilih memakai `--accent-light` (`.assumptions-row--aktif`).
 - <=520px: baris menumpuk (faktor di atas, keluarga di bawah).
 - Tiga catatan kejujuran dan tabel perbandingan 9 baris di kartu Hasil tidak berubah.
+
+## 14. F4 Basis Data Model & Harga (Sesi 5)
+
+**Aturan:** harga dan konteks model adalah data milik pengguna, bukan konstanta aplikasi. F4 adalah satu-satunya tempat mengubahnya; F1-F3 hanya membaca.
+
+### 14.1 Tabel yang menjadi kartu di HP
+
+- Desktop: grid 8 sel `.data-baris` dengan `grid-template-columns: minmax(0,1.6fr) 132px 96px 96px 96px 104px minmax(0,1.5fr) 84px` (Model | Provider | Input | Output | Cache | Konteks | Sumber | aksi). Baris dikelompokkan per provider lewat `.data-grup` + `.data-grup__judul` (logo satu warna dari `providerIcons.js`, fallback monogram huruf awal, `fill: currentColor`, selalu `--ink` di ketiga tema).
+- <=520px: setiap baris berubah menjadi kartu bertumpuk - `grid-template-columns: 1fr`, label kolom dipindah ke kiri tiap nilai (`::before` dari `data-label`), sehingga tabel **tidak pernah** butuh geser horizontal. Antarmuka `<table>` sengaja tidak dipakai agar transformasi ini murni CSS.
+- Sel angka yang bisa diedit adalah `<input>` selebar sel (`.data-sel`) dengan gaya "teks" (tanpa kotak sampai fokus), `inputmode="decimal"` untuk harga dan `inputmode="numeric"` untuk konteks; fokus memberi latar `--surface-2` + garis `--accent`. Tinggi sasaran sentuh minimal 32px di HP.
+- Catatan model (`.data-catatan`) tampil kecil di bawah nama model, warna `--muted-strong`, maksimal dua baris.
+- Sumber selalu menampilkan tautan resmi (`target="_blank"`, `rel="noopener noreferrer"`) + "dicek 19 Nov 2026"; bila `sumber` kosong, teks diam adalah "sumber belum diisi" (bukan tautan palsu).
+
+### 14.2 Sel yang menyimpan saat blur/Enter, menolak yang tidak sah
+
+- Fokus pada sel menyeleksi seluruh teks; Enter/blur menyimpan, Esc membatalkan (nilai lama kembali, pesan hilang).
+- Validasi di satu tempat: `validasiSel(field, teks)` di `lapisanModel.js`. Harga: kosong -> "Nilai belum diisi. Isi angka dulu."; negatif -> "Angka tidak boleh negatif."; bukan angka -> `"abc" bukan angka. Pakai angka, mis. 2 atau 0,05.`; konteks harus bilangan bulat positif ("bulat positif"). Titik dibaca sebagai pemisah ribuan (`1.500.000` -> 1500000).
+- Penolakan **tidak mengubah** nilai tersimpan: sel diberi `aria-invalid="true"`, pesan tampil di `#<id>-galat` (`role="alert"`), dan pesan itu hilang begitu pengguna mengetik lagi. Tidak ada `NaN`/`Infinity`/`0` tak sengaja yang pernah masuk store.
+- Baris yang berbeda dari bawaan menampilkan label "diubah" (`.data-badge-ubah`) dan tombol "Kembalikan" (kembali ke nilai bawaan baris itu saja). Model tambahan menampilkan "Hapus" sebagai gantinya.
+
+### 14.3 Konfirmasi sebaris dua langkah (pengganti modal)
+
+- Tombol berisiko ("Kembalikan bawaan") **tidak** memakai modal/dialog. Klik pertama hanya mengubah label menjadi "Yakin? Klik lagi untuk mengembalikan" dan memberi kelas `data-kembalikan--yakin`; klik kedua menjalankan aksi. Kehilangan fokus (`onBlur`) membatalkan mode yakin dan label kembali semula, jadi salah klik tidak langsung menghapus apa pun. Tombol nonaktif saat tabel masih persis bawaan.
+- Alasan: aksi ini tidak destruktif di tingkat data (bawaan selalu bisa dipulihkan) sehingga modal terasa terlalu berat; konfirmasi sebaris menjaga fokus tetap pada tombol dan aman untuk keyboard.
+
+### 14.4 Model tambahan & petunjuk angka contoh
+
+- `tambahModel()` menambah baris **lengkap** dengan angka contoh ($1/$2/$0,05, konteks 100.000) bertanda `baru: true`. Ini disengaja: baris setengah jadi akan dibuang oleh `normalisasiSimpanan`, jadi angka contoh lebih aman daripada sel kosong.
+- Selama `baru`, baris menampilkan petunjuk "Angka contoh $1/$2/$0,05 · 100.000 - sesuaikan dengan harga resmi."; petunjuk hilang begitu ada satu nilai diubah.
+- Model tambahan tampil di ujung tabel dan langsung muncul di dropdown F1-F3. Menghapus model yang sedang dipilih membuat pemilih jatuh ke `claude-sonnet-5-5` (lihat `jagaModel()` di `App.jsx`), bukan nilai kosong.
+
+### 14.5 Penyimpanan hanya selisih
+
+- localStorage `kalkulator-models-kustom` = `{ ubah: { [id]: patch }, tambah: [model] }`. Nilai yang kembali sama dengan bawaan dihapus dari patch (baris tidak lagi "diubah"). "Kembalikan bawaan" menghapus kunci ini sepenuhnya.
+- Pembacaan selalu melalui `normalisasiSimpanan()`, jadi data lama/rusak tidak pernah merusak tabel atau perhitungan.

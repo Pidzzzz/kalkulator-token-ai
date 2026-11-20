@@ -12,10 +12,11 @@
  * Catatan: suku cache sengaja TIDAK dipakai di F1 — itu wilayah F2.
  */
 
-import { models, presets, jendelaOptions } from "../data/models.js";
+import { presets, jendelaOptions } from "../data/models.js";
+import { getModels } from "./lapisanModel.js";
 
 export function getModelById(id) {
-  return models.find((m) => m.id === id) || null;
+  return getModels().find((m) => m.id === id) || null;
 }
 
 export function getPresetById(id) {
@@ -28,6 +29,9 @@ export function getJendelaLabel(id) {
 
 /**
  * Membaca angka dari masukan teks. Menerima koma maupun titik desimal.
+ * Titik di tengah angka dianggap pemisah ribuan ("1.000.000" -> 1000000),
+ * mengikuti parseAngkaIsian (Sesi 5: edit konteks di F4 "1.000.000" harus
+ * terbaca 1 juta, bukan 1).
  * Mengembalikan NaN bila kosong / bukan angka.
  */
 export function parseAngka(val) {
@@ -35,8 +39,12 @@ export function parseAngka(val) {
     return Number.isFinite(val) ? val : NaN;
   }
   if (val === null || val === undefined) return NaN;
-  const bersih = String(val).trim().replace(/\s/g, "").replace(",", ".");
+  let bersih = String(val).trim().replace(/\s/g, "").replace(/^\$/, "");
   if (bersih === "") return NaN;
+  if (/^-?(\d{1,3}(\.\d{3})+|\d+)(?:,\d*)?$/.test(bersih)) {
+    bersih = bersih.replace(/\./g, "");
+  }
+  bersih = bersih.replace(",", ".");
   const angka = Number(bersih);
   return Number.isFinite(angka) ? angka : NaN;
 }
@@ -76,6 +84,16 @@ export function formatHarga(val) {
   return new Intl.NumberFormat("id-ID", {
     maximumFractionDigits: 4,
   }).format(val);
+}
+
+/**
+ * Angka apa adanya untuk sel F4 yang bisa diedit: titik desimal standar
+ * ("0.2", "1.000000") supaya isian bisa langsung diketik ulang dan
+ * dibaca ulang oleh validasiSel.
+ */
+export function formatSel(val) {
+  if (typeof val !== "number" || !Number.isFinite(val)) return "";
+  return String(val);
 }
 
 /**

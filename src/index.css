@@ -2111,4 +2111,431 @@ body {
   }
 }
 
+/* ============================================================
+   Sesi 5 — F4 Basis Data Model & Harga
+   ============================================================ */
+
+.data-model {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+}
+
+.data-model__kepala {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding-block-end: 12px;
+  border-block-end: 1px solid var(--line);
+}
+
+.data-model__judul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.data-model__judul .card__title {
+  margin: 0;
+}
+
+.data-model__ringkas {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--muted-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.data-model__aksi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.data-model__catatan,
+.data-model__kaki {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--muted-strong);
+}
+
+.data-model__kaki {
+  padding-block-start: 8px;
+  border-block-start: 1px solid var(--line);
+}
+
+.data-model__catatan strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Konfirmasi inline dua langkah pada tombol kembalikan */
+.data-kembalikan--yakin {
+  color: var(--accent);
+  border-color: var(--accent);
+  background-color: var(--accent-soft);
+}
+
+/* ---- Tabel ---- */
+.data-tabel {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8125rem;
+}
+
+.data-baris {
+  display: grid;
+  grid-template-columns: var(--data-kolom, minmax(0, 1fr));
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  border-block-end: 1px solid var(--line);
+}
+
+.data-baris--kepala {
+  padding-block: 6px;
+  border-block-end: 1px solid var(--line);
+  font-size: 0.688rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.data-grup {
+  display: flex;
+  flex-direction: column;
+}
+
+.data-grup__judul {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 8px 4px;
+  font-size: 0.688rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-strong);
+}
+
+.data-provider-ikon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  color: var(--muted);
+}
+
+.data-provider-monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  text-transform: none;
+}
+
+.data-grup__jumlah {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.data-grup__ubah {
+  margin-inline-start: 2px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--accent-light);
+  background-color: var(--accent-soft);
+}
+
+/* ---- Sel ---- */
+.data-sel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.data-nama {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.data-nama__teks {
+  color: var(--ink);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.data-lencana {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--accent-light);
+  background-color: var(--accent-soft);
+  border-radius: 999px;
+}
+
+.data-catatan {
+  margin: 0;
+  font-size: 0.688rem;
+  line-height: 1.4;
+  color: var(--muted-strong);
+}
+
+.data-catatan--peringatan {
+  color: var(--accent-light);
+}
+
+.data-teks {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* Hanya model tambahan yang punya isian nama/provider; baris bawaan teks biasa. */
+.data-nama > .data-sel-input--teks,
+.data-sel--provider > .data-sel-input--teks {
+  min-width: 0;
+  width: 100%;
+}
+
+/* Isian sel: terlihat seperti teks biasa, baru jadi isian saat disentuh —
+   tetap jelas bisa diedit lewat garis bawah putus-putus. */
+.data-sel-input {
+  width: 100%;
+  min-width: 0;
+  height: 30px;
+  padding: 0 6px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--ink);
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-block-end: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.data-sel-input--teks {
+  font-family: var(--font-sans);
+  text-align: left;
+}
+
+.data-sel-input::placeholder {
+  color: var(--muted);
+}
+
+.data-sel-input:hover {
+  border-color: var(--field-line);
+  background-color: var(--field);
+}
+
+.data-sel-input:focus,
+.data-sel-input:focus-visible {
+  border-color: var(--accent);
+  background-color: var(--field);
+  box-shadow: 0 0 0 3px var(--field-ring);
+}
+
+.data-sel-input--galat {
+  border-color: var(--accent);
+  border-block-end-style: solid;
+}
+
+.data-sel-galat {
+  font-size: 0.688rem;
+  line-height: 1.4;
+  color: var(--accent-light);
+}
+
+.data-konteks-teks {
+  font-size: 0.625rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ---- Sumber ---- */
+.data-sumber {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.data-sumber__tautan {
+  color: var(--accent-light);
+  text-decoration: none;
+  border-block-end: 1px solid transparent;
+  overflow-wrap: anywhere;
+}
+
+.data-sumber__tautan:hover,
+.data-sumber__tautan:focus-visible {
+  color: var(--accent);
+  border-block-end-color: var(--accent);
+  outline: none;
+}
+
+.data-sumber__teks {
+  color: var(--muted-strong);
+  overflow-wrap: anywhere;
+}
+
+.data-sumber__teks--kosong,
+.data-cek--kosong {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.data-cek {
+  font-size: 0.688rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.data-sumber-kustom {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* ---- Aksi ---- */
+.data-aksi {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.data-aksi .preset-chip {
+  min-height: 27px;
+}
+
+.data-reset:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.data-hapus:hover,
+.data-hapus:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---- HP: tabel menjadi kartu per model (bukan scroll horizontal) ---- */
+@media (max-width: 520px) {
+  .data-baris--kepala {
+    display: none;
+  }
+
+  .data-baris {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    margin-block: 6px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg);
+  }
+
+  .data-grup__judul {
+    padding-inline: 2px;
+  }
+
+  .data-sel {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 8px;
+  }
+
+  .data-sel::before {
+    content: attr(data-label);
+    font-size: 0.688rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .data-sel--nama {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .data-sel--nama::before,
+  .data-sel--aksi::before {
+    display: none;
+  }
+
+  .data-sel--nama .data-catatan {
+    grid-column: 1 / -1;
+  }
+
+  .data-sel--angka {
+    grid-template-columns: 92px auto minmax(0, 1fr);
+  }
+
+  .data-sel--angka > .data-sel-galat {
+    grid-column: 2 / -1;
+  }
+
+  .data-sel--konteks {
+    grid-template-columns: 92px minmax(0, 1.2fr) auto;
+  }
+
+  .data-sel-input {
+    text-align: left;
+  }
+
+  .data-konteks-teks {
+    text-align: left;
+  }
+
+  .data-aksi {
+    justify-content: flex-start;
+    padding-block-start: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .data-sel-input {
+    transition: none;
+  }
+}
+
+
 

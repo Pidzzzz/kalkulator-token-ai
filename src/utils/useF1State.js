@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { jendelaOptions, models, presets } from "../data/models.js";
+import { jendelaOptions, presets } from "../data/models.js";
+import { getModels } from "./lapisanModel.js";
 
 const STORAGE_KEY = "kalkulator-f1-input";
 
@@ -35,7 +36,7 @@ function bacaSimpanan() {
     const paketId = presets.some((p) => p.id === data.paketId)
       ? data.paketId
       : DEFAULTS.paketId;
-    const modelId = models.some((m) => m.id === data.modelId)
+    const modelId = getModels().some((m) => m.id === data.modelId)
       ? data.modelId
       : DEFAULTS.modelId;
     const jendela = jendelaOptions.some((o) => o.id === data.jendela)

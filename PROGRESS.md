@@ -585,3 +585,34 @@ persen_konteks            = perkiraan_token ÷ konteks model × 100
 **Cek visual (tugas pemilik):** rasa tombol lipat di 3 tema (Gelap/Terang/Hangat, termasuk varian prosa Hangat di mana sakelar disembunyikan), lebar 360px (tabel faktor menumpuk, judul + chevron tidak terpotong), fokus keyboard pada baris judul, dan denyut animasi 250ms vs langsung di mode reduced-motion.
 
 **Status:** Selesai - `npm run build` 0 error, commit `feat: pita metode bisa dilipat + tabel faktor ringkas (Sesi 4B)`.
+
+## Sesi 5 - F4 Basis Data Model & Harga (21 Nov 2026)
+
+**Tujuan:** mengganti halaman "segera hadir" F4 dengan tabel basis data model yang bisa diedit di tempat, dan menjadikannya satu-satunya sumber data model untuk F1-F3.
+
+**Lapisan data kustom (pola baru, dipakai ulang)**
+
+- Satu sumber: `src/utils/lapisanModel.js`. Nilai bawaan selalu dari `src/data/models.js`; localStorage `kalkulator-models-kustom` **hanya menyimpan selisih**, bentuknya `{ ubah: { [id]: { field: nilai } }, tambah: [modelUtuh] }`. Tidak pernah menyimpan salinan tabel penuh, jadi perubahan harga di `models.js` tetap masuk ke pengguna lama.
+- `gabungModel(lapisan)` = bawaan + patch, lalu model tambahan di ujung. `normalisasiSimpanan()` membuang field tak dikenal, angka `NaN`/`Infinity`/negatif, dan konteks bukan bilangan bulat positif, sehingga data lokal yang rusak tidak pernah menghasilkan `NaN`.
+- Store kecil dengan `useSyncExternalStore`: `getModels()` (snapshot stabil), `lapisanSaatIni()` (objek stabil `{ ubah, tambah, kosong }`), `langgananModel(listener)`. Penulis (F4) dan pembaca (F1-F3) memakai store yang sama, jadi edit harga langsung mengubah hitungan tanpa tombol Hitung.
+- `src/utils/useModels.js`: `useModels()` (baca reaktif) dan `useSinkronModel()` (satu listener `storage` per halaman agar edit antar-tab ikut tampil).
+- Aksi: `ubahSel`, `resetBaris`, `tambahModel`, `hapusModel`, `kembalikanBawaan` (+ `muatUlang`), diekspor sebagai objek `aksiModel` dan diteruskan ke `DataModelPanel` lewat satu prop `actions`.
+- F1-F3 diarahkan memakai `getModels()` (`opsi.js`, `uiHelpers.js`, `useF1State/F2State/F3State`); `App.jsx` memakai `jagaModel()` yang jatuh ke `claude-sonnet-5-5` bila id tersimpan sudah tidak ada - tidak ada `NaN`.
+
+**Tabel F4 (`DataModelPanel.jsx`)**
+
+- Dikelompokkan per provider (judul grup + logo satu warna dari Sesi 2E). Kolom: Model | Provider | Input $/1 jt | Output $/1 jt | Cache $/1 jt | Konteks | Sumber. Setiap baris menampilkan tautan harga resmi + "dicek 19 Nov 2026".
+- Sel angka & teks bisa diedit di tempat (Enter/blur menyimpan, Esc membatalkan). Nilai tidak sah (kosong, bukan angka, negatif, konteks bukan bilangan bulat positif) **ditolak** dengan pesan ramah per baris (`aria-invalid` + teks galat), nilai lama tetap, tidak pernah menyimpan `NaN`/`Infinity`/`0` tak sengaja.
+- Baris yang diubah ditandai "diubah" dengan tombol "Kembalikan" per baris. Model tambahan mendapat tombol "Hapus" (model bawaan tidak bisa dihapus, hanya direset).
+- "Tambah model" menambah baris lengkap dengan angka contoh $1/$2/$0,05 dan konteks 100.000 plus petunjuk "sesuaikan dengan harga resmi"; sumber boleh kosong dan tampil "sumber belum diisi".
+- "Kembalikan bawaan" memakai konfirmasi sebaris dua langkah (label berubah jadi "Yakin? Klik lagi untuk mengembalikan"), tanpa modal, dan menghapus seluruh kunci `kalkulator-models-kustom`.
+- <520px tabel berubah menjadi kartu label+nilai bertumpuk (tidak pernah geser horizontal).
+- `models.js`: field `catatan` per model (harga TIDAK berubah) untuk gemini-4-argon, gemini-3-8-flash, deepseek-v4-1-flash, deepseek-v4-pro; tampil kecil di bawah nama model.
+- Titik status F4 di dock dihapus (F4 sudah tersedia).
+
+**Uji headless: jujur, belum tuntas**
+
+- `npm run build`: 0 error (67 modul, 342 kB JS).
+- Harness jsdom (di luar repo) berhenti di tengah UJI 5 karena galat pada skrip uji itu sendiri, jadi UJI 6 tidak berjalan. Beberapa asersi yang gagal sudah dipastikan sebagai cacat asersi/harness (bukan produk, lihat rincian di laporan sesi). Karena itu sesi ini **tidak** diklaim lulus uji wajib; verifikasi perilaku diserahkan ke pengujian pemilik di situs tayang.
+
+**Status:** Selesai ditulis & di-commit - `feat: F4 Basis Data Model & Harga (Sesi 5)`; verifikasi visual & interaksi di browser dilakukan pemilik.

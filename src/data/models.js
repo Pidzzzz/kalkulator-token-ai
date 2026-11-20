@@ -7,6 +7,13 @@
  * Data diperbarui Sesi 2C (19 Nov 2026): 23 model, 9 provider.
  * Seluruh harga sudah diverifikasi dari halaman resmi masing-masing.
  * Catatan DeepSeek: tarif off-peak; jam sibuk 2x.
+ *
+ * Sesi 5: field opsional `catatan` per baris = teks kecil di bawah nama model
+ * pada tabel F4 (tarif intro, tarif off-peak). Harga TIDAK berubah karena itu.
+ *
+ * Pengguna boleh mengubah harga & menambah model dari F4; selisihnya disimpan
+ * terpisah di localStorage (`kalkulator-models-kustom`) oleh
+ * `src/utils/lapisanModel.js` — berkas ini TETAP menjadi bawaan.
  */
 
 export const models = [
@@ -113,6 +120,7 @@ export const models = [
     konteks: 1000000,
     sumber: "https://ai.google.dev/gemini-api/docs/pricing",
     cek: "2026-11-19",
+    catatan: "Tarif intro; naik jadi $4/$20/$0,20 mulai 1 Des 2026.",
   },
   {
     id: "gemini-4-hydrogen",
@@ -135,6 +143,7 @@ export const models = [
     konteks: 1048576,
     sumber: "https://ai.google.dev/gemini-api/docs/pricing",
     cek: "2026-11-19",
+    catatan: "Tarif intro s.d. 31 Des 2026.",
   },
   {
     id: "gemini-3-1-pro",
@@ -160,6 +169,7 @@ export const models = [
     konteks: 1000000,
     sumber: "https://api-docs.deepseek.com/quick_start/pricing",
     cek: "2026-11-19",
+    catatan: "Tarif off-peak; jam sibuk 2×.",
   },
   {
     id: "deepseek-v4-pro",
@@ -171,6 +181,7 @@ export const models = [
     konteks: 1000000,
     sumber: "https://api-docs.deepseek.com/quick_start/pricing",
     cek: "2026-11-19",
+    catatan: "Tarif off-peak; jam sibuk 2×.",
   },
 
   // xAI — https://docs.x.ai/developers/pricing
