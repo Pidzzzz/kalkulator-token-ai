@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Dropdown from "./Dropdown";
 import { formatRibuan } from "../utils/calculator";
 import {
@@ -7,7 +7,12 @@ import {
   formatBiayaSuku,
   formatToken,
 } from "../utils/calculatorF2";
-import { formatMataUang, opsiMataUang } from "../utils/currency";
+import {
+  formatNilaiMataUang,
+  formatMataUang,
+  opsiMataUang,
+  pasanganNilai,
+} from "../utils/currency";
 import { KODE_MATA_UANG_BAWAAN, getCurrency } from "../data/currencies";
 import { useCountUp } from "../utils/useCountUp";
 import { MATA_UANG_KEY, salinKePapan } from "../utils/uiHelpers";
@@ -40,7 +45,7 @@ export default function SimulatorResult({
     try {
       window.localStorage.setItem(MATA_UANG_KEY, mataUang);
     } catch {
-      // Penyimpanan tidak tersedia — pilihan tetap berlaku selama sesi.
+      // Penyimpanan tidak tersedia � pilihan tetap berlaku selama sesi.
     }
   }, [mataUang]);
 
@@ -56,14 +61,26 @@ export default function SimulatorResult({
   const tampilPerPutaran = useCountUp(result.isValid ? result.biayaPerPutaran : 0);
   const tampilKonteksAkhir = useCountUp(result.isValid ? result.konteksAkhir : 0);
 
+  // Sesi 5B: angka utama = mata uang terpilih, pendamping = pasangannya.
+  // Total & rata-rata memakai aturan desimal adaptif yang sudah ada
+  // (formatBiayaSesi) supaya biaya kecil tidak pernah tampil nol.
+  const totalPasangan = pasanganNilai(tampilBiaya, mataUang, formatBiayaSesi);
+  const rataPasangan = pasanganNilai(
+    tampilPerPutaran,
+    mataUang,
+    formatBiayaSesi
+  );
+  // Rincian biaya tampil dalam mata uang terpilih, tanpa pendamping.
+  const sukuMataUang = (val) => formatNilaiMataUang(val, mataUang);
+
   const susunRingkasan = () => {
     const konversi =
       mataUang !== "USD" && result.isValid
         ? ` (= ${formatMataUang(result.biayaTotal, mataUang)})`
         : "";
     return [
-      "Perkiraan Simulator Sesi Agen — Kalkulator Token AI",
-      `Model: ${result.model?.nama || "—"}`,
+      "Perkiraan Simulator Sesi Agen � Kalkulator Token AI",
+      `Model: ${result.model?.nama || "�"}`,
       `Konteks awal: ${formatToken(result.konteksAwal)} token`,
       `Pertumbuhan konteks: ${formatToken(result.pertumbuhan)} token/putaran`,
       `Jumlah putaran: ${formatToken(result.putaran)}`,
@@ -73,13 +90,13 @@ export default function SimulatorResult({
       `Perkiraan biaya sesi: ${formatBiayaSesi(result.biayaTotal)}${konversi}`,
       `  segar: ${formatBiayaSuku(result.biayaSegar)} (${formatRibuan(
         result.tokenSegar
-      )} token × ${formatBiayaHarga(result.hargaInput)}/1 jt)`,
+      )} token � ${formatBiayaHarga(result.hargaInput)}/1 jt)`,
       `  cache: ${formatBiayaSuku(result.biayaCache)} (${formatRibuan(
         result.tokenCache
-      )} token × ${formatBiayaHarga(result.hargaCache)}/1 jt)`,
+      )} token � ${formatBiayaHarga(result.hargaCache)}/1 jt)`,
       `  output: ${formatBiayaSuku(result.biayaOutput)} (${formatRibuan(
         result.tokenOutput
-      )} token × ${formatBiayaHarga(result.hargaOutput)}/1 jt)`,
+      )} token � ${formatBiayaHarga(result.hargaOutput)}/1 jt)`,
       `Rata-rata per putaran: ${formatBiayaSesi(result.biayaPerPutaran)}`,
       `Konteks akhir: ${formatToken(result.konteksAkhir)} token`,
       "Semua angka adalah perkiraan, bukan angka tagihan.",
@@ -120,14 +137,12 @@ export default function SimulatorResult({
               </div>
               <div className="result-row__value-wrap">
                 <span className="result-row__value result-row__value--accent">
-                  {formatBiayaSesi(tampilBiaya)}
+                  {totalPasangan.utama}
                 </span>
                 <span className="result-row__unit">perkiraan</span>
-                {mataUang !== "USD" && (
-                  <span className="result-row__konversi">
-                    = {formatMataUang(tampilBiaya, mataUang)}
-                  </span>
-                )}
+                <span className="result-row__konversi">
+                  = {totalPasangan.pendamping}
+                </span>
               </div>
             </div>
 
@@ -149,10 +164,13 @@ export default function SimulatorResult({
               </div>
               <div className="result-row__value-wrap">
                 <span className="result-row__value">
-                  {formatBiayaSesi(tampilPerPutaran)}
+                  {rataPasangan.utama}
                 </span>
                 <span className="result-row__unit">
-                  / putaran · dari {formatToken(result.putaran)} putaran
+                  / putaran � dari {formatToken(result.putaran)} putaran
+                </span>
+                <span className="result-row__konversi">
+                  = {rataPasangan.pendamping}
                 </span>
               </div>
             </div>
@@ -176,7 +194,7 @@ export default function SimulatorResult({
                 {formatToken(result.konteksAkhir)} token dari jendela{" "}
                 {formatToken(result.ukuranKonteks)} token (
                 {Math.round(result.persenKonteks)}%). Sesi seperti ini berisiko
-                terpotong atau kehabisan konteks sebelum putaran terakhir —
+                terpotong atau kehabisan konteks sebelum putaran terakhir �
                 perpendek riwayat, kurangi putaran, atau ganti ke model berjendela
                 lebih besar.
               </p>
@@ -195,17 +213,17 @@ export default function SimulatorResult({
           <div className="cost-bar__meta">
             <span className="cost-bar__label">RINCIAN BIAYA</span>
             <span className="cost-bar__total">
-              {formatBiayaSesi(result.biayaTotal)}
+              {sukuMataUang(result.biayaTotal)}
             </span>
           </div>
           <div
             className="cost-bar__track"
             role="img"
-            aria-label={`Biaya sesi ${formatBiayaSesi(
+            aria-label={`Biaya sesi ${sukuMataUang(
               result.biayaTotal
-            )}: segar ${formatBiayaSuku(result.biayaSegar)}, cache ${formatBiayaSuku(
+            )}: segar ${sukuMataUang(result.biayaSegar)}, cache ${sukuMataUang(
               result.biayaCache
-            )}, output ${formatBiayaSuku(result.biayaOutput)}`}
+            )}, output ${sukuMataUang(result.biayaOutput)}`}
           >
             <span
               className="cost-bar__seg cost-bar__seg--segar"
@@ -228,7 +246,7 @@ export default function SimulatorResult({
               />
               <span className="cost-legend__name">Segar</span>
               <span className="cost-legend__val">
-                {formatBiayaSuku(result.biayaSegar)}
+                {sukuMataUang(result.biayaSegar)}
               </span>
               <span className="cost-legend__persen">
                 {formatToken(result.porsiSegar)}%
@@ -241,7 +259,7 @@ export default function SimulatorResult({
               />
               <span className="cost-legend__name">Cache</span>
               <span className="cost-legend__val">
-                {formatBiayaSuku(result.biayaCache)}
+                {sukuMataUang(result.biayaCache)}
               </span>
               <span className="cost-legend__persen">
                 {formatToken(result.porsiCache)}%
@@ -254,7 +272,7 @@ export default function SimulatorResult({
               />
               <span className="cost-legend__name">Output</span>
               <span className="cost-legend__val">
-                {formatBiayaSuku(result.biayaOutput)}
+                {sukuMataUang(result.biayaOutput)}
               </span>
               <span className="cost-legend__persen">
                 {formatToken(result.porsiOutput)}%

@@ -304,6 +304,8 @@ export default function App() {
               preset={preset}
               model={result.model}
               jendelaLabel={jendelaLabel}
+              mataUang={mataUang}
+              onUbahMataUang={ubahMataUang}
             />
           </div>
 
@@ -315,7 +317,11 @@ export default function App() {
             onTokenOutputChange={aturTokenOutput}
           />
 
-          <MobileResultStrip result={result} visible={stripVisible} />
+          <MobileResultStrip
+            result={result}
+            visible={stripVisible}
+            mataUang={mataUang}
+          />
         </main>
       ) : activeModule === "f2" ? (
         <main
@@ -364,7 +370,11 @@ export default function App() {
             onUbahOutput={aturOutputPerPutaran}
           />
 
-          <SimulatorMobileStrip result={resultF2} visible={stripVisible} />
+          <SimulatorMobileStrip
+            result={resultF2}
+            visible={stripVisible}
+            mataUang={mataUang}
+          />
         </main>
       ) : activeModule === "f3" ? (
         <main

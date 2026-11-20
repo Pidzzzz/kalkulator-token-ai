@@ -1651,6 +1651,26 @@ body {
   }
 }
 
+/* Sesi 5B — field F2 dalam satu baris sejajar.
+   Label, petunjuk, dan isian menempati tiga baris subgrid yang sama, jadi
+   isian kiri & kanan mulai pada ketinggian yang sama walau jumlah baris
+   .form-hint berbeda. Peramban tanpa subgrid tetap memakai tata letak lama
+   (tanpa perubahan), dan di <=520px grid tetap satu kolom. */
+@supports (grid-template-rows: subgrid) {
+  .module-f2 .form-row--dua {
+    row-gap: 3px;
+    grid-template-rows: auto auto auto;
+  }
+
+  .module-f2 .form-row--dua > .form-group {
+    grid-row: span 3;
+    display: grid;
+    grid-template-rows: subgrid;
+    gap: 0;
+    min-width: 0;
+  }
+}
+
 /* Label sebaris dengan isian persen */
 .form-label-row {
   display: flex;

@@ -6,7 +6,7 @@ import {
   formatFaktor,
   formatPersenKonteks,
 } from "../utils/calculatorF3";
-import { formatMataUang, opsiMataUang } from "../utils/currency";
+import { formatMataUang, opsiMataUang, pasanganNilai } from "../utils/currency";
 import { useCountUp } from "../utils/useCountUp";
 import { MATA_UANG_KEY, salinKePapan } from "../utils/uiHelpers";
 
@@ -56,6 +56,10 @@ export default function TeksResult({ result, mataUang, onUbahMataUang }) {
   const tampilKarakter = useCountUp(result.isValid ? result.karakter : 0);
   const tampilKata = useCountUp(result.isValid ? result.kata : 0);
   const tampilBiaya = useCountUp(result.isValid ? result.biayaMasukan : 0);
+
+  // Sesi 5B: angka utama = mata uang terpilih, pendamping = pasangannya.
+  // Desimal adaptif F3 tetap dipakai lewat formatBiayaMasukan.
+  const biayaPasangan = pasanganNilai(tampilBiaya, mataUang, formatBiayaMasukan);
 
   const providerTerpilih = result.model?.provider || null;
 
@@ -167,13 +171,11 @@ export default function TeksResult({ result, mataUang, onUbahMataUang }) {
               </div>
               <div className="result-row__value-wrap">
                 <span className="result-row__value">
-                  {formatBiayaMasukan(tampilBiaya)}
+                  {biayaPasangan.utama}
                 </span>
-                {mataUang !== "USD" && (
-                  <span className="result-row__konversi">
-                    = {formatMataUang(tampilBiaya, mataUang)}
-                  </span>
-                )}
+                <span className="result-row__konversi">
+                  = {biayaPasangan.pendamping}
+                </span>
               </div>
             </div>
 

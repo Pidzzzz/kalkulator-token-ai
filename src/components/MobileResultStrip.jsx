@@ -1,6 +1,7 @@
-import { formatRibuan, formatUSD } from "../utils/calculator";
+import { formatRibuan } from "../utils/calculator";
+import { formatNilaiMataUang } from "../utils/currency";
 
-export default function MobileResultStrip({ result, visible }) {
+export default function MobileResultStrip({ result, visible, mataUang }) {
   return (
     <div
       className={`mobile-result-strip ${visible ? "mobile-result-strip--visible" : ""}`}
@@ -11,10 +12,9 @@ export default function MobileResultStrip({ result, visible }) {
       )}
       <span className="mobile-result-strip__text">
         {result.isValid
-          ? `~${formatRibuan(result.requestTampil)} request · ${formatUSD(
+          ? `~${formatRibuan(result.requestTampil)} request · ${formatNilaiMataUang(
               result.perkiraanBiaya,
-              2,
-              2
+              mataUang
             )}`
           : result.emptyMessage}
       </span>

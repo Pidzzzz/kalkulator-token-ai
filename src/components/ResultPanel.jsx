@@ -1,21 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import Dropdown from "./Dropdown";
 import { formatRibuan, formatUSD } from "../utils/calculator";
-import { formatMataUang, opsiMataUang } from "../utils/currency";
-import { KODE_MATA_UANG_BAWAAN, getCurrency } from "../data/currencies";
+import {
+  formatMataUang,
+  opsiMataUang,
+  pasanganNilai,
+} from "../utils/currency";
 import { useCountUp } from "../utils/useCountUp";
-
-const MATA_UANG_KEY = "kalkulator-mata-uang";
-
-function bacaMataUang() {
-  if (typeof window === "undefined") return KODE_MATA_UANG_BAWAAN;
-  try {
-    const tersimpan = window.localStorage.getItem(MATA_UANG_KEY);
-    return getCurrency(tersimpan) ? tersimpan : KODE_MATA_UANG_BAWAAN;
-  } catch {
-    return KODE_MATA_UANG_BAWAAN;
-  }
-}
 
 function salinLama(teks) {
   const area = document.createElement("textarea");
@@ -37,18 +28,16 @@ function salinLama(teks) {
   return berhasil;
 }
 
-export default function ResultPanel({ result, preset, model, jendelaLabel }) {
+export default function ResultPanel({
+  result,
+  preset,
+  model,
+  jendelaLabel,
+  mataUang,
+  onUbahMataUang,
+}) {
   const [tersalin, setTersalin] = useState(false);
-  const [mataUang, setMataUang] = useState(bacaMataUang);
   const timerRef = useRef(null);
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(MATA_UANG_KEY, mataUang);
-    } catch {
-      // Penyimpanan tidak tersedia — pilihan tetap berlaku selama sesi.
-    }
-  }, [mataUang]);
 
   useEffect(
     () => () => {
@@ -60,6 +49,11 @@ export default function ResultPanel({ result, preset, model, jendelaLabel }) {
   const tampilRequest = useCountUp(result.isValid ? result.requestTampil : 0);
   const tampilToken = useCountUp(result.isValid ? result.totalToken : 0);
   const tampilBiaya = useCountUp(result.isValid ? result.perkiraanBiaya : 0);
+
+  // Sesi 5B: angka utama = mata uang terpilih, pendamping = pasangannya.
+  const biayaPasangan = pasanganNilai(tampilBiaya, mataUang, (v) =>
+    formatUSD(v, 2, 2)
+  );
 
   const susunRingkasan = () => {
     const namaPaket = preset?.nama || "Kustom";
@@ -113,7 +107,7 @@ export default function ResultPanel({ result, preset, model, jendelaLabel }) {
           compact
           label="Mata uang konversi"
           value={mataUang}
-          onChange={setMataUang}
+          onChange={onUbahMataUang}
           options={opsiMataUang}
         />
       </div>
@@ -181,13 +175,11 @@ export default function ResultPanel({ result, preset, model, jendelaLabel }) {
               </div>
               <div className="result-row__value-wrap">
                 <span className="result-row__value">
-                  {formatUSD(tampilBiaya, 2, 2)}
+                  {biayaPasangan.utama}
                 </span>
-                {mataUang !== "USD" && (
-                  <span className="result-row__konversi">
-                    = {formatMataUang(tampilBiaya, mataUang)}
-                  </span>
-                )}
+                <span className="result-row__konversi">
+                  = {biayaPasangan.pendamping}
+                </span>
               </div>
             </div>
           </>
