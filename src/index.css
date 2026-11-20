@@ -1629,6 +1629,13 @@ body {
   font-weight: 600;
 }
 
+/* Porsi biaya tiap segmen — sama untuk ketiga suku */
+.cost-legend__persen {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+}
+
 /* Peringatan konteks akhir melewati jendela model */
 .context-warning {
   margin-block-start: 8px;

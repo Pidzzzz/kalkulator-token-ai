@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import Dropdown from "./Dropdown";
+import TokenInput from "./TokenInput";
 import { buatOpsiModel } from "../utils/opsi";
 import { formatDesimal } from "../utils/calculator";
 
@@ -51,18 +52,11 @@ export default function SimulatorInput({
             <label className="form-label" htmlFor="f2-konteks-awal">
               Konteks awal (token)
             </label>
-            <input
-              className="form-input"
+            <TokenInput
               id="f2-konteks-awal"
               name="konteksAwal"
-              type="text"
-              inputMode="numeric"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="none"
-              spellCheck="false"
               value={konteksAwal}
-              onChange={(e) => onUbahKonteksAwal(e.target.value)}
+              onChange={onUbahKonteksAwal}
             />
           </div>
 
@@ -70,18 +64,11 @@ export default function SimulatorInput({
             <label className="form-label" htmlFor="f2-pertumbuhan">
               Pertumbuhan / putaran (token)
             </label>
-            <input
-              className="form-input"
+            <TokenInput
               id="f2-pertumbuhan"
               name="pertumbuhan"
-              type="text"
-              inputMode="numeric"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="none"
-              spellCheck="false"
               value={pertumbuhan}
-              onChange={(e) => onUbahPertumbuhan(e.target.value)}
+              onChange={onUbahPertumbuhan}
             />
           </div>
         </div>
@@ -110,18 +97,11 @@ export default function SimulatorInput({
             <label className="form-label" htmlFor="f2-output">
               Output / putaran (token)
             </label>
-            <input
-              className="form-input"
+            <TokenInput
               id="f2-output"
               name="outputPerPutaran"
-              type="text"
-              inputMode="numeric"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="none"
-              spellCheck="false"
               value={outputPerPutaran}
-              onChange={(e) => onUbahOutput(e.target.value)}
+              onChange={onUbahOutput}
             />
           </div>
         </div>

@@ -280,8 +280,6 @@ export default function App() {
               result={resultF2}
               mataUang={mataUang}
               onUbahMataUang={ubahMataUang}
-              jumlahPutaran={f2.putaran}
-              rasioCache={f2.rasioCache}
             />
           </div>
 

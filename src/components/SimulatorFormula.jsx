@@ -5,6 +5,7 @@ import {
   formatRibuan,
 } from "../utils/calculator";
 import { formatToken } from "../utils/calculatorF2";
+import { formatIsianSaatKetik } from "../utils/angkaIsian";
 
 /**
  * Blok "RUMUS & ASUMSI" F2 — tata letak sama dengan F1 (Sesi 1I):
@@ -433,12 +434,12 @@ export default function SimulatorFormula({
               <span className="assumptions-col assumptions-col--val" role="cell">
                 <input
                   className="assumptions-input"
-                  type="number"
+                  type="text"
                   inputMode="numeric"
-                  min="0"
-                  step="1000"
-                  value={konteksAwal}
-                  onChange={(e) => onUbahKonteksAwal(e.target.value)}
+                  autoComplete="off"
+                  spellCheck="false"
+                  value={formatIsianSaatKetik(konteksAwal)}
+                  onChange={(e) => onUbahKonteksAwal(formatIsianSaatKetik(e.target.value))}
                   aria-label="Konteks awal (token)"
                 />
               </span>
@@ -456,12 +457,12 @@ export default function SimulatorFormula({
               <span className="assumptions-col assumptions-col--val" role="cell">
                 <input
                   className="assumptions-input"
-                  type="number"
+                  type="text"
                   inputMode="numeric"
-                  min="0"
-                  step="500"
-                  value={pertumbuhan}
-                  onChange={(e) => onUbahPertumbuhan(e.target.value)}
+                  autoComplete="off"
+                  spellCheck="false"
+                  value={formatIsianSaatKetik(pertumbuhan)}
+                  onChange={(e) => onUbahPertumbuhan(formatIsianSaatKetik(e.target.value))}
                   aria-label="Pertumbuhan konteks per putaran (token)"
                 />
               </span>
@@ -480,12 +481,12 @@ export default function SimulatorFormula({
               <span className="assumptions-col assumptions-col--val" role="cell">
                 <input
                   className="assumptions-input"
-                  type="number"
+                  type="text"
                   inputMode="numeric"
-                  min="0"
-                  step="100"
-                  value={outputPerPutaran}
-                  onChange={(e) => onUbahOutput(e.target.value)}
+                  autoComplete="off"
+                  spellCheck="false"
+                  value={formatIsianSaatKetik(outputPerPutaran)}
+                  onChange={(e) => onUbahOutput(formatIsianSaatKetik(e.target.value))}
                   aria-label="Output per putaran (token)"
                 />
               </span>

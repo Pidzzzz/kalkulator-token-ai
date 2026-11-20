@@ -32,8 +32,6 @@ export default function SimulatorResult({
   result,
   mataUang,
   onUbahMataUang,
-  jumlahPutaran,
-  rasioCache,
 }) {
   const [tersalin, setTersalin] = useState(false);
   const timerRef = useRef(null);
@@ -154,7 +152,7 @@ export default function SimulatorResult({
                   {formatBiayaSesi(tampilPerPutaran)}
                 </span>
                 <span className="result-row__unit">
-                  / putaran · {formatToken(jumlahPutaran)} putaran
+                  / putaran · dari {formatToken(result.putaran)} putaran
                 </span>
               </div>
             </div>
@@ -232,17 +230,21 @@ export default function SimulatorResult({
               <span className="cost-legend__val">
                 {formatBiayaSuku(result.biayaSegar)}
               </span>
+              <span className="cost-legend__persen">
+                {formatToken(result.porsiSegar)}%
+              </span>
             </li>
             <li className="cost-legend__item">
               <span
                 className="cost-legend__swatch cost-legend__swatch--cache"
                 aria-hidden="true"
               />
-              <span className="cost-legend__name">
-                Cache {formatToken(rasioCache)}%
-              </span>
+              <span className="cost-legend__name">Cache</span>
               <span className="cost-legend__val">
                 {formatBiayaSuku(result.biayaCache)}
+              </span>
+              <span className="cost-legend__persen">
+                {formatToken(result.porsiCache)}%
               </span>
             </li>
             <li className="cost-legend__item">
@@ -253,6 +255,9 @@ export default function SimulatorResult({
               <span className="cost-legend__name">Output</span>
               <span className="cost-legend__val">
                 {formatBiayaSuku(result.biayaOutput)}
+              </span>
+              <span className="cost-legend__persen">
+                {formatToken(result.porsiOutput)}%
               </span>
             </li>
           </ul>

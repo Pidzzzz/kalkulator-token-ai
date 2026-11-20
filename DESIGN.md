@@ -250,3 +250,12 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - Biaya < $0,01 tampil 4 desimal agar tidak menjadi `$0,00`; legenda & salinan tetap 2 desimal.
 - Putaran kosong/0, konteks 0 + output 0, atau harga model 0 → "Isi masukan dulu untuk melihat perkiraan sesi." (atau pesan harga). Tombol Salin nonaktif, bar tumpuk disembunyikan.
 - Chart/visual lain tidak ditambahkan; count-up ±250ms, `tabular-nums`, strip HP sticky, konversi IDR, dan `localStorage` (`kalkulator-f2-input`) mengikuti pola F1 persis.
+
+### 11.5 Isian token bertitik ribuan & legenda persen (Sesi 3B)
+
+- **Isian token** (Konteks awal, Pertumbuhan / putaran, Output / putaran) memakai komponen `TokenInput`: tampilan selalu berformat id-ID ("10.000") termasuk saat mengetik; kursor dijaga hanya saat isian difokuskan sehingga titik ribuan tidak membuat kursor melompat, dan nilai dari luar (muat ulang/slider) tidak mengganggu posisi ketik.
+- Nilai state tetap teks terformat, hitungan memakai `parseAngkaIsian` (`src/utils/angkaIsian.js`) yang membuang karakter selain digit/titik/koma lalu membuang titik ribuan; koma tetap desimal. Isian kosong → pesan ramah, bukan 0 paksa.
+- **Jumlah putaran & rasio cache tidak diformat** (rasio tetap `%` + slider).
+- Tabel asumsi F2 memakai pemformat yang sama (nilai tetap terformat seperti sebelumnya).
+- **Legenda bar tumpuk** kini menampilkan porsi biaya (%) untuk ketiga suku — angka 10px mono `--muted` di ujung tiap baris — sehingga "Segar · Cache · Output" konsisten. Persen rasio cache tidak lagi ditempelkan di nama suku (sudah terbaca dari baris masukan/slider).
+- **Rata-rata per putaran** membaca jumlah putaran dari hasil hitung (`dari N putaran`), bukan teks masukan mentah.

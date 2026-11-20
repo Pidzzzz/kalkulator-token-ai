@@ -26,58 +26,16 @@
  */
 
 import { formatDesimal, formatRibuan, getModelById, parseAngka } from "./calculator.js";
+import { parseAngkaIsian } from "./angkaIsian.js";
 
 export const PESAN_KOSONG_F2 = "Isi masukan dulu untuk melihat perkiraan sesi.";
 
-const SALIN_HURUF = {
-  0: "0",
-  1: "1",
-  2: "2",
-  3: "3",
-  4: "4",
-  5: "5",
-  6: "6",
-  7: "7",
-  8: "8",
-  9: "9",
-  ",": ".",
-};
-
 /**
- * Membaca masukan panjang bertitik ribuan: "1.000.000" -> 1000000.
- * Tanpa pemisah ini, isian bertitik ribuan akan terbaca sebagai angka
- * desimal kecil (1.000.000 -> 1) — sumber salah hitung yang berbahaya.
- * Koma diperlakukan sebagai desimal.
+ * Membaca isian token/putaran: buang SEMUA karakter non-digit lalu hitung.
+ * "10.000", "10 000", dan "Rp10.000" sama-sama menjadi 10000. Koma tetap
+ * desimal. Kosong -> NaN (dipakai sebagai keadaan tepi, bukan 0 paksa).
  */
-export function parseToken(val) {
-  if (typeof val === "number") {
-    return Number.isFinite(val) ? val : NaN;
-  }
-  if (val === null || val === undefined) return NaN;
-
-  const bersih = String(val)
-    .trim()
-    .replace(/\s/g, "")
-    .replace(/[^\d.,]/g, "")
-    .replace(/,/g, (c) => SALIN_HURUF[c]);
-
-  if (bersih === "" || bersih === ".") return NaN;
-
-  if (bersih.includes(".")) {
-    // Desimal asli -> baca biasa (mis. "2.5").
-    const n = Number(bersih);
-    return Number.isFinite(n) ? n : NaN;
-  }
-
-  // Seluruh kelompok 3 digit -> pemisah ribuan (mis. "10.000", "1.000.000").
-  if (/^\d{1,3}(\.\d{3})+$/.test(bersih)) {
-    const n = Number(bersih.replace(/\./g, ""));
-    return Number.isFinite(n) ? n : NaN;
-  }
-
-  const n = Number(bersih);
-  return Number.isFinite(n) ? n : NaN;
-}
+export const parseToken = parseAngkaIsian;
 
 export function formatToken(val) {
   if (!Number.isFinite(val)) return "—";
@@ -172,6 +130,9 @@ export function hitungF2({
   if (!model && !harga) {
     emptyMessage = "Model belum tersedia. Pilih model lain untuk melihat perkiraan sesi.";
   } else if (numPutaran <= 0) {
+    emptyMessage = PESAN_KOSONG_F2;
+  } else if (Number.isNaN(numKonteksAwalMentah) || Number.isNaN(numOutputMentah)) {
+    // Isian dikosongkan -> pesan ramah, bukan konteks/output paksa 0.
     emptyMessage = PESAN_KOSONG_F2;
   } else if (numKonteksAwal <= 0 && numOutput <= 0) {
     emptyMessage = PESAN_KOSONG_F2;

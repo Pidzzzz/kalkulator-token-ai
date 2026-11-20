@@ -383,3 +383,21 @@ rata-rata   = biaya / N · konteks_akhir = konteks_awal + (N − 1) × pertumbuh
 **Berkas:** baru `src/utils/calculatorF2.js`, `src/utils/useF2State.js`, `src/utils/opsi.js`, `src/utils/uiHelpers.js`, `src/components/SimulatorInput.jsx`, `src/components/SimulatorResult.jsx`, `src/components/SimulatorFormula.jsx`, `src/components/SimulatorMobileStrip.jsx`; diubah `src/App.jsx` (modul F2), `src/components/InputPanel.jsx` (pakai `opsi.js`, tampilan sama), `src/components/DockNav.jsx` (titik F2), `src/index.css` (pola baru Sesi 3), `PROGRESS.md`, `DESIGN.md`.
 
 **Status:** Selesai — `npm run build` 0 error.
+
+---
+
+## Sesi 3B — Pemformat Ribuan Isian Token F2 + 2 Perbaikan Label (20 Nov 2026)
+
+**Tujuan:** Sesi kecil: isian token F2 tampil bertitik ribuan id-ID, plus dua label hasil yang janggal. Desain & fungsi lain tidak diubah; F1 tidak disentuh.
+
+**Cakupan:**
+- **Pemformat ribuan** (`src/utils/angkaIsian.js` + komponen `src/components/TokenInput.jsx`): Konteks awal, Pertumbuhan / putaran, dan Output / putaran kini tampil "10.000 / 2.000 / 1.000" termasuk saat mengetik. State tetap teks terformat, hitungan memakai `parseAngkaIsian` (buang non-digit & titik ribuan; koma = desimal). Kursor dijaga hanya saat isian difokuskan. Jumlah putaran & rasio cache **tidak** diformat. Tabel asumsi F2 ikut memakai pemformat sama.
+- **Keadaan tepi dikencangkan:** isian Konteks awal atau Output yang dikosongkan sekarang memunculkan "Isi masukan dulu untuk melihat perkiraan sesi." (sebelumnya konteks kosong + output terisi masih dihitung sebagai sesi valid dengan konteks 0 — angka menyesatkan).
+- **Poin 2 — label rata-rata:** temuan nyata. `SimulatorResult` menerima `jumlahPutaran={f2.putaran}` berupa teks mentah, sehingga nilai kosong/non-angka menjadi "— putaran" lewat `formatToken`. Kini baris itu membaca hasil hitung (`dari N putaran`); prop teks dihapus dari `App.jsx` agar tidak ada jalur teks mentah tersisa.
+- **Poin 3 — legenda bar tumpuk:** temuan nyata. Nama suku cache menempelkan persen rasio ("Cache 80%") sementara Segar/Output polos, dan bila rasio kosong menjadi "Cache —%". Dipilih: **tampilkan persen porsi biaya untuk ketiga suku** (Segar/Cache/Output) di ujung tiap baris; persen rasio cache dihapus dari legenda karena sudah terbaca di masukan/slider.
+
+**Verifikasi:** `npm run build` 0 error. Aplikasi tidak dijalankan dan tanpa screenshot. Uji headless (mount komponen di DOM tiruan, 27 pemeriksaan) lulus: ketikan "10000" tampil "10.000" dan hasil tidak berubah; ubah ke "1.000" → total 30.000; ketik "1234567" → "1.234.567"; isian kosong → pesan ramah tanpa NaN/Infinity; muat ulang dari `localStorage` (12000/2500) tampil "12.000"/"2.500"; label "dari 5 putaran" tanpa "— putaran"; ketiga legenda berakhiran % dengan jumlah ≈100%; tabel asumsi "10.000/2.000/1.000". Kasus uji Sesi 3 (biaya $0,0892 dengan harga uji) tetap sama.
+
+**Berkas:** baru `src/utils/angkaIsian.js`, `src/components/TokenInput.jsx`; diubah `src/components/SimulatorInput.jsx`, `src/components/SimulatorFormula.jsx`, `src/components/SimulatorResult.jsx`, `src/utils/calculatorF2.js`, `src/App.jsx`, `src/index.css`, `PROGRESS.md`, `DESIGN.md`.
+
+**Status:** Selesai — `npm run build` 0 error.
