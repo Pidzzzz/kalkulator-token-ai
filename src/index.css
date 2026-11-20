@@ -29,6 +29,16 @@
   --accent-soft: #241D40;
   --on-accent: #FFFFFF;
 
+  /* Sesi 3F: turunan tema (bukan warna baru di luar palet).
+     --muted-strong  = teks sekunder satu tingkat menuju ink (legenda, hint).
+     --field         = permukaan isian, satu tingkat lebih terang dari kartu.
+     --field-line    = garis isian yang lebih tegas dari --line.
+     --field-ring    = ring fokus aksen 25% di atas kartu. */
+  --muted-strong: #B9B3C6;
+  --field: #28282B;
+  --field-line: #4A475F;
+  --field-ring: #302A54;
+
   --card-shadow: none;
   --font-heading: var(--font-serif);
   --font-stat: var(--font-serif);
@@ -48,6 +58,12 @@
   --accent-soft: #EEF0FB;
   --on-accent: #FFFFFF;
 
+  /* Sesi 3F: turunan tema untuk teks sekunder dan permukaan isian. */
+  --muted-strong: #3A465E;
+  --field: #DFE1E6;
+  --field-line: #AFBDCD;
+  --field-ring: #BDBAE4;
+
   --card-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
   --font-heading: var(--font-serif);
   --font-stat: var(--font-serif);
@@ -66,6 +82,12 @@
   --accent-light: #9A4524;
   --accent-soft: #F0EEE6;
   --on-accent: #141413;
+
+  /* Sesi 3F: turunan tema untuk teks sekunder dan permukaan isian. */
+  --muted-strong: #565550;
+  --field: #E8E7E3;
+  --field-line: #C4C0B0;
+  --field-ring: #F3DDD5;
 
   --card-shadow: none;
   --font-heading: var(--font-serif);
@@ -123,13 +145,15 @@ body {
   background: var(--muted);
 }
 
-/* ---- Page Shell (Padding bawah ±110px untuk dock melayang) ---- */
+/* ---- Page Shell (Sesi 3F: padding bawah = dock + 24px aman) ---- */
 .page {
   max-width: 920px;
   margin-inline: auto;
   padding-inline: 16px;
   padding-block-start: 22px;
-  padding-block-end: calc(110px + env(safe-area-inset-bottom, 0px));
+  /* Jarak dock ke bawah 14px + tinggi dock 52px + aman 24px = 90px minimum;
+     dipakai 92px agar ada kelonggaran. Selalu ditambah safe-area HP. */
+  padding-block-end: calc(92px + env(safe-area-inset-bottom, 0px));
 }
 
 /* ---- Header ---- */
@@ -552,6 +576,8 @@ body {
   color: var(--muted);
 }
 
+/* Sesi 3F: isian memakai permukaan --field (satu tingkat dari kartu),
+   garis --field-line yang lebih tegas, dan ring fokus aksen 3px. */
 .form-input,
 .form-select {
   width: 100%;
@@ -561,11 +587,12 @@ body {
   font-family: var(--font-sans);
   font-size: 0.875rem;
   color: var(--ink);
-  background-color: var(--bg);
-  border: 1px solid var(--line);
+  background-color: var(--field);
+  border: 1px solid var(--field-line);
   border-radius: var(--radius-sm);
   outline: none;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    box-shadow 0.15s ease;
   box-sizing: border-box;
   font-variant-numeric: tabular-nums;
 }
@@ -578,8 +605,8 @@ body {
 .form-input:focus-visible,
 .form-select:focus-visible {
   border-color: var(--accent);
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: none;
+  box-shadow: 0 0 0 3px var(--field-ring);
 }
 
 .form-select {
@@ -599,10 +626,11 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%236B6A63'%3E%3Cpath d='M5 7 1 3h8z'/%3E%3C/svg%3E");
 }
 
+/* Sesi 3F: teks bantuan minimal 12px, satu tingkat dari muted menuju ink. */
 .form-hint {
-  font-size: 0.688rem;
-  color: var(--muted);
-  line-height: 1.35;
+  font-size: 0.75rem; /* 12px */
+  color: var(--muted-strong);
+  line-height: 1.4;
 }
 
 /* ---- Dropdown Kustom (Paket, Model, Jendela) ---- */
@@ -624,13 +652,13 @@ body {
   font-size: 0.875rem;
   color: var(--ink);
   text-align: left;
-  background-color: var(--card);
-  border: 1px solid var(--line);
+  background-color: var(--field);
+  border: 1px solid var(--field-line);
   border-radius: var(--radius-sm);
   outline: none;
   cursor: pointer;
   box-sizing: border-box;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .dropdown__trigger:hover {
@@ -639,8 +667,8 @@ body {
 
 .dropdown__trigger:focus-visible {
   border-color: var(--accent);
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: none;
+  box-shadow: 0 0 0 3px var(--field-ring);
 }
 
 .dropdown__nilai {
@@ -1061,7 +1089,8 @@ body {
   line-height: 1.5;
 }
 
-/* Strip hasil ringkas di HP (muncul setelah panel Masukan terlewati) */
+/* Strip hasil ringkas di HP (muncul setelah panel Masukan terlewati).
+   Sesi 3F: menempel di ATAS dock — offset bottom = dock (52px) + 12px. */
 .mobile-result-strip {
   display: none;
 }
@@ -1073,7 +1102,8 @@ body {
     justify-content: space-between;
     gap: 10px;
     position: fixed;
-    top: calc(8px + env(safe-area-inset-top, 0px));
+    top: auto;
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
     left: 12px;
     right: 12px;
     z-index: 90;
@@ -1084,7 +1114,7 @@ body {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-8px);
+    transform: translateY(8px);
     pointer-events: none;
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
   }
@@ -1354,12 +1384,13 @@ body {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--accent-light);
-  background-color: var(--bg);
-  border: 1px solid var(--line);
+  background-color: var(--field);
+  border: 1px solid var(--field-line);
   border-radius: var(--radius-sm);
   outline: none;
   box-sizing: border-box;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .assumptions-input:hover {
@@ -1368,8 +1399,8 @@ body {
 
 .assumptions-input:focus-visible {
   border-color: var(--accent);
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: none;
+  box-shadow: 0 0 0 3px var(--field-ring);
 }
 
 .assumptions-input::-webkit-outer-spin-button,
@@ -1683,7 +1714,7 @@ body {
   background-color: var(--muted);
 }
 
-/* Legenda 3 suku — $ per suku */
+/* Legenda 3 suku — $ per suku (Sesi 3F: 12px, kontras >= 4,5:1) */
 .cost-legend {
   display: flex;
   flex-wrap: wrap;
@@ -1697,8 +1728,8 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 0.688rem;
-  color: var(--muted);
+  font-size: 0.75rem; /* 12px */
+  color: var(--muted-strong);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1727,11 +1758,11 @@ body {
   font-weight: 600;
 }
 
-/* Porsi biaya tiap segmen — sama untuk ketiga suku */
+/* Porsi biaya tiap segmen — sama untuk ketiga suku (Sesi 3F: 12px) */
 .cost-legend__persen {
-  color: var(--muted);
+  color: var(--muted-strong);
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: 0.75rem; /* 12px */
 }
 
 /* Peringatan konteks akhir melewati jendela model */

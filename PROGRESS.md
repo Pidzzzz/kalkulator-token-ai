@@ -481,3 +481,36 @@ rata-rata   = biaya / N · konteks_akhir = konteks_awal + (N − 1) × pertumbuh
 **Cek visual (tugas pemilik):** byline satu baris saat samar di 3 tema (terutama Terang & Hangat) dan saat hover/fokus; "Token" berwarna aksen di ketiga tema tanpa mengubah ritme H1; header di HP sempit.
 
 **Status:** Selesai — `npm run build` 0 error.
+
+---
+
+## Sesi 3F — Dock Menimpa Konten + Teks Kecil + Kontras Isian (20 Nov 2026)
+
+**Tujuan:** Membereskan dock melayang yang menutupi strip hasil dan bagian bawah panel, menaikkan keterbacaan legenda biaya & teks bantuan, serta membedakan isian dari latar kartu. Hanya CSS; rumus/data/logika tidak disentuh, F3/F4 tetap kosong.
+
+**Cakupan:**
+- **Dock tidak lagi menimpa konten:** `.page` → `padding-block-end: calc(92px + env(safe-area-inset-bottom, 0px))`. Perhitungan: jarak dock ke bawah 14px + tinggi dock 52px + aman 24px = 90px minimum, dipakai 92px agar ada kelonggaran. Tinggi dock dihitung dari CSS-nya: border 1px×2 + padding 6px×2 + tombol 38px = 52px.
+- **Strip hasil F1 & F2 di atas dock:** `.mobile-result-strip` (dalam `@media (max-width: 679px)`) kini `top: auto` dan `bottom: calc(64px + safe-area)` = tinggi dock 52px + 12px. Animasi masuk dibalik ke dari bawah (`translateY(8px)` saat tersembunyi). Perilaku muncul/hilang tetap sama (kelas `--visible`: opacity 1, visibility visible, transform none, pointer-events auto). Kedua modul memakai kelas yang sama; z-index strip 90 < dock 100.
+- **Teks kecil:** `.form-hint`, `.cost-legend__item`, `.cost-legend__persen` → 12px (0.75rem) dan warna `--muted-strong` (satu tingkat dari muted menuju ink).
+- **Isian:** `.form-input`/`.form-select`, `.assumptions-input` (TokenInput & `.form-input--rasio` ikut mewarisi), dan `.dropdown__trigger` memakai `background-color: var(--field)` + `border: 1px solid var(--field-line)`. Fokus = `border-color: var(--accent)` + `box-shadow: 0 0 0 3px var(--field-ring)` (ring 3px aksen ±25%, tanpa blur/gradasi).
+
+**Token turunan tema baru (dihitung dari palet yang ada):**
+
+| Tema | `--muted-strong` | `--field` | `--field-line` | `--field-ring` |
+|---|---|---|---|---|
+| Gelap | #B9B3C6 | #28282B | #4A475F | #302A54 |
+| Terang | #3A465E | #DFE1E6 | #AFBDCD | #BDBAE4 |
+| Hangat | #565550 | #E8E7E3 | #C4C0B0 | #F3DDD5 |
+
+**Uji wajib (headless):**
+1. `.page` padding-bottom 92px ≥ 52 + 24 = 76px, plus safe-area; tidak ada media query yang menimpanya.
+2. Strip `bottom: 64px` > tinggi dock 52px, selisih 12px; `top: auto`; tidak ada lagi aturan `top` pada strip.
+3. Legenda & hint 12px; kontras `--muted-strong` vs kartu: Gelap 8,76:1 (muted lama 6,79), Terang 9,47:1 (7,58), Hangat 7,47:1 (5,43); tetap di bawah ink (14,98 / 17,85 / 18,43).
+4. Gelap: isian #28282B vs kartu #17171F (1,21:1), garis #4A475F (1,65:1) lebih tegas dari `--line` #38364A (1,26:1); teks ink di atas isian 12,36:1. Aturan fokus (border aksen + ring 3px) ada untuk isian, select, assumptions-input, dan dropdown trigger.
+5. Regresi: pill dock aktif tetap menampilkan label tanpa hover; F1 250 request / $10,00; F2 $0,0892 ($0,01784/putaran); bawaan F1 & F2 tidak berubah.
+
+**Berkas:** `src/index.css`, `PROGRESS.md`.
+
+**Cek visual (tugas pemilik):** gulir mentok di F1 & F2 (isian Rasio cache terlihat utuh), strip di atas dock saat digulir di HP, keterbacaan legenda biaya, ring fokus isian, semuanya di 3 tema.
+
+**Status:** Selesai — `npm run build` 0 error.
