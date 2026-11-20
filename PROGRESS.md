@@ -401,3 +401,30 @@ rata-rata   = biaya / N · konteks_akhir = konteks_awal + (N − 1) × pertumbuh
 **Berkas:** baru `src/utils/angkaIsian.js`, `src/components/TokenInput.jsx`; diubah `src/components/SimulatorInput.jsx`, `src/components/SimulatorFormula.jsx`, `src/components/SimulatorResult.jsx`, `src/utils/calculatorF2.js`, `src/App.jsx`, `src/index.css`, `PROGRESS.md`, `DESIGN.md`.
 
 **Status:** Selesai — `npm run build` 0 error.
+
+---
+
+## Sesi 3C — Preset Skenario + Microcopy F2 (20 Nov 2026)
+
+**Tujuan:** Pemula tidak tahu angka apa yang harus diisi di F2. Dua penambahan kecil yang meniru pola F1 (chip preset + teks muted penjelas). F1 tidak disentuh; F3–F4 tetap "segera hadir"; rumus `calculatorF2.js` tidak berubah.
+
+**Cakupan:**
+- **Microcopy satu baris** di bawah tiap label isian angka F2 (Konteks awal, Pertumbuhan / putaran, Jumlah putaran, Output / putaran, Rasio cache) — memakai kelas `.form-hint` yang sudah ada (11px, `--muted`, line-height 1.35), tanpa warna/ukuran/ikon baru. Isian Model tidak diberi microcopy.
+- **Tiga chip skenario** di bawah judul panel, di atas isian Model: label kecil muted "Contoh sesi:" + "Sesi singkat", "Sesi ngoding biasa", "Sesi maraton". Gaya chip sama persis dengan `.preset-chip` F1.
+  - Satu klik mengisi kelima isian angka sekaligus (`pilihSkenario` di `useF2State.js`), hasil dihitung ulang seketika, tersimpan di `kalkulator-f2-input` dengan kunci yang sama.
+  - **Model tidak diubah.** Chip murni aksi isi-sekali — tidak ada status aktif/terpilih, semua isian tetap bebas diubah.
+  - Bawaan aplikasi tidak berubah: tanpa klik tetap 10.000 / 2.000 / 5 / 80% / 1.000.
+- Jarak panel Masukan F2 dirapatkan sedikit (`.module-f2 .input-form` gap 8px, `.form-group` gap 3px) agar penambahan microcopy tetap kompak sesuai DESIGN.md.
+
+**Uji wajib (headless, 31 pemeriksaan) — semua lulus:**
+1. "Sesi singkat" → 8.000 / 1.500 / 5 / 80% / 800, konteks akhir 14.000.
+2. "Sesi ngoding biasa" → konteks akhir 72.000.
+3. "Sesi maraton" + Mistral Medium 3.5 → konteks akhir 315.000, peringatan muncul; ganti ke Sonnet 5.5 → peringatan hilang.
+4. Kasus uji Sesi 3 tetap: $0,0892 / 75.000 token / $0,01784 per putaran.
+5. Kelima microcopy tampil persis; tidak ada "—%", "— putaran", "Cache —", NaN/Infinity/undefined.
+
+**Berkas:** diubah `src/components/SimulatorInput.jsx` (chip + microcopy), `src/utils/useF2State.js` (`PRESET_SKENARIO_F2`, `pilihSkenario`), `src/App.jsx` (sambung aksi), `src/index.css` (baris chip & kerapatan panel).
+
+**Cek visual (tugas pemilik):** chip di 3 tema + wrap di HP sempit, jarak microcopy terhadap label & isian, strip hasil sticky di HP tetap bekerja.
+
+**Status:** Selesai — `npm run build` 0 error.

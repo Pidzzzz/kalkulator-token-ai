@@ -87,6 +87,7 @@ export default function App() {
     aturPutaran,
     aturRasioCache,
     aturOutputPerPutaran,
+    pilihSkenario,
   } = useF2State();
 
   const [mataUang, setMataUang] = useState(bacaMataUang);
@@ -273,6 +274,7 @@ export default function App() {
                 onUbahPutaran={aturPutaran}
                 onUbahRasioCache={aturRasioCache}
                 onUbahOutput={aturOutputPerPutaran}
+                onPilihSkenario={pilihSkenario}
               />
             </div>
 

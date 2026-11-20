@@ -22,6 +22,41 @@ function teksAtau(nilai, cadangan) {
     : cadangan;
 }
 
+/**
+ * Preset skenario F2 (Sesi 3C). Mengisi kelima isian angka sekaligus lewat
+ * satu klik; model yang sedang terpilih TIDAK diubah. Aksi isi-sekali —
+ * setelah diklik semua isian tetap bebas diubah.
+ */
+export const PRESET_SKENARIO_F2 = [
+  {
+    id: "singkat",
+    label: "Sesi singkat",
+    konteksAwal: 8000,
+    pertumbuhan: 1500,
+    putaran: 5,
+    rasioCache: 80,
+    outputPerPutaran: 800,
+  },
+  {
+    id: "ngoding",
+    label: "Sesi ngoding biasa",
+    konteksAwal: 15000,
+    pertumbuhan: 3000,
+    putaran: 20,
+    rasioCache: 85,
+    outputPerPutaran: 1200,
+  },
+  {
+    id: "maraton",
+    label: "Sesi maraton",
+    konteksAwal: 20000,
+    pertumbuhan: 5000,
+    putaran: 60,
+    rasioCache: 90,
+    outputPerPutaran: 1500,
+  },
+];
+
 function bacaSimpanan() {
   if (typeof window === "undefined") return DEFAULTS;
   try {
@@ -76,6 +111,26 @@ export function useF2State() {
     [ubah]
   );
 
+  /** Isi kelima isian angka dari preset skenario; model tidak disentuh. */
+  const pilihSkenario = useCallback(
+    (presetSkenario) => {
+      const preset =
+        typeof presetSkenario === "string"
+          ? PRESET_SKENARIO_F2.find((p) => p.id === presetSkenario)
+          : presetSkenario;
+      if (!preset) return;
+      setState((prev) => ({
+        ...prev,
+        konteksAwal: String(preset.konteksAwal),
+        pertumbuhan: String(preset.pertumbuhan),
+        putaran: String(preset.putaran),
+        rasioCache: String(preset.rasioCache),
+        outputPerPutaran: String(preset.outputPerPutaran),
+      }));
+    },
+    []
+  );
+
   return {
     state,
     pilihModel,
@@ -84,5 +139,6 @@ export function useF2State() {
     aturPutaran,
     aturRasioCache,
     aturOutputPerPutaran,
+    pilihSkenario,
   };
 }

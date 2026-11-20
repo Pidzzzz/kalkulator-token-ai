@@ -3,6 +3,7 @@ import Dropdown from "./Dropdown";
 import TokenInput from "./TokenInput";
 import { buatOpsiModel } from "../utils/opsi";
 import { formatDesimal } from "../utils/calculator";
+import { PRESET_SKENARIO_F2 } from "../utils/useF2State";
 
 /**
  * Panel Masukan F2 — Simulator Sesi Agen.
@@ -21,6 +22,7 @@ export default function SimulatorInput({
   onUbahPutaran,
   onUbahRasioCache,
   onUbahOutput,
+  onPilihSkenario,
 }) {
   const grupModel = useMemo(() => buatOpsiModel(), []);
 
@@ -32,6 +34,26 @@ export default function SimulatorInput({
   return (
     <article className="card">
       <h2 className="card__title">Masukan</h2>
+
+      <div className="preset-skenario">
+        <span className="preset-skenario__label">Contoh sesi:</span>
+        <div
+          className="preset-chips preset-chips--skenario"
+          role="group"
+          aria-label="Contoh sesi"
+        >
+          {PRESET_SKENARIO_F2.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              className="preset-chip"
+              onClick={() => onPilihSkenario(preset)}
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <form className="input-form" onSubmit={(e) => e.preventDefault()}>
         <div className="form-group">
@@ -52,6 +74,9 @@ export default function SimulatorInput({
             <label className="form-label" htmlFor="f2-konteks-awal">
               Konteks awal (token)
             </label>
+            <p className="form-hint">
+              Isi percakapan saat sesi dimulai; riwayat panjang = angka besar.
+            </p>
             <TokenInput
               id="f2-konteks-awal"
               name="konteksAwal"
@@ -64,6 +89,9 @@ export default function SimulatorInput({
             <label className="form-label" htmlFor="f2-pertumbuhan">
               Pertumbuhan / putaran (token)
             </label>
+            <p className="form-hint">
+              Berapa banyak konteks bertambah tiap giliran agen bekerja.
+            </p>
             <TokenInput
               id="f2-pertumbuhan"
               name="pertumbuhan"
@@ -78,6 +106,10 @@ export default function SimulatorInput({
             <label className="form-label" htmlFor="f2-putaran">
               Jumlah putaran
             </label>
+            <p className="form-hint">
+              Satu putaran = agen membaca konteks, berpikir, lalu membalas
+              sekali.
+            </p>
             <input
               className="form-input"
               id="f2-putaran"
@@ -97,6 +129,9 @@ export default function SimulatorInput({
             <label className="form-label" htmlFor="f2-output">
               Output / putaran (token)
             </label>
+            <p className="form-hint">
+              Panjang balasan agen tiap putaran, termasuk penalarannya.
+            </p>
             <TokenInput
               id="f2-output"
               name="outputPerPutaran"
@@ -128,6 +163,11 @@ export default function SimulatorInput({
               <span className="form-suffix__unit">%</span>
             </div>
           </div>
+
+          <p className="form-hint">
+            Porsi konteks yang dibaca ulang dari cache murah; sesi agen umumnya
+            70–90%.
+          </p>
 
           <input
             className="form-slider"
