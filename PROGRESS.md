@@ -454,3 +454,30 @@ rata-rata   = biaya / N · konteks_akhir = konteks_awal + (N − 1) × pertumbuh
 **Cek visual (tugas pemilik):** animasi berjenjang di 3 tema (Gelap/Terang/Hangat), header & pengalih tema di HP sempit (byline tidak mendorong pengalih aneh), dan perilaku saat "kurangi gerak" OS aktif (header tampil langsung).
 
 **Status:** Selesai — `npm run build` 0 error.
+
+---
+
+## Sesi 3E — Byline Ganda + Judul Dua Warna (20 Nov 2026)
+
+**Tujuan:** Membereskan laporan pemilik bahwa byline "by Pidos" tampak dua kali, sekaligus menyamarkan byline dan membuat H1 dua nada. Hanya header yang disentuh.
+
+**Temuan byline ganda:** setelah menelusuri seluruh sumber, **tidak ada byline ganda di kode**. `src/components/Header.jsx` menulis elemen byline tepat sekali, `index.html` tidak punya byline, riwayat git hanya satu commit menambahkan `Pidos` (Sesi 3D), dan bundle yang sedang live di GitHub Pages memuat tepat satu byline. Yang dirender pun satu elemen. Penyebab yang paling mungkin: **byline terlipat jadi dua baris** ("by" di baris pertama, "Pidos" di baris kedua) saat wadahnya menyempit — mis. dua kolom isian berjejer + pengalih tema di HP — sehingga terbaca seperti dua byline bertumpuk. Perbaikan di sumber tampilan: byline kini `white-space: nowrap` sebagai **satu elemen utuh** (tetap membawa kelas animasi `header__in--2`).
+
+**Cakupan:**
+- **Byline lebih samar:** seluruh baris (kata "by" + tautan "Pidos") `opacity: 0.6`; saat hover/fokus tautan kembali `opacity: 1` dan nama berubah ke `--accent` + garis bawah seperti sebelumnya. Warna tetap `--muted`/`--ink` tema, ukuran tetap 0.75rem.
+- **Lantai keterbacaan per tema:** pada tema berlatar terang, `--muted` + 0,6 jatuh ke ±2,8:1 (Terang) dan ±2,4:1 (Hangat) di atas `--bg` — terlalu redup. Karena syarat "tetap terbaca di ketiga tema" lebih keras daripada angka opacity, diberi override **Terang 0,85** dan **Hangat 0,9** (Gelap tetap 0,6). Hasil kontras: Gelap 3,32:1 · Terang 4,90:1 · Hangat 4,20:1. Tetap lebih samar dari teks biasa dan tetap menguat ke 1 saat hover/fokus; tanpa warna baru.
+- **Judul dua nada:** H1 dipecah dua span — "Kalkulator" `var(--ink)`, "Token" `var(--accent)` (ungu di Gelap/Terang, mengikuti aksen di Hangat). Fon Fraunces, ukuran 1.688rem, bobot 700, dan spasi tidak berubah; tanpa italic/gradasi/glow; tanpa heks/rgb baru di CSS header.
+- **Tidak berubah:** `<title>`, animasi `headerIn` (0.8s ease-out both, jeda 0/0.1/0.2/0.3s), blok `prefers-reduced-motion`, subjudul, badge, F1–F4.
+
+**Uji wajib (headless, 32 pemeriksaan) — semua lulus:**
+1. Elemen byline di header = **1**, teks "by Pidos", tautan https://github.com/Pidzzzz, sumber menulis sekali, nowrap.
+2. Opacity 0,6 ada; hover/fokus → 1 (+ aksen); ukuran teks tetap.
+3. H1 dua span: "Kalkulator" `--ink`, "Token" `var(--accent)`; tanpa warna hardcode di CSS header; tanpa italic/gradasi; ukuran & bobot sama.
+4. `<title>` = "Kalkulator Token"; `headerIn` + jeda berjenjang + reduced-motion utuh; keempat elemen tetap beranimasi.
+5. Bawaan F2 10.000 / 2.000 / 5 / 80% / 1.000; kasus uji Sesi 3 tetap $0,0892; bawaan F1 utuh. Bonus: kontras byline ≥3:1 di ketiga tema.
+
+**Berkas:** `src/components/Header.jsx`, `src/index.css`, `PROGRESS.md`.
+
+**Cek visual (tugas pemilik):** byline satu baris saat samar di 3 tema (terutama Terang & Hangat) dan saat hover/fokus; "Token" berwarna aksen di ketiga tema tanpa mengubah ritme H1; header di HP sempit.
+
+**Status:** Selesai — `npm run build` 0 error.

@@ -46,10 +46,11 @@ export default function Header({ currentTheme, onThemeChange }) {
       <div className="header__title-row">
         <div className="header__title-block">
           <h1 className="header__title header__in header__in--1">
-            Kalkulator Token
+            <span className="header__title-ink">Kalkulator</span>{" "}
+            <span className="header__title-accent">Token</span>
           </h1>
           <p className="header__byline header__in header__in--2">
-            by{" "}
+            <span className="header__byline-by">by</span>{" "}
             <a
               className="header__byline-link"
               href="https://github.com/Pidzzzz"

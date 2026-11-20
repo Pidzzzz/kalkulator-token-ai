@@ -160,12 +160,37 @@ body {
   letter-spacing: -0.02em;
 }
 
-/* Byline "by Pidos": teks sekunder muted, nama semibold berwarna ink */
+/* Judul dua nada: "Kalkulator" ink, "Token" aksen tema aktif.
+   Hanya warna yang berbeda — fon, ukuran, bobot, dan spasi tetap sama. */
+.header__title-ink {
+  color: var(--ink);
+}
+
+.header__title-accent {
+  color: var(--accent);
+}
+
+/* Byline "by Pidos": satu baris utuh, samar (opacity 0,6) di tema Gelap. */
 .header__byline {
   margin-block: -2px 6px;
   font-size: 0.75rem;
   line-height: 1.4;
   color: var(--muted);
+  opacity: 0.6;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+
+/* Tema berlatar terang: 0,6 di --muted jatuh ke ±2,8:1 (Terang) dan ±2,4:1
+   (Hangat) di atas --bg. Dinaikkan ke lantai keterbacaan — tetap lebih samar
+   dari teks biasa, tetap menguat ke 1 saat hover/fokus, dan tetap hanya
+   memakai token tema (tanpa warna baru). */
+[data-theme="terang"] .header__byline {
+  opacity: 0.85;
+}
+
+[data-theme="hangat"] .header__byline {
+  opacity: 0.9;
 }
 
 .header__byline-link {
@@ -173,6 +198,12 @@ body {
   color: var(--ink);
   text-decoration: none;
   transition: color 0.15s ease;
+}
+
+/* Saat tautan disentuh/difokus: baris kembali penuh & nama beraksen. */
+.header__byline:hover,
+.header__byline:focus-within {
+  opacity: 1;
 }
 
 .header__byline-link:hover,
