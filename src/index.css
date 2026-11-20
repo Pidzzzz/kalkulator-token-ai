@@ -1398,3 +1398,273 @@ body {
   white-space: nowrap;
   border: 0;
 }
+
+/* ============================================================
+   Sesi 3 — F2 Simulator Sesi Agen
+   Hanya menambah pola baru; tata letak Sesi 1–2E tidak diubah.
+   (Grup panel memakai .module-f1 agar kolom & lapisan dropdown sama.)
+   ============================================================ */
+
+/* Baris isian berdampingan: 2 kolom di desktop, menumpuk di HP */
+.form-row {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.form-row--dua {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 520px) {
+  .form-row--dua {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Label sebaris dengan isian persen */
+.form-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.form-suffix {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.form-input--rasio {
+  width: 62px;
+  min-height: 30px;
+  padding-block: 3px;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--accent-light);
+}
+
+.form-suffix__unit {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* Slider rasio cache — warna solid, tanpa gradasi/glow */
+.form-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 22px;
+  margin-block-start: 2px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.form-slider::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background-color: var(--accent-soft);
+}
+
+.form-slider::-moz-range-track {
+  height: 5px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background-color: var(--accent-soft);
+}
+
+.form-slider::-moz-range-progress {
+  height: 5px;
+  border-radius: 999px;
+  background-color: var(--accent);
+}
+
+.form-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-block-start: -6.5px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  border: 2px solid var(--card);
+  box-shadow: 0 0 0 1px var(--line);
+  transition: transform 0.12s ease;
+}
+
+.form-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  border: 2px solid var(--card);
+  box-shadow: 0 0 0 1px var(--line);
+  transition: transform 0.12s ease;
+}
+
+.form-slider:hover::-webkit-slider-thumb,
+.form-slider:active::-webkit-slider-thumb {
+  transform: scale(1.1);
+}
+
+.form-slider:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.form-slider__skala {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-block-start: -2px;
+}
+
+/* Bar tumpuk 3 segmen (satu-satunya visualisasi F2) */
+.cost-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-block-end: 12px;
+}
+
+.cost-bar__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.688rem;
+  font-weight: 600;
+}
+
+.cost-bar__label {
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cost-bar__total {
+  font-family: var(--font-stat);
+  font-size: 0.75rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.cost-bar__track {
+  display: flex;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background-color: var(--accent-soft);
+}
+
+.cost-bar__seg {
+  height: 100%;
+  flex: 0 0 auto;
+  transition: width 0.25s ease;
+}
+
+.cost-bar__seg--segar {
+  background-color: var(--accent);
+}
+
+.cost-bar__seg--cache {
+  background-color: var(--accent-light);
+}
+
+.cost-bar__seg--output {
+  background-color: var(--muted);
+}
+
+/* Legenda 3 suku — $ per suku */
+.cost-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cost-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.688rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cost-legend__swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.cost-legend__swatch--segar {
+  background-color: var(--accent);
+}
+
+.cost-legend__swatch--cache {
+  background-color: var(--accent-light);
+}
+
+.cost-legend__swatch--output {
+  background-color: var(--muted);
+}
+
+.cost-legend__val {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* Peringatan konteks akhir melewati jendela model */
+.context-warning {
+  margin-block-start: 8px;
+  padding: 8px 10px;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--ink);
+  background-color: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+
+.context-warning strong {
+  color: var(--accent-light);
+}
+
+/* Nama model di judul blok rumus */
+.formula-section__judul {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  min-width: 0;
+}
+
+.formula-section__model {
+  font-size: 0.688rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-slider::-webkit-slider-thumb,
+  .form-slider::-moz-range-thumb,
+  .cost-bar__seg {
+    transition: none;
+  }
+}

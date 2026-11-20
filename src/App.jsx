@@ -5,14 +5,36 @@ import InputPanel from "./components/InputPanel";
 import ResultPanel from "./components/ResultPanel";
 import FormulaSection from "./components/FormulaSection";
 import MobileResultStrip from "./components/MobileResultStrip";
+import SimulatorInput from "./components/SimulatorInput";
+import SimulatorResult from "./components/SimulatorResult";
+import SimulatorFormula from "./components/SimulatorFormula";
+import SimulatorMobileStrip from "./components/SimulatorMobileStrip";
 import Footer from "./components/Footer";
 import { useF1State } from "./utils/useF1State";
-import { getJendelaLabel, getPresetById, hitungF1 } from "./utils/calculator";
+import { useF2State } from "./utils/useF2State";
+import {
+  getJendelaLabel,
+  getPresetById,
+  hitungF1,
+} from "./utils/calculator";
+import { hitungF2 } from "./utils/calculatorF2";
+import { MATA_UANG_KEY } from "./utils/uiHelpers";
+import { KODE_MATA_UANG_BAWAAN, getCurrency } from "./data/currencies";
 
 function getModuleFromHash() {
   if (typeof window === "undefined") return "f1";
   const hash = window.location.hash.toLowerCase().replace("#", "");
   return MODULES.some((m) => m.id === hash) ? hash : "f1";
+}
+
+function bacaMataUang() {
+  if (typeof window === "undefined") return KODE_MATA_UANG_BAWAAN;
+  try {
+    const tersimpan = window.localStorage.getItem(MATA_UANG_KEY);
+    return getCurrency(tersimpan) ? tersimpan : KODE_MATA_UANG_BAWAAN;
+  } catch {
+    return KODE_MATA_UANG_BAWAAN;
+  }
 }
 
 export default function App() {
@@ -56,16 +78,61 @@ export default function App() {
   const inputPanelRef = useRef(null);
   const [stripVisible, setStripVisible] = useState(false);
 
+  // ---- F2 Simulator Sesi Agen ----
+  const {
+    state: f2,
+    pilihModel: pilihModelF2,
+    aturKonteksAwal,
+    aturPertumbuhan,
+    aturPutaran,
+    aturRasioCache,
+    aturOutputPerPutaran,
+  } = useF2State();
+
+  const [mataUang, setMataUang] = useState(bacaMataUang);
+
+  const ubahMataUang = useCallback((kode) => {
+    setMataUang(kode);
+    try {
+      window.localStorage.setItem(MATA_UANG_KEY, kode);
+    } catch {
+      // Penyimpanan tidak tersedia — pilihan tetap berlaku selama sesi.
+    }
+  }, []);
+
+  const resultF2 = useMemo(
+    () =>
+      hitungF2({
+        modelId: f2.modelId,
+        konteksAwal: f2.konteksAwal,
+        pertumbuhan: f2.pertumbuhan,
+        putaran: f2.putaran,
+        rasioCache: f2.rasioCache,
+        outputPerPutaran: f2.outputPerPutaran,
+      }),
+    [
+      f2.modelId,
+      f2.konteksAwal,
+      f2.pertumbuhan,
+      f2.putaran,
+      f2.rasioCache,
+      f2.outputPerPutaran,
+    ]
+  );
+
+  const inputPanelF2Ref = useRef(null);
+
   useEffect(() => {
-    if (activeModule !== "f1") {
+    if (activeModule !== "f1" && activeModule !== "f2") {
       setStripVisible(false);
       return;
     }
 
     let raf = null;
+    const panelRef = activeModule === "f1" ? inputPanelRef : inputPanelF2Ref;
 
     const perbarui = () => {
-      const el = inputPanelRef.current;
+      const el = panelRef.current;
       if (!el) {
         setStripVisible(false);
         return;
@@ -182,6 +249,56 @@ export default function App() {
           />
 
           <MobileResultStrip result={result} visible={stripVisible} />
+        </main>
+      ) : activeModule === "f2" ? (
+        <main
+          id="panel-f2"
+          role="tabpanel"
+          aria-labelledby="tab-f2"
+          tabIndex={0}
+          className="main-panel"
+        >
+          <div className="module-f1 module-f2">
+            <div className="module-f1__input" ref={inputPanelF2Ref}>
+              <SimulatorInput
+                modelId={f2.modelId}
+                konteksAwal={f2.konteksAwal}
+                pertumbuhan={f2.pertumbuhan}
+                putaran={f2.putaran}
+                rasioCache={f2.rasioCache}
+                outputPerPutaran={f2.outputPerPutaran}
+                onPilihModel={pilihModelF2}
+                onUbahKonteksAwal={aturKonteksAwal}
+                onUbahPertumbuhan={aturPertumbuhan}
+                onUbahPutaran={aturPutaran}
+                onUbahRasioCache={aturRasioCache}
+                onUbahOutput={aturOutputPerPutaran}
+              />
+            </div>
+
+            <SimulatorResult
+              result={resultF2}
+              mataUang={mataUang}
+              onUbahMataUang={ubahMataUang}
+              jumlahPutaran={f2.putaran}
+              rasioCache={f2.rasioCache}
+            />
+          </div>
+
+          <SimulatorFormula
+            result={resultF2}
+            konteksAwal={f2.konteksAwal}
+            pertumbuhan={f2.pertumbuhan}
+            putaran={f2.putaran}
+            rasioCache={f2.rasioCache}
+            outputPerPutaran={f2.outputPerPutaran}
+            onUbahKonteksAwal={aturKonteksAwal}
+            onUbahPertumbuhan={aturPertumbuhan}
+            onUbahRasioCache={aturRasioCache}
+            onUbahOutput={aturOutputPerPutaran}
+          />
+
+          <SimulatorMobileStrip result={resultF2} visible={stripVisible} />
         </main>
       ) : (
         <main

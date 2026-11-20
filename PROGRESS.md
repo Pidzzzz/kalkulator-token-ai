@@ -1,4 +1,4 @@
-# PROGRESS — Kalkulator Token & Request AI
+﻿# PROGRESS — Kalkulator Token & Request AI
 
 ## Sesi 1C — Rombak Anti-Slop (Desain + Kata) + Compact (19 Nov 2026)
 
@@ -327,3 +327,59 @@ judul panel di tema Hangat, dan pengalih tema teks diganti dengan 3 tombol ikon.
 **Verifikasi:** `npm run build` 0 error; uji fungsi murni memastikan 9 provider terpetakan (8 ikon, 1 monogram). Aplikasi tidak dijalankan — verifikasi visual di 3 tema adalah tugas user.
 
 **Status:** Selesai — commit `feat: logo provider pada judul grup dropdown Model (Sesi 2E)`.
+
+---
+
+## Sesi 3 — Fungsi F2 Simulator Sesi Agen (20 Nov 2026)
+
+**Tujuan:** Membuat F2 hidup — mensimulasikan biaya satu sesi agen dari file data (`models.js`), lengkap dengan blok "Rumus & Asumsi" yang memakai nilai berjalan. F1 tidak diubah fungsinya; F3–F4 tetap status kosong.
+
+**Model hitung** (`src/utils/calculatorF2.js`, fungsi murni):
+```
+konteks(r)  = konteks_awal + (r − 1) × pertumbuhan          r = 1..N
+cache(r)    = konteks(r) × rasio_cache
+segar(r)    = konteks(r) − cache(r)
+output(r)   = output_per_putaran                            (tetap)
+token_segar = Σ segar(r) · token_cache = Σ cache(r) · token_output = N × output
+biaya       = token_segar/1jt × harga_input + token_cache/1jt × harga_cache
+            + token_output/1jt × harga_output
+rata-rata   = biaya / N · konteks_akhir = konteks_awal + (N − 1) × pertumbuhan
+```
+- Cache dibulatkan per putaran lalu sisa konteks menjadi segar, sehingga hasil eksak (14.000, bukan 13.999,999…) dan `cache + segar` selalu sama dengan konteks putaran itu.
+- `parseToken` menerima titik ribuan (`"1.000.000"` → 1000000) — mencegah salah hitung dari isian bertitik. Koma tetap desimal.
+- Fungsi menerima `harga` opsional (override) untuk kasus uji/F4 kelak; bila kosong memakai harga `models.js`.
+- Semua pembagian dilindungi dari nol; putaran 0 / konteks 0 / harga 0 → `isValid: false` + pesan ramah.
+
+**Kasus uji PRD (Sonnet 5.5, awal 10.000, tumbuh 2.000, 5 putaran, cache 80%, output 1.000/putaran, harga uji $2 / $0,20 / $10):**
+
+| Butir | Hasil |
+| --- | --- |
+| Konteks per putaran | 10.000 / 12.000 / 14.000 / 16.000 / 18.000 |
+| Token segar | 14.000 |
+| Token cache | 56.000 |
+| Token output | 5.000 |
+| Total token | 75.000 |
+| Biaya segar | $0,028 |
+| Biaya cache | $0,0112 |
+| Biaya output | $0,05 |
+| **Total biaya** | **$0,0892** |
+| Rata-rata per putaran | $0,01784 |
+| Konteks akhir | 18.000 |
+
+**Selisih harga cache kasus uji vs `models.js`:** kasus uji memakai `$0,20` per 1 jt, sedangkan `models.js` mencatat Claude Sonnet 5.5 = `$0,10` (cek 2026-11-19). Aplikasi selalu memakai `models.js`, jadi dengan bawaan yang sama totalnya **$0,0836** dan rata-rata **$0,0167**/putaran (segar $0,028 + cache $0,0056 + output $0,05). Angka kasus uji $0,0892 hanya cocok bila harga cache $0,20 — dibuktikan lewat uji fungsi dengan override harga, bukan dengan mengubah `models.js`.
+
+**Cakupan UI:**
+- **Masukan** (`SimulatorInput.jsx`): Model (Dropdown kustom bergrup per provider + logo + harga menempel, memakai `buatOpsiModel()` yang sekarang dipakai bersama F1), konteks awal, pertumbuhan/putaran, jumlah putaran, output/putaran, dan rasio cache (isian angka + slider 0–100 dua arah). Bawaan = kasus uji. Semua langsung menghitung ulang.
+- **Hasil** (`SimulatorResult.jsx`): total biaya sesi (aksen) + konversi IDR, total token, **rata-rata per putaran** (wajib PRD), konteks akhir; bar tumpuk 3 segmen (segar `--accent` / cache `--accent-light` / output `--muted`) + legenda `$` per suku; peringatan `role="alert"` bila konteks akhir melebihi jendela model; tombol Salin di kaki kartu dengan status Tersalin.
+- **Rumus & Asumsi** (`SimulatorFormula.jsx`): 4 baris simbol / 5 baris "Dengan angka" memakai nilai hidup (konteks awal, pertumbuhan, putaran, rasio, harga model terpilih), prosa untuk tema Hangat dengan nilai hidup, dan tabel asumsi yang bisa diedit di tempat (konteks awal, pertumbuhan, output per putaran, rasio cache).
+- **Strip HP** (`SimulatorMobileStrip.jsx`): pola sticky F1, isi `$total · $rata-rata/putaran` (+ penanda konteks terlampaui).
+- **Persistensi:** `localStorage` `kalkulator-f2-input` (validasi model & balik ke bawaan). Mata uang memakai kunci & pemilih ringkas yang sama dengan F1.
+- **Navigasi:** titik status di tombol F2 dilepas karena modulnya kini hidup; F3–F4 tetap bertitik.
+
+**Refaktor kecil (tanpa mengubah perilaku F1):** pembangun opsi dropdown dipindah ke `src/utils/opsi.js` (`buatOpsiModel/Paket/Jendela`) dan dipakai F1 + F2; logika salin papan klip dipindah ke `src/utils/uiHelpers.js`.
+
+**Verifikasi:** `npm run build` 0 error. Aplikasi tidak dijalankan dan tanpa screenshot sesuai aturan sesi. Uji headless (mount komponen di DOM tiruan, 43 pemeriksaan) lulus semua: kasus uji eksak, ubah rasio cache (angka + bar + legenda), ubah putaran (angka + mode "Dengan angka" ikut berubah), peringatan konteks saat jendela model terlampaui, pesan ramah saat putaran kosong / konteks 0 (tanpa NaN/Infinity/~0), tombol Salin nonaktif saat kosong, teks salinan benar, dan prosa Hangat memakai nilai hidup.
+
+**Berkas:** baru `src/utils/calculatorF2.js`, `src/utils/useF2State.js`, `src/utils/opsi.js`, `src/utils/uiHelpers.js`, `src/components/SimulatorInput.jsx`, `src/components/SimulatorResult.jsx`, `src/components/SimulatorFormula.jsx`, `src/components/SimulatorMobileStrip.jsx`; diubah `src/App.jsx` (modul F2), `src/components/InputPanel.jsx` (pakai `opsi.js`, tampilan sama), `src/components/DockNav.jsx` (titik F2), `src/index.css` (pola baru Sesi 3), `PROGRESS.md`, `DESIGN.md`.
+
+**Status:** Selesai — `npm run build` 0 error.

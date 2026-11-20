@@ -1,18 +1,14 @@
 import { useMemo } from "react";
 import Dropdown from "./Dropdown";
-import { models, presets, jendelaOptions } from "../data/models";
+import { formatHarga, parseAngka } from "../utils/calculator";
 import {
-  formatDesimal,
-  formatHarga,
-  parseAngka,
-} from "../utils/calculator";
+  buatOpsiJendela,
+  buatOpsiModel,
+  buatOpsiPaket,
+} from "../utils/opsi";
 
 const NOMINAL_CEPAT = [5, 10, 20, 50];
 const PERSEN_CEPAT = [25, 50];
-
-function formatHargaCache(nilai) {
-  return formatDesimal(nilai, 2, 4);
-}
 
 export default function InputPanel({
   paketId,
@@ -27,34 +23,9 @@ export default function InputPanel({
   onUbahJendela,
 }) {
   // Data opsi dropdown — dipakai bersama oleh Paket, Model, dan Jendela.
-  const opsiPaket = useMemo(
-    () => presets.map((p) => ({ value: p.id, label: p.nama })),
-    []
-  );
-
-  const grupModel = useMemo(() => {
-    const grup = new Map();
-    for (const m of models) {
-      if (!grup.has(m.provider)) grup.set(m.provider, []);
-      grup.get(m.provider).push({
-        value: m.id,
-        label: m.nama,
-        short: `$${formatHarga(m.hargaInput)}/$${formatHarga(m.hargaOutput)}`,
-        detail: `input $${formatHarga(m.hargaInput)} · output $${formatHarga(
-          m.hargaOutput
-        )} · cache $${formatHargaCache(m.hargaCache)} per 1 jt`,
-      });
-    }
-    return Array.from(grup.entries()).map(([label, options]) => ({
-      label,
-      options,
-    }));
-  }, []);
-
-  const opsiJendela = useMemo(
-    () => jendelaOptions.map((j) => ({ value: j.id, label: j.label })),
-    []
-  );
+  const opsiPaket = useMemo(() => buatOpsiPaket(), []);
+  const grupModel = useMemo(() => buatOpsiModel(), []);
+  const opsiJendela = useMemo(() => buatOpsiJendela(), []);
 
   const totalAngka = parseAngka(totalKuota);
   const totalValid = Number.isFinite(totalAngka) && totalAngka > 0;

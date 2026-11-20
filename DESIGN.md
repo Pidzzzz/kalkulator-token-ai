@@ -219,3 +219,34 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - `prefers-reduced-motion: reduce` mematikan fitur: dock selalu opacity 1 dan transisi dimatikan. Perubahan setelan OS diikuti lewat listener `matchMedia` yang dibersihkan saat unmount.
 - Hanya fokus `:focus-visible` yang menahan dock tetap penuh; fokus sisa dari tap di HP tidak menahan redup selamanya.
 - Saat redup, teks tombol non-aktif memakai `--ink` agar tetap terbaca di 3 tema; pil aktif dan titik status mempertahankan warna aksennya.
+
+## 11. F2 Hidup — Simulator Sesi Agen (Sesi 3)
+
+> Tata letak, 3 tema, dock, dropdown kustom, konversi mata uang, dan blok Rumus & Asumsi tidak berubah. Panel F2 memakai grup `.module-f1` (kolom & lapisan dropdown sama) dengan penanda `.module-f2`. Bagian ini mencatat pola baru.
+
+### 11.1 Slider rasio cache
+
+- Baris **Rasio cache** memakai label sebaris dengan isian angka kecil (62px, mono tebal `--accent-light`, suffix `%`) di kanan, lalu slider selebar kolom di bawahnya.
+- Slider: rel 5px `--accent-soft` berborder `--line`; isian kiri `--accent` solid (hanya `::-moz-range-progress`; WebKit memakai thumb sebagai penanda karena track-nya solid tanpa gradasi). Thumb bulat 16px `--accent` dengan cincin `--card` + `--line`, membesar 1,1× saat hover/tekan.
+- Slider dan isian angka **dua arah**: menggeser mengisi angka, mengetik memindah slider (0–100, dikunci).
+- Skala `0%`…`100%` mono 10px `--muted` di bawah rel. `prefers-reduced-motion` mematikan transisi thumb.
+- Dua kolom isian berdampingan (`konteks awal | pertumbuhan`, `putaran | output`) memakai `.form-row--dua`; di ≤520px menumpuk satu kolom.
+
+### 11.2 Bar tumpuk 3 segmen (satu-satunya visualisasi F2)
+
+- Terletak di kaki kartu Hasil, di atas tombol Salin: label kecil `RINCIAN BIAYA` + total, lalu rel ramping 8px radius 999px berborder `--line`.
+- Tiga segmen berwarna solid: **segar** `--accent`, **cache** `--accent-light`, **output** `--muted`. Tanpa gradasi, glow, atau celah.
+- Legenda di bawahnya: swatch 8px + nama + `$` per suku (mono tebal `--ink`). Legenda selalu 2 desimal agar sebaris rapi.
+- Lebar tiap segmen = porsi biaya suku terhadap total (dilindungi dari total 0); `role="img"` + `aria-label` berisi ketiga nilai. Disembunyikan saat hasil belum valid. BUKAN donat/garis waktu.
+
+### 11.3 Peringatan konteks
+
+- Bila `konteks_akhir > konteks` model di `models.js`, kartu Hasil menampilkan blok `.context-warning` (`role="alert"`): latar `--accent-soft`, garis kiri 3px `--accent`, teks 12px — menyebut konteks akhir, jendela model, persen, dan risiko sesi terpotong/kehabisan konteks.
+- Strip HP menambahkan penanda `· konteks terlampaui`. Angka tetap tampil apa adanya — tidak ada angka yang diam-diam dibatasi.
+
+### 11.4 Angka biaya & keadaan tepi
+
+- Total biaya sesi memakai `--accent` (angka utama); total token, rata-rata per putaran, dan konteks akhir memakai `--ink`.
+- Biaya < $0,01 tampil 4 desimal agar tidak menjadi `$0,00`; legenda & salinan tetap 2 desimal.
+- Putaran kosong/0, konteks 0 + output 0, atau harga model 0 → "Isi masukan dulu untuk melihat perkiraan sesi." (atau pesan harga). Tombol Salin nonaktif, bar tumpuk disembunyikan.
+- Chart/visual lain tidak ditambahkan; count-up ±250ms, `tabular-nums`, strip HP sticky, konversi IDR, dan `localStorage` (`kalkulator-f2-input`) mengikuti pola F1 persis.
