@@ -353,3 +353,21 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 
 - localStorage `kalkulator-models-kustom` = `{ ubah: { [id]: patch }, tambah: [model] }`. Nilai yang kembali sama dengan bawaan dihapus dari patch (baris tidak lagi "diubah"). "Kembalikan bawaan" menghapus kunci ini sepenuhnya.
 - Pembacaan selalu melalui `normalisasiSimpanan()`, jadi data lama/rusak tidak pernah merusak tabel atau perhitungan.
+
+## 15. Sesi 5B — Field F2 Sejajar + Hierarki Mata Uang Hasil
+
+### 15.1 Baris field F2 memakai subgrid
+
+- `.module-f2 .form-row--dua` = grid 3 baris eksplisit (`auto auto auto`) dengan `row-gap: 3px`. Tiap `.form-group` di dalamnya = subgrid (`grid-row: span 3`, `display: grid`, `grid-template-rows: subgrid`, `gap: 0`, `min-width: 0`).
+- Hasilnya label, petunjuk (`.form-hint`), dan isian pada kolom kiri-kanan menempati baris yang sama: isian selalu mulai pada ketinggian yang sama meski jumlah baris petunjuk berbeda. Tidak ada pemotongan teks petunjuk.
+- Seluruh aturan dibungkus `@supports (grid-template-rows: subgrid)`; peramban tanpa subgrid memakai perilaku lama. Di <=520px grid tetap satu kolom, tiap kelompok tetap tiga baris internal (label, petunjuk, isian).
+- Tidak ada token warna/ukuran baru, dan teks label/petunjuk tidak diubah.
+
+### 15.2 Hierarki mata uang pada angka hasil
+
+- Aturan: **angka utama** (besar/aksen/pertama) memakai mata uang yang dipilih pengguna; **angka pendamping kecil** memakai pasangannya — USD bila pilihan bukan USD, IDR bila pilihan USD.
+- Sumber format tunggal: `formatNilaiMataUang(nilaiUSD, kode)` dan `pasanganNilai(nilaiUSD, kode, formatDolar)` di `src/utils/currency.js`. Desimal adaptif (0-6, nilai bukan-nol tidak pernah tampil 0) tetap berlaku; IDR & JPY 0 desimal; USD ditulis ringkas (`$0,08`).
+- Pilihan mata uang satu untuk seluruh halaman: state di `App.jsx`, disimpan di `kalkulator-mata-uang` (bawaan IDR), dipakai pemilih ringkas di judul kartu Hasil F1/F2/F3.
+- Pemakaian: F1 garis Perkiraan Biaya; F2 total biaya sesi (hero) dan rata-rata per putaran; F3 biaya masukan; strip hasil HP F1 & F2 (tanpa pendamping).
+- Rincian Biaya F2 (bar tumpuk + legenda Segar/Cache/Output) memakai mata uang terpilih **tanpa** pendamping.
+- Tetap USD: label dari sisi input (Jatah (USD), Total jatah paket (USD), bilah PEMAKAIAN JATAH), seluruh hitungan internal, harga tabel F4, dan teks "Salin hasil".

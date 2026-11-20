@@ -616,3 +616,39 @@ persen_konteks            = perkiraan_token ÷ konteks model × 100
 - Harness jsdom (di luar repo) berhenti di tengah UJI 5 karena galat pada skrip uji itu sendiri, jadi UJI 6 tidak berjalan. Beberapa asersi yang gagal sudah dipastikan sebagai cacat asersi/harness (bukan produk, lihat rincian di laporan sesi). Karena itu sesi ini **tidak** diklaim lulus uji wajib; verifikasi perilaku diserahkan ke pengujian pemilik di situs tayang.
 
 **Status:** Selesai ditulis & di-commit - `feat: F4 Basis Data Model & Harga (Sesi 5)`; verifikasi visual & interaksi di browser dilakukan pemilik.
+
+## Sesi 5B - Field F2 Sejajar + Hierarki Mata Uang Hasil (21 Nov 2026)
+
+**Tujuan:** dua poles tampilan: (1) field F2 dalam satu baris sejajar; (2) angka uang hasil F1-F3 mengikuti mata uang terpilih dengan pasangannya sebagai pendamping. Hitungan, data `models.js`, dan modul di luar cakupan tidak berubah.
+
+**Bagian A - Field F2 sejajar**
+
+- `.module-f2 .form-row--dua` menjadi grid 3 baris (`auto auto auto`) dengan `row-gap: 3px`; tiap `.form-group` di baris itu menjadi subgrid (`grid-row: span 3`, `display: grid`, `grid-template-rows: subgrid`, `gap: 0`). Label, petunjuk, dan isian kedua kolom menempati baris yang sama, sehingga isian mulai pada ketinggian yang sama walau jumlah baris `.form-hint` berbeda. Berlaku untuk kedua baris pasangan field.
+- Dijaga `@supports (grid-template-rows: subgrid)`; peramban tanpa subgrid tetap memakai tata letak lama. Di <=520px grid tetap satu kolom seperti sekarang.
+- Teks label/petunjuk tidak diubah. **Pembuktian = konstruksi CSS + cek visual pemilik** (jsdom tidak mengukur layout, harness posisi sengaja tidak dibuat).
+
+**Bagian B - Hierarki mata uang pada angka hasil**
+
+- Helper `src/utils/currency.js`: `formatNilaiMataUang(nilaiUSD, kode)` (desimal adaptif 0-6; IDR & JPY 0 desimal; USD ringkas `$0,08`), `kodePendamping()`, dan `pasanganNilai(nilaiUSD, kode, formatDolar)` -> `{ utama, pendamping }`.
+- Aturan: utama = mata uang terpilih; pendamping = pasangannya (bukan USD -> USD; USD -> IDR). Format USD memakai formatter lama milik pemanggil (`formatUSD` / `formatBiayaSesi` / `formatBiayaMasukan`) sehingga aturan desimal adaptif yang sudah terbukti tidak berubah.
+- F1: garis PERKIRAAN BIAYA dibalik mengikuti pilihan (IDR -> `Rp182.500` lalu `= $10,00`). State mata uang F1 kini di `App` (dikontrol) supaya satu pilihan dipakai F1/F2/F3 + strip.
+- F2: hero total biaya dan rata-rata per putaran memakai pasangan; bar tumpuk & legenda RINCIAN BIAYA tampil dalam mata uang terpilih tanpa pendamping.
+- F3: biaya masukan memakai pasangan; desimal adaptif tetap.
+- Strip HP F1 & F2 ikut mata uang terpilih (tanpa pendamping). Strip F3 tidak menampilkan uang.
+- Tidak berubah: label berdenominasi USD dari sisi input (Jatah (USD), Total jatah paket (USD), bilah PEMAKAIAN JATAH), semua hitungan internal (USD), harga tabel F4, dan teks "Salin hasil" (tetap USD lebih dulu, konversi dalam tanda kurung).
+
+**Uji headless (jsdom + bundel esbuild di luar repo, 24 asersi, ditulis sekali): 21 LULUS / 3 GAGAL (cacat harness)**
+
+1. F2 bawaan IDR: hero `Rp1.526` + pendamping `$0,08`; rata-rata `Rp305` + `$0,02`. LULUS
+2. Tukar ke USD: hero `$0,08` + `Rp1.526`; legenda ikut USD; localStorage `USD`; setelah muat ulang hierarki tetap USD-dulu. LULUS
+3. Regresi: F1 `~250` request; pasangan F1 `$10,00 = Rp182.500` dan `Rp182.500 = $10,00`; F3 contoh 60 token, OpenAI 52, Mistral 55; total USD internal F2 `0.0836`; F4 23 model. LULUS
+4. Legenda F2 dalam IDR dihitung dari nilai tak-bulat: `Rp511 | Rp102 | Rp913`; total bar `Rp1.526`. LULUS
+
+Catatan jujur 3 asersi GAGAL: `T3 F3 token contoh` (`~0`), `T3 F3 biaya utama IDR` (`Rp0`), `T3 F3 biaya pendamping USD` (`$0,00`). Penyebabnya harness memeriksa tepat setelah klik, sedangkan nilai F3 beranimasi count-up 250 ms dari 0; tabel perbandingan yang tidak beranimasi sudah menampilkan 52/55 dari teks contoh, jadi teks dan hitungannya masuk. Sesuai pagar sesi, harness tidak ditulis ulang - ketiga angka akhir F3 **belum terbukti lewat harness** dan masuk daftar cek pemilik.
+
+**Berkas:** diubah `src/utils/currency.js` (helper pasangan), `src/components/ResultPanel.jsx` (mata uang dikontrol + pasangan), `src/components/SimulatorResult.jsx`, `src/components/TeksResult.jsx`, `src/components/MobileResultStrip.jsx`, `src/components/SimulatorMobileStrip.jsx`, `src/App.jsx` (mata uang di App + prop strip), `src/index.css` (subgrid F2), `PROGRESS.md`, `DESIGN.md`.
+
+**Cek visual (tugas pemilik):** (a) isian F2 baris 1 & 2 mulai sejajar di desktop, tetap rapi satu kolom di <=520px, di 3 tema; (b) pertukaran IDR/USD di F1, F2 (termasuk legenda & bar tumpuk), dan F3, plus strip HP; (c) angka kecil F3 saat IDR (`Rp2` + `$0,00012`).
+
+**Status:** Selesai - `npm run build` 0 error (67 modul, 342,84 kB JS), commit `fix: field F2 sejajar + hierarki mata uang hasil (Sesi 5B)`.
+
