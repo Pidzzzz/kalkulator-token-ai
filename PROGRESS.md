@@ -734,3 +734,17 @@ Harness sempat gagal dua kali saat dibangun (jsdom di-bundle sebagai ESM -> "Dyn
 **Berkas:** `src/utils/calculator.js` (turunan biaya + ambang), `src/components/ResultPanel.jsx` (persen jatah, keadaan warna, bilah + legenda bagi biaya), `src/index.css` (token `--warn`/`--danger` 3 tema + gaya bilah/legenda), `DESIGN.md` (Bagian 18), `PROGRESS.md`.
 
 **Status:** Selesai ditulis & di-commit - `feat: warna ambang bilah jatah & bilah bagi biaya F1 (Sesi 7)`; hasil uji headless dicatat setelah verifikasi.
+
+**Uji headless (jsdom + esbuild, ditulis SEKALI): 11 LULUS / 0 GAGAL**
+
+1. Ambang: 20% normal -> jatah 45/50 (90%) peringatan -> jatah 60/50 (120%) bahaya -> kembali 10/50 normal. Diperiksa lewat `data-ambang` + kelas pada track/isian/angka persen (bukan piksel). LULUS (1a-1d)
+2. Bagi biaya 50/50: input 10.000 @ $3 + output 2.000 @ $15 -> total $0,06; porsi 50%/50%; lebar segmen 50%/50%; legenda 2 baris. LULUS
+3. Bagi biaya asimetris: output 1.000 -> total $0,045; porsi tak-bulat 66,67%/33,33%; tampil 67%/33%. LULUS
+4. Keadaan kosong: jatah dikosongkan -> bilah & legenda bagi biaya tidak dirender, pesan ramah tampil. LULUS
+5. Regresi: F1 250 request + pasangan `Rp182.500` / `$10,00`; F2 $0,0892; F3 60/52/55; F4 23 baris; FAQ 10/8/14; tanpa NaN di F1-F3. LULUS (5a-5d)
+
+**Yang belum terbukti lewat harness:** tampilan warna nyata di 3 tema (kontras diukur manual dari nilai token, bukan piksel), keterbacaan bilah/legenda di IDR & USD pada layar sempit, dan keadaan kosong secara visual - jsdom tidak mengukur layout/warna. Semua masuk cek visual pemilik.
+
+**Cek visual (tugas pemilik):** (a) tiga tingkat warna bilah jatah di 3 tema dengan memaksa jatah melewati 80% dan 100% (Hangat: pastikan mustard peringatan tidak tertukar dengan aksen tanah liat); (b) keterbacaan bilah bagi biaya + legenda dua baris di IDR dan USD, termasuk porsi sangat kecil (minimal 2px); (c) keadaan kosong F1 (jatah kosong) - bilah jatah/bagi biaya dan legenda tidak tampil.
+
+**Status akhir:** Selesai - `npm run build` 0 error, commit & push `feat: warna ambang bilah jatah & bilah bagi biaya F1 (Sesi 7)`, uji headless 11/11 lulus.
