@@ -652,3 +652,21 @@ Catatan jujur 3 asersi GAGAL: `T3 F3 token contoh` (`~0`), `T3 F3 biaya utama ID
 
 **Status:** Selesai - `npm run build` 0 error (67 modul, 342,84 kB JS), commit `fix: field F2 sejajar + hierarki mata uang hasil (Sesi 5B)`.
 
+
+## Sesi 6 - FAQ, Sering Tertukar & Glosarium (21 Nov 2026)
+
+**Tujuan:** menambah SATU bagian bacaan sesudah F4 berjudul "FAQ & Glosarium" (Sering Tertukar, FAQ akordeon, Glosarium) plus tautan anchor dari footer. F1-F4 tidak diubah fungsinya, `models.js` tidak disentuh, tanpa riset harga ulang.
+
+**Cakupan**
+- Komponen baru `src/components/FaqGlosarium.jsx`, dirender sekali di `App.jsx` setelah `<main>` modul dan sebelum `<Footer>`: satu `<section id="faq-glosarium">` yang terbaca dari modul mana pun. Dock tetap F1-F4 (tanpa item baru).
+- **Sering Tertukar**: tepat 10 kartu pasangan (dua istilah + satu kalimat pembeda; `Contoh:` hanya pada pasangan 3 dan 6 sesuai teks sesi). Desktop 2 kolom; <=520px satu kolom dan istilah di dalam kartu menumpuk vertikal.
+- **FAQ**: tepat 8 pertanyaan, akordeon tertutup bawaan. Tombol `<button>` asli (`aria-expanded` + `aria-controls`), jawaban `role="region"` + `hidden`, Enter/Spasi, fokus ring `--accent`, chevron berputar; tiap jawaban satu penjelasan + satu contoh. Perilaku yang tidak terdokumentasi ditulis "tidak dipublikasikan".
+- **Glosarium**: tepat 14 istilah urut alfabetis (Cache ... Token input / output) dalam `<dl>` dua kolom (satu kolom di HP).
+- Footer: tautan `FAQ & Glosarium` (`href="#faq-glosarium"`, gaya `--accent-light` + garis bawah + fokus ring). `hashchange` App hanya berpindah modul bila hash cocok f1-f4, sehingga anchor bacaan tidak memaksa pindah ke F1.
+- Tampilan mengikuti DESIGN.md: latar solid, tanpa gradasi/glow, tanpa warna baru; ketiga tema berlaku lewat token yang ada. Tanpa masukan/hitungan baru.
+
+**Urutan pendaratan (dikunci sesi):** `npm run build` 0 error (68 modul, 353,21 kB JS) -> commit -> push -> verifikasi mendalam (uji headless ditulis satu kali) setelahnya.
+
+**Berkas:** baru `src/components/FaqGlosarium.jsx`; diubah `src/App.jsx` (render bagian + guard hashchange), `src/components/Footer.jsx` (tautan anchor), `src/index.css` (blok "Sesi 6" + responsif <=520px + reduced motion), `DESIGN.md` (Bagian 16), `PROGRESS.md`.
+
+**Status:** Selesai ditulis & di-commit - `feat: FAQ, Sering Tertukar & Glosarium (Sesi 6)`; hasil uji headless dicatat di bawah setelah verifikasi.

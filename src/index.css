@@ -2557,5 +2557,262 @@ body {
   }
 }
 
+/* ============================================================
+   Sesi 6 — FAQ, Sering Tertukar & Glosarium
+   Bagian bacaan sesudah modul F1–F4, sebelum footer. Murni teks:
+   tanpa masukan, tanpa hitungan, tanpa item dock baru. Latar solid,
+   tanpa gradasi/glow; tiga tema yang ada berlaku otomatis lewat token.
+   ============================================================ */
+.bacaan {
+  width: 100%;
+  margin-block-start: 22px;
+  padding-block-start: 16px;
+  border-block-start: 1px solid var(--line);
+  scroll-margin-block-start: 16px;
+}
+
+.bacaan__header {
+  margin-block-end: 4px;
+}
+
+.bacaan__label {
+  font-size: 0.688rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.bacaan__judul {
+  font-family: var(--font-heading);
+  font-size: 1.188rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-block-start: 2px;
+}
+
+.bacaan__blok {
+  margin-block-start: 18px;
+}
+
+.bacaan__subjudul {
+  font-family: var(--font-heading);
+  font-size: 0.938rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-block-end: 10px;
+}
+
+/* ---- A. Sering Tertukar: dua kolom kartu di desktop ---- */
+.tertukar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tertukar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+}
+
+.tertukar__istilah {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 6px;
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.tertukar__istilah-teks {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.tertukar__vs {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tertukar__beda {
+  font-size: 0.813rem;
+  color: var(--muted-strong);
+  line-height: 1.55;
+}
+
+.tertukar__contoh {
+  font-size: 0.75rem;
+  color: var(--ink);
+  line-height: 1.5;
+  padding-inline-start: 8px;
+  border-inline-start: 2px solid var(--line);
+}
+
+.tertukar__contoh-label,
+.faq__contoh-label {
+  font-weight: 700;
+  color: var(--accent-light);
+}
+
+/* ---- B. FAQ: akordeon tertutup bawaan, tombol asli (Enter/Spasi) ---- */
+.faq {
+  display: flex;
+  flex-direction: column;
+  border-block-start: 1px solid var(--line);
+}
+
+.faq__item {
+  border-block-end: 1px solid var(--line);
+}
+
+.faq__judul {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.faq__tombol {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding-block: 11px;
+  padding-inline: 2px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink);
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.faq__tombol:hover .faq__chevron {
+  color: var(--accent-light);
+}
+
+.faq__tombol:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.faq__chevron {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--muted-strong);
+  transition: transform 0.2s ease, color 0.15s ease;
+}
+
+.faq__tombol[aria-expanded="true"] .faq__chevron {
+  transform: rotate(180deg);
+}
+
+.faq__jawab {
+  padding-block-end: 12px;
+  padding-inline: 2px;
+}
+
+.faq__jawab[hidden] {
+  display: none;
+}
+
+.faq__jawab p {
+  font-size: 0.813rem;
+  color: var(--muted-strong);
+  line-height: 1.6;
+}
+
+.faq__contoh {
+  margin-block-start: 6px;
+  color: var(--ink);
+}
+
+/* ---- C. Glosarium: daftar istilah dua kolom, urut alfabetis ---- */
+.glosarium {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+}
+
+.glosarium__item {
+  padding-block: 10px;
+  border-block-end: 1px solid var(--line);
+  break-inside: avoid;
+}
+
+.glosarium__istilah {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-block-end: 2px;
+}
+
+.glosarium__arti {
+  margin: 0;
+  font-size: 0.813rem;
+  color: var(--muted-strong);
+  line-height: 1.55;
+}
+
+/* Tautan anchor dari footer */
+.footer__link {
+  font-weight: 600;
+  color: var(--accent-light);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border-radius: 2px;
+}
+
+.footer__link:hover {
+  color: var(--ink);
+}
+
+.footer__link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* HP: pasangan tertukar menumpuk vertikal (satu kolom), begitu pula
+   istilah di dalamnya — bukan dua kolom menyempit. Glosarium satu kolom. */
+@media (max-width: 520px) {
+  .tertukar-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tertukar__istilah {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .glosarium {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__chevron {
+    transition: none;
+  }
+}
+
+
 
 

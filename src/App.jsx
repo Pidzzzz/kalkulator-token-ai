@@ -14,6 +14,7 @@ import TeksResult from "./components/TeksResult";
 import TeksFormula from "./components/TeksFormula";
 import TeksMobileStrip from "./components/TeksMobileStrip";
 import DataModelPanel from "./components/DataModelPanel.jsx";
+import FaqGlosarium from "./components/FaqGlosarium";
 import Footer from "./components/Footer";
 import { useF1State } from "./utils/useF1State";
 import { useF2State } from "./utils/useF2State";
@@ -241,11 +242,14 @@ export default function App() {
     }
   }, []);
 
-  // Listen to hashchange from browser back/forward or external links
+  // Listen to hashchange from browser back/forward or external links.
+  // Hash bacaan (#faq-glosarium) bukan modul: jangan paksa halaman pindah ke
+  // F1 hanya karena pengguna mengeklik tautan anchor dari footer.
   useEffect(() => {
     const handleHashChange = () => {
-      const mod = getModuleFromHash();
-      setActiveModule(mod);
+      const hash = window.location.hash.toLowerCase().replace("#", "");
+      if (!MODULES.some((m) => m.id === hash)) return;
+      setActiveModule(hash);
     };
     window.addEventListener("hashchange", handleHashChange);
     return () => window.removeEventListener("hashchange", handleHashChange);
@@ -420,6 +424,8 @@ export default function App() {
           />
         </main>
       )}
+
+      <FaqGlosarium />
 
       <Footer />
       <DockNav activeModule={activeModule} onSelectModule={selectModule} />

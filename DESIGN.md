@@ -371,3 +371,26 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - Pemakaian: F1 garis Perkiraan Biaya; F2 total biaya sesi (hero) dan rata-rata per putaran; F3 biaya masukan; strip hasil HP F1 & F2 (tanpa pendamping).
 - Rincian Biaya F2 (bar tumpuk + legenda Segar/Cache/Output) memakai mata uang terpilih **tanpa** pendamping.
 - Tetap USD: label dari sisi input (Jatah (USD), Total jatah paket (USD), bilah PEMAKAIAN JATAH), seluruh hitungan internal, harga tabel F4, dan teks "Salin hasil".
+
+## 16. Sesi 6 — FAQ, Sering Tertukar & Glosarium
+
+> Bagian bacaan mandiri sesudah modul F1–F4 dan sebelum footer. Bukan modul baru: dock tetap F1–F4, tanpa item tambahan, tanpa masukan/hitungan baru. Data `models.js` dan fungsi F1–F4 tidak berubah.
+
+### 16.1 Penempatan & anchor
+
+- Satu `<section id="faq-glosarium">` dirender sekali di `App.jsx` setelah `<main>` modul dan sebelum `<Footer>`, sehingga terbaca sama dari modul mana pun.
+- Footer menambahkan satu tautan `FAQ & Glosarium` (`href="#faq-glosarium"`) di samping penafian; gaya `--accent-light`, garis bawah, fokus ring `--accent`.
+- Hash bacaan bukan hash modul: listener `hashchange` hanya berpindah modul bila hash cocok `f1`–`f4`, jadi klik tautan footer tidak memaksa pindah ke F1. `scroll-margin-block-start: 16px` menjaga judul tidak menempel di tepi atas.
+- Judul bagian: label kecil `BACAAN` (aksen, kapital) + H2 `FAQ & Glosarium` (Fraunces). Tanpa subjudul tambahan (aturan anti-slop).
+
+### 16.2 Tiga sub-bagian
+
+- **Sering Tertukar** — 10 kartu pasangan. Tiap kartu: dua istilah bersebelahan dengan penghubung kecil (`vs`, atau `=` untuk pasangan yang memang sama), satu kalimat pembeda, dan baris `Contoh:` bergaris kiri hanya pada pasangan yang menyertakan contoh (3 dan 6). Kartu memakai `--card`, border `--line`, `--card-shadow` tema (tanpa gradasi/glow).
+- **FAQ** — 8 pertanyaan sebagai akordeon. Tiap item memakai `<button>` asli dengan `aria-expanded` + `aria-controls`; jawaban `role="region"` + `aria-labelledby`, tertutup bawaan lewat atribut `hidden`, bisa dibuka/ditutup satu per satu. Enter/Spasi bekerja, fokus terlihat (`outline: 2px solid --accent`), chevron berputar 180° (dimatikan pada `prefers-reduced-motion`). Tiap jawaban: satu penjelasan inti + satu `Contoh:`. Perilaku provider yang tidak terdokumentasi ditulis "tidak dipublikasikan".
+- **Glosarium** — 14 istilah urut alfabetis dalam `<dl>` dua kolom (Cache → Token input / output), istilah `--ink` tebal, arti `--muted-strong`.
+
+### 16.3 Responsif & tema
+
+- >520px: Sering Tertukar 2 kolom kartu, Glosarium 2 kolom; ≤520px keduanya menjadi satu kolom dan dua istilah di dalam kartu ikut menumpuk vertikal — tidak ada dua kolom menyempit dan tidak ada geser horizontal.
+- Warna sepenuhnya dari token tema yang sudah ada (`--bg`, `--card`, `--line`, `--ink`, `--muted`, `--muted-strong`, `--accent`, `--accent-light`, `--card-shadow`); Gelap, Terang, dan Hangat otomatis berlaku. Tanpa latar gradasi, glow, atau warna baru.
+- Tipografi mengikuti aturan global: Fraunces untuk H2/subjudul, Inter untuk teks bacaan.
