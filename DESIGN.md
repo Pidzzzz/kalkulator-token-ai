@@ -474,6 +474,7 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - Komponen baru `PitaCaraPakai` memakai ulang `PitaHeader`, `PitaBody`, dan hook pita Sesi 4B — bukan pola baru. Judul terlihat `Cara Pakai` (label kecil aksen kapital, gaya label pita rumah).
 - Diletakkan sebagai anak pertama `<main>` tiap modul, **di atas** `.module-f1` (F1–F3) atau `DataModelPanel` (F4), selebar area modul. Jarak bawah 14px; baris judul memakai hairline rumah.
 - Id unik per modul: `cara-pakai-toggle-f1..f4` + `cara-pakai-isi-f1..f4` (`aria-expanded` / `aria-controls`).
+- Tiap pita diberi `key` unik per modul di `App.jsx` (`cara-pakai-f1..f4`). Tanpa key, React memakai ulang instance komponen yang sama saat modul berganti (posisi pohon sama), sehingga keadaan lipat F1 terbawa ke F2. Key memaksa pita membaca keadaan modulnya sendiri dari localStorage setiap kali modul dibuka.
 
 ### 19.2 Keadaan lipat & kunci terpisah
 

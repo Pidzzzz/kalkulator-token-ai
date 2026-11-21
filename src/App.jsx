@@ -288,7 +288,7 @@ export default function App() {
           tabIndex={0}
           className="main-panel"
         >
-          <PitaCaraPakai modul="f1" />
+          <PitaCaraPakai key="cara-pakai-f1" modul="f1" />
 
           <div className="module-f1">
             <div className="module-f1__input" ref={inputPanelRef}>
@@ -338,7 +338,7 @@ export default function App() {
           tabIndex={0}
           className="main-panel"
         >
-          <PitaCaraPakai modul="f2" />
+          <PitaCaraPakai key="cara-pakai-f2" modul="f2" />
 
           <div className="module-f1 module-f2">
             <div className="module-f1__input" ref={inputPanelF2Ref}>
@@ -393,7 +393,7 @@ export default function App() {
           tabIndex={0}
           className="main-panel"
         >
-          <PitaCaraPakai modul="f3" />
+          <PitaCaraPakai key="cara-pakai-f3" modul="f3" />
 
           <div className="module-f1 module-f3">
             <div className="module-f1__input" ref={inputPanelF3Ref}>
@@ -426,7 +426,7 @@ export default function App() {
           tabIndex={0}
           className="main-panel"
         >
-          <PitaCaraPakai modul="f4" />
+          <PitaCaraPakai key="cara-pakai-f4" modul="f4" />
 
           <DataModelPanel
             actions={aksiModel}

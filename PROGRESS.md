@@ -760,8 +760,23 @@ Harness sempat gagal dua kali saat dibangun (jsdom di-bundle sebagai ESM -> "Dyn
 - Tepat 3 langkah bernomor `01`/`02`/`03` (JetBrains Mono, muted) per modul, teks apa adanya di `src/data/caraPakai.js` (`CARA_PAKAI.f1..f4`). <=520px nomor menyempit + teks 12px, tetap menumpuk vertikal.
 - Isi tetap ter-mount saat terlipat (atribut `hidden`), animasi 250ms + penjaga reduced motion; tanpa gradasi/glow/warna baru.
 
-**Urutan pendaratan (dikunci sesi):** `npm run build` 0 error (70 modul, 358,53 kB JS) -> commit -> push -> verifikasi mendalam setelahnya.
+**Urutan pendaratan (dikunci sesi):** `npm run build` 0 error (70 modul, 358,59 kB JS) -> commit -> push -> verifikasi mendalam setelahnya.
 
 **Berkas:** baru `src/components/PitaCaraPakai.jsx`, `src/data/caraPakai.js`; diubah `src/utils/usePitaTerbuka.js` (hook generik + kunci terpisah), `src/App.jsx` (pita di 4 modul), `src/index.css` (blok Sesi 8), `DESIGN.md` (Bagian 19), `PROGRESS.md`.
 
 **Status:** Selesai ditulis & di-commit - `feat: pita Cara Pakai di F1-F4 (Sesi 8)`; hasil uji headless dicatat setelah verifikasi.
+
+**Uji headless (jsdom + esbuild, ditulis SEKALI): 13 LULUS / 0 GAGAL**
+
+Temuan nyata pada jalan pertama: pita F2 mewarisi keadaan lipat F1 karena React memakai ulang instance `PitaCaraPakai` di posisi pohon yang sama saat modul berganti (hook `useState` tidak diinisialisasi ulang). Perbaikan: `key` unik per modul (`cara-pakai-f1..f4`) di `App.jsx`. Uji TIDAK ditulis ulang - harness yang sama dijalankan lagi dan lulus semua.
+
+1. Pita tampil di F1-F4; tiap pita berjudul "Cara Pakai", tepat 3 langkah bernomor 01/02/03. LULUS (1a-1d)
+2. Bawaan terbuka di keempat modul; F1 dilipat -> F2/F3/F4 tetap terbuka; F1 & F2 tertutup setelah muat ulang (F3 tetap terbuka). Kunci baru `kalkulator-pita-cara-pakai` terisi `{f1:false,f2:false,f3:true,f4:true}`; sentinel `kalkulator-pita` (`{f1:false,f2:true,f3:false}`) tidak berubah sama sekali, dan pita metode F1 tetap tertutup sesuai sentinel. LULUS (2a-2e)
+3. Melipat/membuka pita F1 & F2 tidak mengubah angka hasil utama. LULUS (3a-3b)
+4. Regresi: F1 250 request; F2 $0,0892; F3 60/52/55; F4 23 baris; FAQ 10/8/14; tanpa NaN di F1-F3. LULUS (4a-4d)
+
+**Yang belum terbukti lewat harness:** tampilan pita di 3 tema, rasa animasi lipat 250ms vs reduced-motion, tata letak langkah di HP 360px, dan posisi visual pita terhadap panel - jsdom tidak mengukur layout/gaya. Semua masuk cek visual pemilik.
+
+**Cek visual (tugas pemilik):** (a) pita "Cara Pakai" di 3 tema (Gelap/Terang/Hangat), termasuk hairline & label aksen; (b) rasa melipat/membuka (250ms, chevron berputar, isi tidak hilang) dan mode kurangi gerak; (c) langkah 01-03 di HP 360px (nomor + teks menggantung, tanpa geser horizontal); (d) posisi pita di atas panel pada keempat modul F1-F4, lebar sejajar pita Rumus/Metode.
+
+**Status akhir:** Selesai - `npm run build` 0 error (70 modul, 358,59 kB JS), commit & push `feat: pita Cara Pakai di F1-F4 (Sesi 8)` + perbaikan `key` per modul, uji headless 13/13 lulus.
