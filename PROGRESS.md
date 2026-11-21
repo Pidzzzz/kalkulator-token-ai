@@ -703,3 +703,17 @@ Harness sempat gagal dua kali saat dibangun (jsdom di-bundle sebagai ESM -> "Dyn
 **Berkas:** `src/components/FaqGlosarium.jsx` (struktur dua panel, nomor + ikon plus, `sorot` + `TeksContoh`, label sub-bagian, daftar glosarium), `src/index.css` (blok Sesi 6 ditulis ulang), `DESIGN.md` (Bagian 17), `PROGRESS.md`. Tidak ada berkas lain yang diubah.
 
 **Status:** Selesai ditulis & di-commit - `style: poles Sering Tertukar, FAQ & Glosarium (Sesi 6B)`; hasil uji headless dicatat setelah verifikasi.
+
+**Uji headless (jsdom + esbuild, ditulis SEKALI): 11 LULUS / 0 GAGAL**
+
+1. Hitungan utuh: 10 pasangan, 8 FAQ, 14 istilah, glosarium tetap alfabetis. LULUS (1a-1d)
+2. Struktur tampilan baru: 20 panel (2 per pasangan) + 10 lencana, FAQ bernomor 01-08 dan memakai ikon plus (chevron lama 0). LULUS (1e-1f)
+3. Akordeon: tertutup bawaan, satu klik membuka + jawaban tampil, klik lagi menutup. LULUS
+4. Tautan footer `#faq-glosarium` + section id utuh. LULUS
+5. Regresi: F1 250 request; F3 60/52/55 (9 keluarga); F2 $0,0892; tanpa NaN di F1-F3. LULUS (4a-4c)
+
+**Yang belum terbukti lewat harness:** tampilan visual (dua sisi + aksen tema, dashed Contoh, nomor 01-08, keadaan terbuka akordeon), tumpukan di HP 360px, dan putaran ikon plus — jsdom tidak mengukur layout/gaya. Semua masuk cek visual pemilik.
+
+**Cek visual (tugas pemilik):** (a) Sering Tertukar dua sisi di 3 tema - lencana `vs` mengikuti aksen (ungu Gelap/Terang, tanah liat Hangat), kedua panel netral; (b) HP 360px: panel menumpuk dengan `vs` di antara, tanpa geser horizontal; (c) akordeon: keadaan terbuka (latar solid + garis aksen 2px kiri) dan ikon plus berputar jadi x; (d) kartu Contoh dashed di Sering Tertukar dan jawaban FAQ, angka kunci tebal beraksen; (e) keterbacaan nomor 01-08 dan istilah glosarium Fraunces.
+
+**Status akhir:** Selesai - `npm run build` 0 error, commit & push `style: poles Sering Tertukar, FAQ & Glosarium (Sesi 6B)`, uji headless 11/11 lulus.
