@@ -670,3 +670,18 @@ Catatan jujur 3 asersi GAGAL: `T3 F3 token contoh` (`~0`), `T3 F3 biaya utama ID
 **Berkas:** baru `src/components/FaqGlosarium.jsx`; diubah `src/App.jsx` (render bagian + guard hashchange), `src/components/Footer.jsx` (tautan anchor), `src/index.css` (blok "Sesi 6" + responsif <=520px + reduced motion), `DESIGN.md` (Bagian 16), `PROGRESS.md`.
 
 **Status:** Selesai ditulis & di-commit - `feat: FAQ, Sering Tertukar & Glosarium (Sesi 6)`; hasil uji headless dicatat di bawah setelah verifikasi.
+
+**Uji headless (jsdom + esbuild, ditulis SEKALI): 10 LULUS / 0 GAGAL**
+
+Harness sempat gagal dua kali saat dibangun (jsdom di-bundle sebagai ESM -> "Dynamic require of path"); perbaikannya hanya konfigurasi build (`--external:jsdom` + output di akar proyek agar resolusi Node menemukan jsdom), bukan menulis ulang uji. Berkas uji sementara dihapus setelah jalan.
+
+1. Bagian baru tampil: 10 pasangan Sering Tertukar, 8 FAQ, 14 istilah Glosarium (urut alfabetis). LULUS
+2. Akordeon: FAQ pertama tertutup bawaan (`aria-expanded="false"`, jawaban `hidden`), klik membuka (jawaban tampil + teks benar), klik lagi menutup. LULUS
+3. Tautan footer `href="#faq-glosarium"` ada dan target `<section id="faq-glosarium">` ada. LULUS
+4. Regresi angka: F1 250 request + $10,00; F2 kasus Sesi 3 $0,0892; F3 contoh 60/52/55; F4 23 baris; tidak ada NaN/Infinity di hasil F1-F3. LULUS (4a-4d)
+
+**Yang belum terbukti lewat harness:** tata letak responsif (<=520px pasangan menumpuk), tampilan 3 tema, dan fokus keyboard terlihat - jsdom tidak mengukur layout/gaya visual. Semua masuk daftar cek visual pemilik.
+
+**Cek visual (tugas pemilik):** (a) bagian FAQ & Glosarium di tema Gelap, Terang, Hangat; (b) akordeon dibuka lewat keyboard (Tab ke pertanyaan, Enter/Spasi) dengan fokus terlihat dan chevron berputar; (c) pasangan Sering Tertukar di HP 360px menumpuk satu kolom tanpa geser horizontal; (d) tautan footer "FAQ & Glosarium" menggulir tepat ke judul bagian dari modul mana pun (termasuk F4).
+
+**Status akhir:** Selesai - `npm run build` 0 error, commit & push `feat: FAQ, Sering Tertukar & Glosarium (Sesi 6)`, uji headless 10/10 lulus.
