@@ -29,6 +29,11 @@
   --accent-soft: #241D40;
   --on-accent: #FFFFFF;
 
+  /* Sesi 7: warna semantik ambang bilah jatah. Solid, tanpa glow.
+     Kontras vs kartu #17171F: warn 10,10:1 · danger 6,44:1. */
+  --warn: #F5B942;
+  --danger: #F87171;
+
   /* Sesi 3F: turunan tema (bukan warna baru di luar palet).
      --muted-strong  = teks sekunder satu tingkat menuju ink (legenda, hint).
      --field         = permukaan isian, satu tingkat lebih terang dari kartu.
@@ -58,6 +63,11 @@
   --accent-soft: #EEF0FB;
   --on-accent: #FFFFFF;
 
+  /* Sesi 7: warna semantik ambang bilah jatah. Solid, tanpa glow.
+     Kontras vs kartu #FFFFFF: warn 5,02:1 · danger 6,47:1. */
+  --warn: #B45309;
+  --danger: #B91C1C;
+
   /* Sesi 3F: turunan tema untuk teks sekunder dan permukaan isian. */
   --muted-strong: #3A465E;
   --field: #DFE1E6;
@@ -82,6 +92,12 @@
   --accent-light: #9A4524;
   --accent-soft: #F0EEE6;
   --on-accent: #141413;
+
+  /* Sesi 7: warna semantik ambang bilah jatah. Warn sengaja mustard gelap
+     agar tidak tertukar dengan aksen tanah liat #D97757.
+     Kontras vs kartu #FFFFFF: warn 5,54:1 · danger 6,54:1. */
+  --warn: #8A6100;
+  --danger: #B3261E;
 
   /* Sesi 3F: turunan tema untuk teks sekunder dan permukaan isian. */
   --muted-strong: #565550;
@@ -1077,7 +1093,39 @@ body {
   height: 100%;
   background-color: var(--accent);
   border-radius: 999px;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, background-color 0.2s ease;
+}
+
+/* Sesi 7: angka persen jatah + keadaan semantik (normal/peringatan/bahaya).
+   Hanya elemen bilah & persen yang berubah warna; kartu/teks lain tetap. */
+.usage-bar__meta-angka {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.usage-bar__persen {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.usage-bar__persen--peringatan {
+  color: var(--warn);
+}
+
+.usage-bar__persen--bahaya {
+  color: var(--danger);
+}
+
+.usage-bar__fill--peringatan {
+  background-color: var(--warn);
+}
+
+.usage-bar__fill--bahaya {
+  background-color: var(--danger);
 }
 
 /* Keadaan tepi: pesan ramah saat jatah/harga belum valid */
@@ -1885,6 +1933,54 @@ body {
   font-size: 0.75rem; /* 12px */
 }
 
+/* Sesi 7: bilah bagi biaya F1 — dua segmen, lebih tipis dari F2.
+   Segmen 1 aksen, segmen 2 netral (--muted). Minimum 2px agar tetap
+   terlihat saat porsinya sangat kecil. Legenda dua baris. */
+.cost-bar--f1 {
+  gap: 5px;
+  margin-block: 2px 12px;
+}
+
+.cost-bar--f1 .cost-bar__track {
+  height: 6px;
+}
+
+.cost-bar--f1 .cost-bar__seg {
+  min-width: 2px;
+}
+
+.cost-bar__seg--f1-input {
+  background-color: var(--accent);
+}
+
+.cost-bar__seg--f1-output {
+  background-color: var(--muted);
+}
+
+.cost-legend--f1 {
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cost-legend--f1 .cost-legend__item {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto auto;
+  gap: 8px;
+  width: 100%;
+}
+
+.cost-legend--f1 .cost-legend__persen {
+  text-align: right;
+}
+
+.cost-legend__swatch--f1-input {
+  background-color: var(--accent);
+}
+
+.cost-legend__swatch--f1-output {
+  background-color: var(--muted);
+}
+
 /* Peringatan konteks akhir melewati jendela model */
 .context-warning {
   margin-block-start: 8px;
@@ -1920,7 +2016,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .form-slider::-webkit-slider-thumb,
   .form-slider::-moz-range-thumb,
-  .cost-bar__seg {
+  .cost-bar__seg,
+  .usage-bar__fill {
     transition: none;
   }
 }

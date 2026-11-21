@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import Dropdown from "./Dropdown";
-import { formatRibuan, formatUSD } from "../utils/calculator";
+import { formatDesimal, formatRibuan, formatUSD } from "../utils/calculator";
 import {
   formatMataUang,
+  formatNilaiMataUang,
   opsiMataUang,
   pasanganNilai,
 } from "../utils/currency";
@@ -54,6 +55,21 @@ export default function ResultPanel({
   const biayaPasangan = pasanganNilai(tampilBiaya, mataUang, (v) =>
     formatUSD(v, 2, 2)
   );
+
+  // Sesi 7: ambang warna bilah jatah + rincian biaya per request.
+  const ambang = result.ambangPemakaian || "normal";
+  const kelasAmbang =
+    ambang === "bahaya"
+      ? "usage-bar__fill--bahaya"
+      : ambang === "peringatan"
+        ? "usage-bar__fill--peringatan"
+        : "";
+  const persenJatah = formatDesimal(result.usagePercentRaw, 0, 1) + "%";
+  const nominalInput = formatNilaiMataUang(result.biayaInput, mataUang);
+  const nominalOutput = formatNilaiMataUang(result.biayaOutput, mataUang);
+  const persenInput = formatRibuan(result.porsiInput);
+  const persenOutput = formatRibuan(result.porsiOutput);
+  const totalBagi = formatNilaiMataUang(result.biayaPerRequest, mataUang);
 
   const susunRingkasan = () => {
     const namaPaket = preset?.nama || "Kustom";
@@ -128,14 +144,23 @@ export default function ResultPanel({
                 <span className="estimate-pill">ESTIMASI</span>
               </div>
 
-              {/* Bar Pemakaian Jatah — hanya tampil bila total valid */}
+              {/* Bar Pemakaian Jatah — hanya tampil bila total valid.
+                  Sesi 7: warna semantik normal/peringatan/bahaya. */}
               {result.isUsageValid && (
                 <div className="usage-bar">
                   <div className="usage-bar__meta">
                     <span className="usage-bar__label">PEMAKAIAN JATAH</span>
-                    <span className="usage-bar__value">
-                      {formatUSD(result.jatah, 0, 2)} dari{" "}
-                      {formatUSD(result.totalKuota, 0, 2)}
+                    <span className="usage-bar__meta-angka">
+                      <span
+                        className={`usage-bar__persen usage-bar__persen--${ambang}`}
+                        data-ambang={ambang}
+                      >
+                        {persenJatah}
+                      </span>
+                      <span className="usage-bar__value">
+                        {formatUSD(result.jatah, 0, 2)} dari{" "}
+                        {formatUSD(result.totalKuota, 0, 2)}
+                      </span>
                     </span>
                   </div>
                   <div
@@ -144,10 +169,13 @@ export default function ResultPanel({
                     aria-valuenow={Math.round(result.usagePercent)}
                     aria-valuemin={0}
                     aria-valuemax={100}
+                    aria-valuetext={`${persenJatah} pemakaian jatah`}
                     aria-label="Persentase pemakaian jatah"
+                    data-ambang={ambang}
                   >
                     <div
-                      className="usage-bar__fill"
+                      className={`usage-bar__fill ${kelasAmbang}`}
+                      data-ambang={ambang}
                       style={{ width: `${result.usagePercent}%` }}
                     ></div>
                   </div>
@@ -189,6 +217,51 @@ export default function ResultPanel({
           </p>
         )}
       </div>
+
+      {/* Sesi 7: bilah bagi biaya per request — Input segar vs Output.
+          Hanya tampil bila hasil valid dan ada biaya > 0. */}
+      {result.isValid && result.biayaPerRequest > 0 && (
+        <div className="cost-bar cost-bar--f1">
+          <div className="cost-bar__meta">
+            <span className="cost-bar__label">BAGI BIAYA PER REQUEST</span>
+            <span className="cost-bar__total">{totalBagi}</span>
+          </div>
+          <div
+            className="cost-bar__track"
+            role="img"
+            aria-label={`Bagi biaya per request ${totalBagi}: input segar ${nominalInput} (${persenInput}%), output ${nominalOutput} (${persenOutput}%)`}
+          >
+            <span
+              className="cost-bar__seg cost-bar__seg--f1-input"
+              style={{ width: `${result.porsiInput}%` }}
+            />
+            <span
+              className="cost-bar__seg cost-bar__seg--f1-output"
+              style={{ width: `${result.porsiOutput}%` }}
+            />
+          </div>
+          <ul className="cost-legend cost-legend--f1">
+            <li className="cost-legend__item">
+              <span
+                className="cost-legend__swatch cost-legend__swatch--f1-input"
+                aria-hidden="true"
+              />
+              <span className="cost-legend__name">Input segar</span>
+              <span className="cost-legend__val">{nominalInput}</span>
+              <span className="cost-legend__persen">{persenInput}%</span>
+            </li>
+            <li className="cost-legend__item">
+              <span
+                className="cost-legend__swatch cost-legend__swatch--f1-output"
+                aria-hidden="true"
+              />
+              <span className="cost-legend__name">Output</span>
+              <span className="cost-legend__val">{nominalOutput}</span>
+              <span className="cost-legend__persen">{persenOutput}%</span>
+            </li>
+          </ul>
+        </div>
+      )}
 
       <button
         className="btn-copy"

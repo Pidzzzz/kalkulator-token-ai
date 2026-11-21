@@ -717,3 +717,20 @@ Harness sempat gagal dua kali saat dibangun (jsdom di-bundle sebagai ESM -> "Dyn
 **Cek visual (tugas pemilik):** (a) Sering Tertukar dua sisi di 3 tema - lencana `vs` mengikuti aksen (ungu Gelap/Terang, tanah liat Hangat), kedua panel netral; (b) HP 360px: panel menumpuk dengan `vs` di antara, tanpa geser horizontal; (c) akordeon: keadaan terbuka (latar solid + garis aksen 2px kiri) dan ikon plus berputar jadi x; (d) kartu Contoh dashed di Sering Tertukar dan jawaban FAQ, angka kunci tebal beraksen; (e) keterbacaan nomor 01-08 dan istilah glosarium Fraunces.
 
 **Status akhir:** Selesai - `npm run build` 0 error, commit & push `style: poles Sering Tertukar, FAQ & Glosarium (Sesi 6B)`, uji headless 11/11 lulus.
+
+## Sesi 7 - Warna Ambang Bilah Jatah & Bilah Bagi Biaya F1 (21 Nov 2026)
+
+**Tujuan:** memoles tampilan panel Hasil F1 saja: warna semantik bilah pemakaian jatah (normal/peringatan/bahaya) dan bilah dua segmen bagi biaya input vs output. Rumus F1 tetap dua suku; F2-F4, FAQ & Glosarium, `models.js`, dan dock tidak disentuh.
+
+**Cakupan**
+- **Token semantik baru** di 3 tema (solid, tanpa gradasi/glow): Gelap `--warn #F5B942` (10,10:1) / `--danger #F87171` (6,44:1); Terang `#B45309` (5,02:1) / `#B91C1C` (6,47:1); Hangat `#8A6100` (5,54:1) / `#B3261E` (6,54:1). Kontras diukur terhadap kartu tiap tema; Hangat sengaja mustard gelap agar tidak tertukar dengan aksen tanah liat.
+- **Ambang bilah jatah:** ≤80% normal, >80% dan <100% peringatan, ≥100% bahaya. Berlaku pada isian bilah + angka persentase baru di baris meta (mis. `20%`), bukan kartu/teks lain. Penanda: `data-ambang` pada track/fill/persen + kelas `usage-bar__fill--peringatan|bahaya` dan `usage-bar__persen--peringatan|bahaya`. Lebar isian tetap dibatasi 0-100%; label memakai persentase mentah (boleh >100%).
+- **Bilah bagi biaya per request F1:** dua segmen (Input segar `--accent`, Output `--muted`), track tipis 6px, legenda dua baris (nama + nominal mata uang terpilih + persen dari nilai tak-bulat), total per request di meta. Minimal 2px per segmen. Hanya tampil saat hasil valid dan biaya > 0.
+- **Data turunan** di `hitungF1` (tanpa mengubah rumus): `biayaInput`, `biayaOutput`, `porsiInput`, `porsiOutput`, `usagePercentRaw`, `ambangPemakaian`; `getAmbangPemakaian()` diekspor.
+- Tidak ada perubahan pada F2/F3/F4, FAQ & Glosarium, `models.js`, `App.jsx`, atau dock.
+
+**Urutan pendaratan (dikunci sesi):** `npm run build` 0 error (68 modul, 356,58 kB JS) -> commit -> push -> verifikasi mendalam setelahnya.
+
+**Berkas:** `src/utils/calculator.js` (turunan biaya + ambang), `src/components/ResultPanel.jsx` (persen jatah, keadaan warna, bilah + legenda bagi biaya), `src/index.css` (token `--warn`/`--danger` 3 tema + gaya bilah/legenda), `DESIGN.md` (Bagian 18), `PROGRESS.md`.
+
+**Status:** Selesai ditulis & di-commit - `feat: warna ambang bilah jatah & bilah bagi biaya F1 (Sesi 7)`; hasil uji headless dicatat setelah verifikasi.

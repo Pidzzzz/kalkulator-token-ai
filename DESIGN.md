@@ -434,3 +434,33 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - Tiap sub-bagian mendapat label kecil di atas judulnya: `01` / `02` / `03` (dekoratif, `aria-hidden`), JetBrains Mono 11px, `letter-spacing: 0.08em`, warna `--accent`; judul sub-bagian tetap Fraunces.
 - Jarak judul ke isi dirapatkan (`margin-block-end: 8px`), jarak antar sub-bagian dilonggarkan (`margin-block-start: 32px`).
 - Tidak ada token warna baru: semua memakai token tema yang sudah ada; aksen mengikuti tema (ungu Gelap/Terang, tanah liat Hangat).
+
+## 18. Sesi 7 — Warna Ambang Bilah Jatah & Bilah Bagi Biaya F1
+
+> Hanya tampilan panel Hasil F1 yang berubah. Rumus F1 tetap dua suku (input segar + output); cache tetap wilayah F2. F2–F4, FAQ & Glosarium, `models.js`, dan dock tidak disentuh.
+
+### 18.1 Token semantik `--warn` / `--danger`
+
+| Tema | `--warn` | Kontras vs kartu | `--danger` | Kontras vs kartu |
+|---|---|---|---|---|
+| Gelap | `#F5B942` | 10,10:1 | `#F87171` | 6,44:1 |
+| Terang | `#B45309` | 5,02:1 | `#B91C1C` | 6,47:1 |
+| Hangat | `#8A6100` | 5,54:1 | `#B3261E` | 6,54:1 |
+
+- Warna solid, tanpa gradasi/glow. Gelap memakai amber/merah muda terang; Terang memakai amber/merah gelap. Hangat memakai **mustard gelap** agar peringatan tidak tertukar dengan aksen tanah liat `#D97757`.
+- Kontras diukur terhadap latar kartu masing-masing (`#17171F` Gelap, `#FFFFFF` Terang/Hangat) dan semuanya ≥4,5:1 supaya angka persentase tetap terbaca.
+
+### 18.2 Ambang bilah PEMAKAIAN JATAH
+
+- Aturan dari persentase mentah (`usagePercentRaw`, boleh >100): **≤80% normal**, **>80% dan <100% peringatan**, **≥100% bahaya**. Lebar isian tetap dibatasi 0–100% (`usagePercent`), hanya label/ambang yang memakai nilai mentah.
+- Keadaan diterapkan pada isian bilah dan angka persentase baru di baris meta (`20%`), bukan pada kartu/teks lain.
+- Penanda uji stabil: atribut `data-ambang="normal|peringatan|bahaya"` pada track, isian, dan angka persen; kelas `usage-bar__fill--peringatan` / `usage-bar__fill--bahaya` pada isian; kelas `usage-bar__persen--peringatan` / `--bahaya` pada angka.
+- Normal memakai `--accent` (isian) dan `--ink` (angka persen) seperti tampilan lama. `aria-valuenow` tetap 0–100; `aria-valuetext` menyebut persentase mentah.
+
+### 18.3 Bilah bagi biaya per request (dua segmen)
+
+- Diletakkan tepat di bawah baris Perkiraan Biaya (setelah blok baris hasil), memakai pola visual bar F2 dengan modifier `.cost-bar--f1`: track tipis 6px, dua segmen, legenda dua baris.
+- Segmen **Input segar** = `var(--accent)`; segmen **Output** = `var(--muted)` (token netral yang sudah ada, bukan warna baru). Tiap segmen `min-width: 2px` agar porsi sangat kecil tetap terlihat.
+- Legenda: swatch + nama + nominal + persen. Nominal memakai mata uang terpilih (`formatNilaiMataUang`, aturan hierarki Sesi 5B, tanpa pendamping); persen dari nilai tak-bulat dibulatkan untuk tampilan (boleh 99–101). Total per request tampil di meta (`BAGI BIAYA PER REQUEST`).
+- Hanya tampil bila `result.isValid && biayaPerRequest > 0`; pada keadaan kosong/pesan ramah bilah dan legenda tidak dirender.
+- Data turunan baru dari `hitungF1`: `biayaInput`, `biayaOutput`, `porsiInput`, `porsiOutput`, `usagePercentRaw`, `ambangPemakaian` — nilai `biayaPerRequest`, request, token, dan biaya tidak berubah.

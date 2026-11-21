@@ -97,6 +97,16 @@ export function formatSel(val) {
 }
 
 /**
+ * Ambang warna bilah pemakaian jatah (Sesi 7).
+ * ≤80% normal · >80% dan <100% peringatan · ≥100% bahaya.
+ */
+export function getAmbangPemakaian(persen) {
+  if (!Number.isFinite(persen) || persen <= 80) return "normal";
+  if (persen >= 100) return "bahaya";
+  return "peringatan";
+}
+
+/**
  * Format dolar ringkas: "$10", "$0,06", "$12,50".
  */
 export function formatUSD(val, minDigits = 0, maxDigits = 2) {
@@ -138,9 +148,9 @@ export function hitungF1({
 
   // Biaya per request tetap dihitung walau jatah kosong, supaya blok
   // "Dengan angka" bisa menampilkan hasil antara yang benar.
-  const biayaPerRequest =
-    (numTokenInput * numHargaInput + numTokenOutput * numHargaOutput) /
-    1000000;
+  const biayaInput = (numTokenInput * numHargaInput) / 1000000;
+  const biayaOutput = (numTokenOutput * numHargaOutput) / 1000000;
+  const biayaPerRequest = biayaInput + biayaOutput;
 
   const adaJatah = numJatah > 0;
   const adaHarga = numHargaInput > 0 || numHargaOutput > 0;
@@ -170,17 +180,32 @@ export function hitungF1({
   const usagePercent = isUsageValid
     ? Math.min(100, Math.max(0, (numJatah / numTotalKuota) * 100))
     : 0;
+  // Persentase mentah (boleh >100) hanya untuk label & ambang warna;
+  // lebar bilah tetap memakai usagePercent yang dibatasi 0–100.
+  const usagePercentRaw = isUsageValid
+    ? (numJatah / numTotalKuota) * 100
+    : 0;
+  const porsiInput =
+    biayaPerRequest > 0 ? (biayaInput / biayaPerRequest) * 100 : 0;
+  const porsiOutput =
+    biayaPerRequest > 0 ? (biayaOutput / biayaPerRequest) * 100 : 0;
 
   return {
     isValid,
     emptyMessage,
     model,
+    biayaInput,
+    biayaOutput,
     biayaPerRequest,
+    porsiInput,
+    porsiOutput,
     requestExact,
     requestTampil,
     totalToken,
     perkiraanBiaya,
     usagePercent,
+    usagePercentRaw,
+    ambangPemakaian: getAmbangPemakaian(usagePercentRaw),
     isUsageValid,
     jatah: numJatah,
     totalKuota: numTotalKuota,
