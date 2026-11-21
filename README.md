@@ -44,13 +44,26 @@ ditampilkan terbuka. Tidak ada angka ajaib.
   serta logo provider.
 - **Salin hasil** dalam satu klik.
 
-### Segera hadir
+### F2 — Simulator Sesi Agen (tersedia)
 
-- **F2 — Simulator Sesi Agen**: simulasikan satu sesi agen koding per putaran.
-- **F3 — Penghitung Token Teks**: perkiraan token dari teks yang kamu tempel.
-- **F4 — Basis Data Model & Harga**: jelajahi dan sunting basis data harga.
-- **FAQ & Glosarium**: konteks vs kuota, request vs token, cache, compaction,
-  dan perbedaan AI usage lain yang sering tertukar.
+- Simulasikan satu sesi agen koding per putaran: konteks yang tumbuh, sebagian
+  terbaca dari cache, total biaya sesi dan rata-rata biaya per putaran.
+
+### F3 — Penghitung Token Teks (tersedia)
+
+- Tempel teks dan perkirakan jumlah token beserta biaya memasukkannya, per
+  model. Angka ini perkiraan, bukan hitungan tokenizer resmi.
+
+### F4 — Basis Data Model & Harga (tersedia)
+
+- Jelajahi 23 model dari 9 provider beserta harganya; klik nilai harga untuk
+  mengubahnya — perubahan langsung berlaku di F1, F2, dan F3.
+
+### FAQ & Glosarium (tersedia)
+
+- 10 pasangan istilah yang sering tertukar, 8 FAQ, dan 14 istilah glosarium —
+  bacaan untuk memahami konteks vs kuota, request vs token, cache, dan
+  compaction.
 
 ## Cara memakai
 
@@ -83,10 +96,10 @@ React 19 · Vite · mesin hitung JavaScript murni · di-host di GitHub Pages.
 ## Peta jalan
 
 - [x] F1 — Penerjemah Batas
-- [ ] F2 — Simulator Sesi Agen
-- [ ] F3 — Penghitung Token Teks
-- [ ] F4 — Basis Data Model & Harga
-- [ ] FAQ & Glosarium AI Usage
+- [x] F2 — Simulator Sesi Agen
+- [x] F3 — Penghitung Token Teks
+- [x] F4 — Basis Data Model & Harga
+- [x] FAQ & Glosarium AI Usage
 
 ## Lisensi
 
