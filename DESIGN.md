@@ -464,3 +464,28 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - Legenda: swatch + nama + nominal + persen. Nominal memakai mata uang terpilih (`formatNilaiMataUang`, aturan hierarki Sesi 5B, tanpa pendamping); persen dari nilai tak-bulat dibulatkan untuk tampilan (boleh 99–101). Total per request tampil di meta (`BAGI BIAYA PER REQUEST`).
 - Hanya tampil bila `result.isValid && biayaPerRequest > 0`; pada keadaan kosong/pesan ramah bilah dan legenda tidak dirender.
 - Data turunan baru dari `hitungF1`: `biayaInput`, `biayaOutput`, `porsiInput`, `porsiOutput`, `usagePercentRaw`, `ambangPemakaian` — nilai `biayaPerRequest`, request, token, dan biaya tidak berubah.
+
+## 19. Sesi 8 — Pita Cara Pakai di F1–F4
+
+> Satu pita panduan per modul, di atas panel Masukan/Hasil. Fungsi, rumus, isi modul, FAQ & Glosarium, `models.js`, dan dock tidak berubah.
+
+### 19.1 Komponen & posisi
+
+- Komponen baru `PitaCaraPakai` memakai ulang `PitaHeader`, `PitaBody`, dan hook pita Sesi 4B — bukan pola baru. Judul terlihat `Cara Pakai` (label kecil aksen kapital, gaya label pita rumah).
+- Diletakkan sebagai anak pertama `<main>` tiap modul, **di atas** `.module-f1` (F1–F3) atau `DataModelPanel` (F4), selebar area modul. Jarak bawah 14px; baris judul memakai hairline rumah.
+- Id unik per modul: `cara-pakai-toggle-f1..f4` + `cara-pakai-isi-f1..f4` (`aria-expanded` / `aria-controls`).
+
+### 19.2 Keadaan lipat & kunci terpisah
+
+- Bawaan **terbuka** di semua modul. Melipat satu modul tidak memengaruhi modul lain.
+- Kunci localStorage baru `kalkulator-pita-cara-pakai` berisi `{ f1, f2, f3, f4 }` boolean. Hook baru `usePitaCaraPakai(modul)` di berkas yang sama dengan `usePitaTerbuka`.
+- Kunci lama `kalkulator-pita` (pita metode F1–F3) **tidak dibaca maupun ditulis** oleh pita Cara Pakai. Pembacaan/penulisan memakai helper generik `bacaKunci`/`tulisKunci`, sehingga perilaku pita metode tetap identik.
+- Nilai tak dikenal/korup dikembalikan ke terbuka; kegagalan `localStorage` diabaikan diam-diam; event `storage` menyinkronkan antar-tab.
+- Isi tetap ter-mount saat terlipat (atribut `hidden` pada `PitaBody`), animasi tinggi + opacity 250ms, `prefers-reduced-motion` mematikan transisi — pola Sesi 4B.
+
+### 19.3 Isi tiga langkah
+
+- Tepat **3 langkah** per modul, teks tersimpan di `src/data/caraPakai.js` (`CARA_PAKAI.f1..f4`) agar tidak tersebar di JSX.
+- Nomor `01`/`02`/`03` JetBrains Mono 11px `--muted` di kolom kiri (pola nomor FAQ/kode), teks 13px `--muted-strong` dengan indentasi menggantung.
+- ≤520px: kolom nomor menyempit (`1.4rem`), teks 12px; langkah tetap menumpuk vertikal rapi tanpa geser horizontal.
+- Tanpa latar kartu, gradasi, glow, atau warna baru; tiga tema berlaku lewat token yang ada.

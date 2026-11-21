@@ -14,6 +14,7 @@ import TeksResult from "./components/TeksResult";
 import TeksFormula from "./components/TeksFormula";
 import TeksMobileStrip from "./components/TeksMobileStrip";
 import DataModelPanel from "./components/DataModelPanel.jsx";
+import PitaCaraPakai from "./components/PitaCaraPakai";
 import FaqGlosarium from "./components/FaqGlosarium";
 import Footer from "./components/Footer";
 import { useF1State } from "./utils/useF1State";
@@ -287,6 +288,8 @@ export default function App() {
           tabIndex={0}
           className="main-panel"
         >
+          <PitaCaraPakai modul="f1" />
+
           <div className="module-f1">
             <div className="module-f1__input" ref={inputPanelRef}>
               <InputPanel
@@ -335,6 +338,8 @@ export default function App() {
           tabIndex={0}
           className="main-panel"
         >
+          <PitaCaraPakai modul="f2" />
+
           <div className="module-f1 module-f2">
             <div className="module-f1__input" ref={inputPanelF2Ref}>
               <SimulatorInput
@@ -388,6 +393,8 @@ export default function App() {
           tabIndex={0}
           className="main-panel"
         >
+          <PitaCaraPakai modul="f3" />
+
           <div className="module-f1 module-f3">
             <div className="module-f1__input" ref={inputPanelF3Ref}>
               <TeksInput
@@ -419,6 +426,8 @@ export default function App() {
           tabIndex={0}
           className="main-panel"
         >
+          <PitaCaraPakai modul="f4" />
+
           <DataModelPanel
             actions={aksiModel}
           />

@@ -2998,3 +2998,59 @@ body {
 
 
 
+
+/* ============================================================
+   Sesi 8 - Pita Cara Pakai di F1-F4
+   Memakai komponen & animasi pita Sesi 4B; kunci lipatan terpisah.
+   ============================================================ */
+.pita-panduan {
+  width: 100%;
+  margin-block: 0 14px;
+}
+
+.pita-panduan .formula-section__header {
+  margin-block-end: 8px;
+}
+
+.pita-langkah {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pita-langkah__item {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 10px;
+}
+
+.pita-langkah__nomor {
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pita-langkah__teks {
+  font-size: 0.813rem;
+  color: var(--muted-strong);
+  line-height: 1.55;
+}
+
+@media (max-width: 520px) {
+  .pita-langkah__item {
+    grid-template-columns: 1.4rem minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .pita-langkah__teks {
+    font-size: 0.75rem;
+  }
+}
+

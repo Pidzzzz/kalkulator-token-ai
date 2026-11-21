@@ -748,3 +748,20 @@ Harness sempat gagal dua kali saat dibangun (jsdom di-bundle sebagai ESM -> "Dyn
 **Cek visual (tugas pemilik):** (a) tiga tingkat warna bilah jatah di 3 tema dengan memaksa jatah melewati 80% dan 100% (Hangat: pastikan mustard peringatan tidak tertukar dengan aksen tanah liat); (b) keterbacaan bilah bagi biaya + legenda dua baris di IDR dan USD, termasuk porsi sangat kecil (minimal 2px); (c) keadaan kosong F1 (jatah kosong) - bilah jatah/bagi biaya dan legenda tidak tampil.
 
 **Status akhir:** Selesai - `npm run build` 0 error, commit & push `feat: warna ambang bilah jatah & bilah bagi biaya F1 (Sesi 7)`, uji headless 11/11 lulus.
+
+## Sesi 8 - Pita Cara Pakai di F1-F4 (21 Nov 2026)
+
+**Tujuan:** menambah SATU pita panduan "Cara Pakai" di atas panel tiap modul F1, F2, F3, dan F4. Fungsi, rumus, isi modul, FAQ & Glosarium, `models.js`, dan dock tidak berubah.
+
+**Cakupan**
+- Komponen baru `src/components/PitaCaraPakai.jsx` memakai ulang `PitaHeader`, `PitaBody`, dan pola animasi Sesi 4B. Diletakkan sebagai anak pertama `<main>` tiap modul (di atas panel Masukan/Hasil), lebar penuh.
+- Hook baru `usePitaCaraPakai(modul)` di berkas `usePitaTerbuka.js`, dengan helper generik `bacaKunci`/`tulisKunci`. Kunci localStorage BARU `kalkulator-pita-cara-pakai` = `{ f1, f2, f3, f4 }`; kunci lama `kalkulator-pita` tidak dibaca/ditulis oleh pita ini.
+- Bawaan terbuka di semua modul; melipat satu modul tidak memengaruhi modul lain; nilai tersimpan dibaca lagi saat muat ulang; event `storage` menyinkronkan antar-tab.
+- Tepat 3 langkah bernomor `01`/`02`/`03` (JetBrains Mono, muted) per modul, teks apa adanya di `src/data/caraPakai.js` (`CARA_PAKAI.f1..f4`). <=520px nomor menyempit + teks 12px, tetap menumpuk vertikal.
+- Isi tetap ter-mount saat terlipat (atribut `hidden`), animasi 250ms + penjaga reduced motion; tanpa gradasi/glow/warna baru.
+
+**Urutan pendaratan (dikunci sesi):** `npm run build` 0 error (70 modul, 358,53 kB JS) -> commit -> push -> verifikasi mendalam setelahnya.
+
+**Berkas:** baru `src/components/PitaCaraPakai.jsx`, `src/data/caraPakai.js`; diubah `src/utils/usePitaTerbuka.js` (hook generik + kunci terpisah), `src/App.jsx` (pita di 4 modul), `src/index.css` (blok Sesi 8), `DESIGN.md` (Bagian 19), `PROGRESS.md`.
+
+**Status:** Selesai ditulis & di-commit - `feat: pita Cara Pakai di F1-F4 (Sesi 8)`; hasil uji headless dicatat setelah verifikasi.
