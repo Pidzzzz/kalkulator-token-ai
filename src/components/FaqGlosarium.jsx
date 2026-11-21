@@ -23,6 +23,7 @@ const SERING_TERTUKAR = [
     beda: "Konteks berulang yang terbaca dari cache jauh lebih murah. Inilah alasan sesi agen panjang tidak semahal kelihatannya.",
     contoh:
       "DeepSeek cache $0,003 vs input segar $0,15 per 1 jt token = 50× lipat.",
+    sorot: ["$0,003", "$0,15", "50×"],
   },
   {
     a: "Batas konteks model",
@@ -39,6 +40,7 @@ const SERING_TERTUKAR = [
     b: "tengah malam",
     beda: "Jendela mulai dari pesan pertama — bukan tengah malam, bukan jam bulat.",
     contoh: "Kirim pesan pertama 21.10, jendela berakhir 02.10.",
+    sorot: ["21.10", "02.10"],
   },
   {
     a: "Compaction",
@@ -78,6 +80,7 @@ const FAQ = [
       "Sesi lama membawa seluruh riwayat sebagai konteks, sehingga setiap putaran membaca ulang konteks yang besar. Sesi baru mulai dari konteks kecil, jadi biaya input per request ikut kecil.",
     contoh:
       "Melanjutkan sesi 100.000 token jauh lebih mahal per request daripada sesi baru 5.000 token, walau pertanyaannya sama.",
+    sorot: ["100.000", "5.000"],
   },
   {
     tanya: "Kenapa angka kalkulator ini bisa berbeda dari tagihan aslinya?",
@@ -85,6 +88,7 @@ const FAQ = [
       "Semua angka di sini adalah perkiraan terbuka dari asumsi yang ditampilkan — harga per 1 juta token dan faktor karakter-per-token. Tagihan resmi memakai tokenizer provider, pembulatan, pajak, dan aturan yang tidak selalu dipublikasikan. Itulah alasan lencana ESTIMASI: ini perkiraan terbuka, bukan billing.",
     contoh:
       "Teks 207 karakter dihitung 60 token dengan faktor 3,5; tokenizer resmi bisa memberi angka sedikit berbeda.",
+    sorot: ["207", "60", "3,5"],
   },
   {
     tanya: "Kenapa batas paketku tidak reset tengah malam?",
@@ -92,6 +96,7 @@ const FAQ = [
       "Jendela paket umumnya mulai dari pemakaian pertamamu, bukan mengikuti jam kalender. Karena itu batas 5 jam, mingguan, atau bulanan bisa bergeser mengikuti kapan kamu mulai.",
     contoh:
       "Pesan pertama pukul 21.10 membuat jendela 5 jam berakhir pukul 02.10, bukan pukul 00.00.",
+    sorot: ["21.10", "02.10", "00.00"],
   },
   {
     tanya:
@@ -100,6 +105,7 @@ const FAQ = [
       "Cache adalah salinan konteks yang sudah pernah diproses server, sehingga request berikutnya tidak perlu memproses ulang dari nol. Membaca dari cache jauh lebih murah daripada input segar.",
     contoh:
       "DeepSeek: cache $0,003 vs input segar $0,15 per 1 juta token — sekitar 50× lipat.",
+    sorot: ["$0,003", "$0,15", "50×"],
   },
   {
     tanya: "Model yang sama, kenapa harganya bisa beda jauh antar-provider?",
@@ -107,6 +113,7 @@ const FAQ = [
       "Provider resmi dan perantara seperti relay menetapkan margin, jalur, dan tarif sendiri, jadi model yang sama bisa dijual dengan harga berbeda. Bagaimana tepatnya sebuah perantara menentukan harganya tidak dipublikasikan.",
     contoh:
       "Model yang sama bisa tampil $2/$10 per 1 juta token di satu tempat dan lebih mahal di relay lain.",
+    sorot: ["$2/$10"],
   },
   {
     tanya:
@@ -115,6 +122,7 @@ const FAQ = [
       "Compaction merangkum riwayat saat sesi terlalu panjang: konteks menyusut karena detail diganti rangkuman, sementara intisari dan keputusan bertahan. Kuota tidak ikut berubah — compaction bukan pengembalian jatah.",
     contoh:
       "Sesi 150.000 token bisa menjadi rangkuman beberapa ribu token, tetapi pemakaian kuota paket tetap seperti sebelumnya.",
+    sorot: ["150.000"],
   },
   {
     tanya: "Kenapa paketku menyebut “5 jam” DAN “mingguan” sekaligus?",
@@ -122,6 +130,7 @@ const FAQ = [
       "Paket besar biasanya punya beberapa batas berlapis yang aktif bersamaan: jendela 5 jam, batas mingguan, kadang jatah bulanan. Yang lebih dulu habis, dialah yang menghentikan pemakaian. Besar tiap batas tidak dipublikasikan dengan angka pasti oleh semua provider.",
     contoh:
       "Jendela 5 jam masih longgar, tetapi batas mingguan sudah 100% — pemakaian tetap terhenti.",
+    sorot: ["100%"],
   },
 ];
 
@@ -184,7 +193,7 @@ const GLOSARIUM = [
   },
 ];
 
-function ChevronIcon() {
+function PlusIcon() {
   return (
     <svg
       width="12"
@@ -198,8 +207,32 @@ function ChevronIcon() {
       aria-hidden="true"
       focusable="false"
     >
-      <path d="m6 9 6 6 6-6" />
+      <path d="M12 5v14M5 12h14" />
     </svg>
+  );
+}
+
+function escapeRegExp(teks) {
+  return teks.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * Menebalkan angka kunci di dalam kalimat contoh tanpa mengubah satu huruf
+ * pun: teks dipecah pada potongan `sorot`, potongan itu dibungkus <strong>.
+ */
+function TeksContoh({ teks, sorot = [] }) {
+  if (!teks || sorot.length === 0) return teks;
+
+  const pola = new RegExp(`(${sorot.map(escapeRegExp).join("|")})`, "g");
+
+  return teks.split(pola).map((bagian, index) =>
+    sorot.includes(bagian) ? (
+      <strong className="contoh__angka" key={index}>
+        {bagian}
+      </strong>
+    ) : (
+      bagian
+    )
   );
 }
 
@@ -228,22 +261,31 @@ export default function FaqGlosarium() {
 
       {/* ---- A. Sering Tertukar ---- */}
       <div className="bacaan__blok">
-        <h3 className="bacaan__subjudul">Sering Tertukar</h3>
+        <div className="bacaan__sub-head">
+          <span className="bacaan__sub-label" aria-hidden="true">
+            01
+          </span>
+          <h3 className="bacaan__subjudul">Sering Tertukar</h3>
+        </div>
         <div className="tertukar-grid">
           {SERING_TERTUKAR.map((item, index) => (
             <article className="tertukar" key={`${item.a}-${item.b}-${index}`}>
-              <p className="tertukar__istilah">
-                <span className="tertukar__istilah-teks">{item.a}</span>
+              <div className="tertukar__banding">
+                <div className="tertukar__panel">
+                  <span className="tertukar__istilah-teks">{item.a}</span>
+                </div>
                 <span className="tertukar__vs" aria-hidden="true">
                   {item.penghubung || "vs"}
                 </span>
-                <span className="tertukar__istilah-teks">{item.b}</span>
-              </p>
+                <div className="tertukar__panel">
+                  <span className="tertukar__istilah-teks">{item.b}</span>
+                </div>
+              </div>
               <p className="tertukar__beda">{item.beda}</p>
               {item.contoh ? (
                 <p className="tertukar__contoh">
                   <span className="tertukar__contoh-label">Contoh:</span>{" "}
-                  {item.contoh}
+                  <TeksContoh teks={item.contoh} sorot={item.sorot} />
                 </p>
               ) : null}
             </article>
@@ -253,15 +295,24 @@ export default function FaqGlosarium() {
 
       {/* ---- B. FAQ (akordeon) ---- */}
       <div className="bacaan__blok">
-        <h3 className="bacaan__subjudul">FAQ</h3>
+        <div className="bacaan__sub-head">
+          <span className="bacaan__sub-label" aria-hidden="true">
+            02
+          </span>
+          <h3 className="bacaan__subjudul">FAQ</h3>
+        </div>
         <div className="faq">
           {FAQ.map((item, index) => {
             const idJawab = `faq-jawab-${index + 1}`;
             const idTombol = `faq-tanya-${index + 1}`;
             const isOpen = terbuka[index];
+            const nomor = String(index + 1).padStart(2, "0");
 
             return (
-              <div className="faq__item" key={item.tanya}>
+              <div
+                className={`faq__item${isOpen ? " faq__item--terbuka" : ""}`}
+                key={item.tanya}
+              >
                 <h4 className="faq__judul">
                   <button
                     type="button"
@@ -271,9 +322,12 @@ export default function FaqGlosarium() {
                     aria-controls={idJawab}
                     onClick={() => toggleFaq(index)}
                   >
+                    <span className="faq__nomor" aria-hidden="true">
+                      {nomor}
+                    </span>
                     <span className="faq__tanya">{item.tanya}</span>
-                    <span className="faq__chevron" aria-hidden="true">
-                      <ChevronIcon />
+                    <span className="faq__plus" aria-hidden="true">
+                      <PlusIcon />
                     </span>
                   </button>
                 </h4>
@@ -287,7 +341,7 @@ export default function FaqGlosarium() {
                   <p>{item.jawab}</p>
                   <p className="faq__contoh">
                     <span className="faq__contoh-label">Contoh:</span>{" "}
-                    {item.contoh}
+                    <TeksContoh teks={item.contoh} sorot={item.sorot} />
                   </p>
                 </div>
               </div>
@@ -298,7 +352,12 @@ export default function FaqGlosarium() {
 
       {/* ---- C. Glosarium ---- */}
       <div className="bacaan__blok">
-        <h3 className="bacaan__subjudul">Glosarium</h3>
+        <div className="bacaan__sub-head">
+          <span className="bacaan__sub-label" aria-hidden="true">
+            03
+          </span>
+          <h3 className="bacaan__subjudul">Glosarium</h3>
+        </div>
         <dl className="glosarium">
           {GLOSARIUM.map((item) => (
             <div className="glosarium__item" key={item.istilah}>

@@ -394,3 +394,43 @@ Pilihan tema disimpan di `localStorage` (`kalkulator-theme`) dan diterapkan mela
 - >520px: Sering Tertukar 2 kolom kartu, Glosarium 2 kolom; ≤520px keduanya menjadi satu kolom dan dua istilah di dalam kartu ikut menumpuk vertikal — tidak ada dua kolom menyempit dan tidak ada geser horizontal.
 - Warna sepenuhnya dari token tema yang sudah ada (`--bg`, `--card`, `--line`, `--ink`, `--muted`, `--muted-strong`, `--accent`, `--accent-light`, `--card-shadow`); Gelap, Terang, dan Hangat otomatis berlaku. Tanpa latar gradasi, glow, atau warna baru.
 - Tipografi mengikuti aturan global: Fraunces untuk H2/subjudul, Inter untuk teks bacaan.
+
+## 17. Sesi 6B — Poles Sering Tertukar, FAQ & Glosarium
+
+> Hanya tampilan bagian bacaan Sesi 6 yang berubah. Isi teks, jumlah (10 pasangan / 8 FAQ / 14 istilah), makna, `models.js`, F1–F4, dan dock tidak disentuh. Tidak ada kolom pencarian, chip kategori, nav A–Z, tombol melayang, atau warna aksen kedua.
+
+### 17.1 Sering Tertukar — perbandingan dua sisi
+
+- Tiap pasangan menjadi grid `minmax(0,1fr) auto minmax(0,1fr)`: panel kiri = istilah pertama, lencana `vs` di tengah, panel kanan = istilah kedua.
+- Kedua panel netral: `background-color: var(--card)` + `border: 1px solid var(--line)` + radius rumah. Kartu pembungkus pasangan tidak lagi berlatar/border (hanya pengelompok), sehingga tidak ada kartu di dalam kartu.
+- Lencana `vs` kecil (pil 24px, mono 10px, `border: 1px solid var(--line)`, latar solid `--bg`) memakai `color: var(--accent)` — satu-satunya aksen pada pasangan; di tema Hangat otomatis menjadi tanah liat.
+- Pasangan "Token reasoning = token output" tetap memakai penghubung `=` (bukan `vs`) agar maknanya tidak berubah.
+- ≤520px: panel menumpuk satu kolom, lencana `vs` di antara keduanya (`justify-self: center`), tanpa dua kolom menyempit.
+
+### 17.2 FAQ — baris akordeon ringan tanpa kotak
+
+- Baris tetap dipisah hairline; tidak ada latar kartu pada keadaan tertutup.
+- Nomor `01`–`08` di kiri: JetBrains Mono 11px, `font-weight: 500`, warna `--muted`, lebar tetap `1.4rem` agar pertanyaan sejajar.
+- Teks pertanyaan `font-weight: 500` (bukan bold penuh); jawaban tetap fokus utama.
+- Chevron diganti ikon plus SVG 12px; `transform: rotate(45deg)` saat `aria-expanded="true"` (menjadi ×). Hanya transisi transform + warna, dimatikan pada `prefers-reduced-motion: reduce`.
+- Keadaan terbuka: `background-color: var(--card)` (permukaan solid satu tingkat dari latar `--bg`) + garis aksen 2px di sisi kiri lewat pseudo-element `::before` (tanpa menggeser tata letak), tanpa gradasi/glow/latar transparan berwarna.
+- Jawaban menjorok sejajar teks pertanyaan (`margin-inline-start: calc(1.4rem + 10px)`), sehingga nomor tetap menjadi kolom kiri yang rapi.
+
+### 17.3 Kartu Contoh menonjol
+
+- Baris `Contoh:` di Sering Tertukar dan jawaban FAQ menjadi kotak kecil `border: 1px dashed var(--line)`, radius `--radius-sm`, latar transparan (bukan warna), padding 8×10px.
+- Angka kunci di dalam kalimat contoh dibungkus `<strong class="contoh__angka">`: tebal + `color: var(--accent)`. Daftar potongan yang disorot disimpan sebagai field `sorot` per item (mis. `$0,003`, `$0,15`, `50×`, `21.10`, `100.000`, `207`, `3,5`, `$2/$10`, `150.000`, `100%`).
+- Kalimat contoh tidak diubah satu huruf pun: `TeksContoh` hanya memecah teks pada potongan `sorot` lalu membungkus potongan itu.
+
+### 17.4 Glosarium — daftar istilah
+
+- Menjadi satu daftar vertikal (bukan grid dua kolom): tiap baris grid `180px minmax(0,1fr)` — istilah di kiri, definisi penuh di kanan.
+- Nama istilah memakai Fraunces (`--font-heading`) 1rem `font-weight: 600`; definisi tetap Inter 13px `--muted-strong`, tampil penuh tanpa "selengkapnya", tanpa chip, tanpa nav A–Z.
+- ≤520px: istilah di atas, definisi di bawah (`grid-template-columns: 1fr`).
+- Urutan alfabetis dan isi definisi tidak berubah.
+
+### 17.5 Label & jarak
+
+- Tiap sub-bagian mendapat label kecil di atas judulnya: `01` / `02` / `03` (dekoratif, `aria-hidden`), JetBrains Mono 11px, `letter-spacing: 0.08em`, warna `--accent`; judul sub-bagian tetap Fraunces.
+- Jarak judul ke isi dirapatkan (`margin-block-end: 8px`), jarak antar sub-bagian dilonggarkan (`margin-block-start: 32px`).
+- Tidak ada token warna baru: semua memakai token tema yang sudah ada; aksen mengikuti tema (ungu Gelap/Terang, tanah liat Hangat).

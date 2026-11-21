@@ -685,3 +685,21 @@ Harness sempat gagal dua kali saat dibangun (jsdom di-bundle sebagai ESM -> "Dyn
 **Cek visual (tugas pemilik):** (a) bagian FAQ & Glosarium di tema Gelap, Terang, Hangat; (b) akordeon dibuka lewat keyboard (Tab ke pertanyaan, Enter/Spasi) dengan fokus terlihat dan chevron berputar; (c) pasangan Sering Tertukar di HP 360px menumpuk satu kolom tanpa geser horizontal; (d) tautan footer "FAQ & Glosarium" menggulir tepat ke judul bagian dari modul mana pun (termasuk F4).
 
 **Status akhir:** Selesai - `npm run build` 0 error, commit & push `feat: FAQ, Sering Tertukar & Glosarium (Sesi 6)`, uji headless 10/10 lulus.
+
+## Sesi 6B - Poles Sering Tertukar, FAQ & Glosarium (21 Nov 2026)
+
+**Tujuan:** memoles TAMPILAN bagian bacaan Sesi 6 saja. Isi teks, jumlah (10 pasangan / 8 FAQ / 14 istilah), makna, F1-F4, `models.js`, dan dock tidak berubah.
+
+**Cakupan**
+- **Sering Tertukar dua sisi:** tiap pasangan = panel kiri (istilah 1) + lencana `vs` tengah + panel kanan (istilah 2). Kedua panel netral (`--card` + hairline), lencana `vs` kecil berwarna `var(--accent)`. Pasangan "Token reasoning = token output" tetap memakai `=`. <=520px panel menumpuk satu kolom dengan `vs` di antaranya.
+- **FAQ ringan tanpa kotak:** nomor `01`-`08` mono muted di kiri, pertanyaan `font-weight: 500`, ikon plus berputar 45 derajat saat terbuka (bukan chevron). Keadaan terbuka: latar solid `--card` + garis aksen 2px di sisi kiri (pseudo-element, tanpa geser tata letak), tanpa gradasi/glow/latar transparan berwarna. Jawaban menjorok sejajar teks pertanyaan.
+- **Kartu Contoh:** baris `Contoh:` di Sering Tertukar & FAQ menjadi kotak dashed hairline; angka kunci dibungkus `<strong>` tebal + `var(--accent)` lewat field `sorot` (teks kalimat tidak diubah).
+- **Glosarium daftar istilah:** satu kolom baris (istilah 180px + definisi penuh), istilah Fraunces 600, definisi Inter 13px penuh tanpa "selengkapnya"/chip/nav A-Z; <=520px menumpuk.
+- **Label & jarak:** label kecil `01/02/03` mono aksen di atas tiap judul sub-bagian; jarak judul ke isi 8px, antar sub-bagian 32px.
+- Tanpa kolom pencarian, chip kategori, aksen kedua, nav A-Z, atau item dock baru. Tanpa token warna baru; aksen mengikuti tema (tanah liat di Hangat).
+
+**Urutan pendaratan (dikunci sesi):** `npm run build` 0 error (68 modul, 354,42 kB JS) -> commit -> push -> verifikasi mendalam setelahnya.
+
+**Berkas:** `src/components/FaqGlosarium.jsx` (struktur dua panel, nomor + ikon plus, `sorot` + `TeksContoh`, label sub-bagian, daftar glosarium), `src/index.css` (blok Sesi 6 ditulis ulang), `DESIGN.md` (Bagian 17), `PROGRESS.md`. Tidak ada berkas lain yang diubah.
+
+**Status:** Selesai ditulis & di-commit - `style: poles Sering Tertukar, FAQ & Glosarium (Sesi 6B)`; hasil uji headless dicatat setelah verifikasi.
