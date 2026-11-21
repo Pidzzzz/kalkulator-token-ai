@@ -88,6 +88,11 @@ React 19 · Vite · mesin hitung JavaScript murni · di-host di GitHub Pages.
 - [ ] F4 — Basis Data Model & Harga
 - [ ] FAQ & Glosarium AI Usage
 
+## Lisensi
+
+MIT — bebas dipakai, diubah, dan disebarkan dengan menyertakan hak cipta.
+Lihat [LICENSE](LICENSE) untuk teks lengkapnya.
+
 ---
 
 Dibuat oleh [Pidzzz](https://github.com/Pidzzzz). Nama dan harga model adalah

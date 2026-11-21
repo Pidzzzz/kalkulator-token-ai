@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "description": "Kalkulator Token & Request AI — bantu pengguna AI coding menerjemahkan jatah & batas paket menjadi angka yang bisa dibayangkan",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
